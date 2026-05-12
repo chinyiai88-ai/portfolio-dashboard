@@ -1,0 +1,40 @@
+name: Update Portfolio Data
+
+on:
+  schedule:
+    - cron: '0 * * * *'   # 每小時整點執行
+  workflow_dispatch:        # 手動觸發（可在 GitHub Actions 頁面按 Run workflow）
+
+jobs:
+  fetch-and-commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write       # 允許 push data.json 回 repo
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run fetch_data.py
+        env:
+          FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
+        run: python fetch_data.py
+
+      - name: Commit & push data.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          # 只有 data.json 有變動才 commit（避免空 commit）
+          git diff --staged --quiet \
+            || git commit -m "chore: auto-update data.json [skip ci]"
+          git push

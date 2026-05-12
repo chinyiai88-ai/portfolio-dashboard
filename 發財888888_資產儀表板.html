@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>發財888888 資產儀表板</title>
+<style>
+:root{
+  --bg:#0f1117;--s1:#1a1d27;--s2:#232738;--bd:#2e3347;
+  --tx:#e2e8f0;--mu:#8892a4;
+  --gr:#22c55e;--rd:#ef4444;--yw:#f59e0b;--bl:#3b82f6;--pu:#a855f7;--cy:#06b6d4;--ac:#6366f1;
+  --ret-red:#ef4444;--ret-blue:#3b82f6;--ret-yellow:#f59e0b;--ret-green:#22c55e;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;font-size:13px;}
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--s1);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:200;gap:8px;flex-wrap:wrap;}
+.topbar h1{font-size:14px;font-weight:700;color:var(--ac);white-space:nowrap;}
+.topbar-r{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--mu);display:inline-block;flex-shrink:0;}
+.dot.ok{background:var(--gr);}.dot.err{background:var(--rd);}.dot.spin{background:var(--yw);animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.ts{font-size:11px;color:var(--mu);}
+.btn{border:none;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;}
+.btn-pri{background:var(--ac);color:#fff;}.btn-pri:hover{opacity:.85;}
+.btn-sec{background:var(--s2);border:1px solid var(--bd);color:var(--tx);}.btn-sec:hover{border-color:var(--ac);}
+.btn-add{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:var(--gr);padding:3px 10px;border-radius:5px;font-size:11px;cursor:pointer;}
+.btn-add:hover{background:rgba(34,197,94,.22);}
+.btn-del{background:transparent;border:none;color:var(--mu);cursor:pointer;font-size:13px;padding:0 3px;line-height:1;opacity:0;}
+tr:hover .btn-del{opacity:1;}
+.btn-del:hover{color:var(--rd);}
+/* LAYOUT */
+.page{max-width:1440px;margin:0 auto;padding:12px;}
+.sec{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
+h2{font-size:13px;font-weight:700;color:var(--cy);margin-bottom:10px;letter-spacing:.3px;}
+/* METRICS */
+.metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:8px;}
+.mc{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 12px;}
+.mc .lb{font-size:10px;color:var(--mu);margin-bottom:3px;}
+.mc .v{font-size:15px;font-weight:700;}
+.mc .sb{font-size:10px;color:var(--mu);margin-top:2px;word-break:break-all;}
+/* MACRO INPUTS */
+.macro-row{display:flex;gap:10px;flex-wrap:wrap;padding-top:10px;border-top:1px solid var(--bd);align-items:flex-end;}
+.macro-grp{display:flex;flex-direction:column;gap:3px;}
+.macro-grp label{font-size:10px;color:var(--mu);}
+input.macro{background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--tx);font-size:13px;padding:4px 8px;width:120px;text-align:right;}
+input.macro:focus{outline:none;border-color:var(--ac);}
+.rate-badge{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);border-radius:5px;padding:5px 10px;font-size:13px;color:var(--yw);font-weight:700;}
+.rate-badge small{font-size:10px;font-weight:400;color:var(--mu);display:block;}
+/* TABLES */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;}
+th{background:var(--s2);color:var(--mu);font-size:11px;font-weight:700;padding:6px 8px;white-space:nowrap;border-bottom:1px solid var(--bd);text-align:right;}
+th.L,td.L{text-align:left;}
+td{padding:5px 7px;border-bottom:1px solid #1c2030;font-size:12px;white-space:nowrap;text-align:right;vertical-align:middle;}
+tr:hover>td{background:rgba(255,255,255,.02);}
+.cat-hdr td{background:var(--s2);color:var(--mu);font-size:11px;font-weight:700;padding:4px 8px;text-align:left;}
+.tot-row td{background:#1b1f30;font-weight:700;border-top:2px solid var(--bd);}
+.add-row td{padding:3px 8px;background:transparent;border-bottom:none;}
+/* RETURN RATE COLOR STRIPE */
+.rr-red    > td:first-child{border-left:4px solid var(--ret-red)!important;}
+.rr-blue   > td:first-child{border-left:4px solid var(--ret-blue)!important;}
+.rr-yellow > td:first-child{border-left:4px solid var(--ret-yellow)!important;}
+.rr-green  > td:first-child{border-left:4px solid var(--ret-green)!important;}
+.rr-red    > td:first-child .ri{color:var(--ret-red);}
+.rr-blue   > td:first-child .ri{color:var(--ret-blue);}
+.rr-yellow > td:first-child .ri{color:var(--ret-yellow);}
+.rr-green  > td:first-child .ri{color:var(--ret-green);}
+.ri{font-size:9px;margin-right:2px;vertical-align:middle;}
+.rr-red .ret-cell{color:var(--ret-red)!important;font-weight:700;}
+.rr-blue .ret-cell{color:var(--ret-blue)!important;font-weight:700;}
+.rr-yellow .ret-cell{color:var(--ret-yellow)!important;font-weight:700;}
+.rr-green .ret-cell{color:var(--ret-green)!important;font-weight:700;}
+/* LEGEND */
+.legend{display:flex;gap:12px;margin-bottom:8px;flex-wrap:wrap;align-items:center;}
+.leg{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--mu);}
+.leg-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+/* EDITABLE INPUTS */
+input.ie{background:transparent;border:1px solid transparent;border-radius:4px;color:var(--tx);font-size:12px;padding:2px 4px;width:100%;min-width:40px;}
+input.ie:hover{border-color:var(--bd);}
+input.ie:focus{outline:none;border-color:var(--ac);background:rgba(99,102,241,.08);}
+input.ie.num{text-align:right;width:75px;}
+input.ie.name{min-width:130px;}
+input.ie.tick{width:105px;font-size:11px;color:var(--mu);}
+input.ie.strat{width:100%;font-size:11px;color:var(--mu);}
+input.manual-p{background:rgba(59,130,246,.1);border:1px solid var(--bl);border-radius:4px;color:var(--bl);font-size:12px;width:75px;text-align:right;padding:3px 5px;}
+input.manual-p:focus{outline:none;background:rgba(59,130,246,.18);}
+/* PRICE */
+.pv{color:var(--yw);font-weight:600;}
+.pv.loading{color:var(--mu);}
+/* COLORS */
+.pos{color:var(--gr);}.neg{color:var(--rd);}.neu{color:var(--mu);}
+/* SIGNAL */
+.sig{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;}
+.sig.buy{background:rgba(34,197,94,.12);color:var(--gr);}
+.sig.sell{background:rgba(239,68,68,.12);color:var(--rd);}
+.sig.ok{background:rgba(99,102,241,.12);color:var(--ac);}
+/* PROGRESS */
+.prog{background:#1c2030;border-radius:3px;height:6px;width:90px;display:inline-block;vertical-align:middle;position:relative;overflow:hidden;}
+.prog-f{height:100%;border-radius:3px;transition:width .3s;}
+.prog-t{position:absolute;top:0;left:50%;width:2px;height:100%;background:rgba(255,255,255,.5);}
+/* LOAN SECTION (was PLEDGE) */
+.loan-sep{margin-top:12px;padding-top:10px;border-top:2px dashed var(--pu);}
+.loan-lbl{color:var(--pu);font-weight:700;font-size:12px;margin-bottom:6px;}
+/* ERROR */
+.errbar{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:7px;padding:7px 12px;margin-bottom:10px;font-size:12px;color:var(--rd);display:none;}
+/* BADGE */
+.bdg{display:inline-block;background:rgba(255,255,255,.05);border:1px solid var(--bd);border-radius:3px;padding:0 4px;font-size:10px;color:var(--mu);margin-left:2px;vertical-align:middle;}
+/* ADD STOCK BAR */
+.add-stock-bar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;padding:10px 12px;background:rgba(34,197,94,.04);border:1px dashed rgba(34,197,94,.25);border-radius:8px;margin-top:10px;}
+.add-stock-bar label{font-size:10px;color:var(--mu);display:flex;flex-direction:column;gap:3px;}
+.add-stock-bar select,.add-stock-bar input[type="text"],.add-stock-bar input[type="number"]{background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--tx);font-size:12px;padding:4px 6px;max-width:120px;}
+.add-stock-bar select:focus,.add-stock-bar input:focus{outline:none;border-color:var(--ac);}
+/* DIVIDENDS */
+.div-sub-h{font-size:12px;font-weight:700;color:var(--mu);margin:10px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--bd);}
+.div-group-hdr td{background:rgba(99,102,241,.08);color:var(--ac);font-size:11px;font-weight:700;padding:3px 8px;text-align:left;}
+.div-tot-row td{background:#1b1f30;font-weight:700;border-top:2px solid var(--bd);}
+.est-tag{font-size:9px;color:var(--yw);border:1px solid rgba(245,158,11,.4);border-radius:3px;padding:0 3px;margin-left:3px;vertical-align:middle;}
+/* MOBILE */
+@media(max-width:650px){
+  .metric-row{grid-template-columns:1fr 1fr;}
+  .mc .v{font-size:13px;}
+  .topbar h1{font-size:13px;}
+  .page{padding:8px;}
+  .prog{width:60px;}
+  .add-stock-bar{gap:5px;}
+  .add-stock-bar select,.add-stock-bar input[type="text"],.add-stock-bar input[type="number"]{max-width:100px;}
+}
+@media(max-width:400px){
+  .metric-row{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>💰 發財888888 資產儀表板</h1>
+  <div class="topbar-r">
+    <span id="rateDisp" class="rate-badge" style="padding:3px 8px;font-size:12px;">USD/TWD —</span>
+    <span style="display:flex;align-items:center;gap:5px;">
+      <span class="dot" id="dot"></span>
+      <span class="ts" id="ts">載入中...</span>
+    </span>
+    <button class="btn btn-pri" onclick="fetchAllPrices()">🔄 更新</button>
+  </div>
+</div>
+
+<div class="page">
+<div class="errbar" id="errbar"></div>
+
+<!-- ① 基礎數據 -->
+<div class="sec">
+  <h2>📊 基礎數據</h2>
+
+  <!-- Row 1 -->
+  <div class="metric-row">
+    <div class="mc" style="border-color:var(--cy)">
+      <div class="lb">投資組合總值 (TWD)</div>
+      <div class="v" id="m_ptot" style="color:var(--cy)">—</div>
+      <div class="sb">不含類現金 / 不含借款部位</div>
+    </div>
+    <div class="mc">
+      <div class="lb">未實現損益</div>
+      <div class="v" id="m_pnl">—</div>
+      <div class="sb" id="m_pnl_sub">—</div>
+    </div>
+    <div class="mc" style="border-color:var(--gr)">
+      <div class="lb">可用現金</div>
+      <div class="v" id="m_cash" style="color:var(--gr)">—</div>
+      <div class="sb" id="m_cash_sub">現金 + 類現金ETF</div>
+    </div>
+    <div class="mc" style="border-color:var(--ac);background:linear-gradient(135deg,rgba(99,102,241,.12),rgba(99,102,241,.04));">
+      <div class="lb" style="color:var(--ac);">金融資產淨值</div>
+      <div class="v" id="m_nav" style="color:var(--ac);">—</div>
+      <div class="sb">組合+借款現值+現金−貸款</div>
+    </div>
+  </div>
+
+  <!-- Row 2 -->
+  <div class="metric-row">
+    <div class="mc">
+      <div class="lb">系統操作建議</div>
+      <div class="v" id="m_sysop" style="font-size:13px;">—</div>
+      <div class="sb" id="m_sysop_sub">依整體報酬率判斷</div>
+    </div>
+    <div class="mc">
+      <div class="lb">正2 導航燈號</div>
+      <div class="v" id="m_nav2" style="font-size:13px;">—</div>
+      <div class="sb" id="m_nav2_sub">—</div>
+    </div>
+    <div class="mc">
+      <div class="lb">負債率</div>
+      <div class="v" id="m_dr">—</div>
+      <div class="sb">30–70% 健康區間</div>
+    </div>
+    <div class="mc" style="border-color:var(--pu)">
+      <div class="lb">借款部位未實現損益</div>
+      <div class="v" id="m_pledge" style="color:var(--pu)">—</div>
+      <div class="sb">借款現值 − 借入成本</div>
+    </div>
+  </div>
+
+  <!-- Macro inputs -->
+  <div class="macro-row">
+    <div class="macro-grp">
+      <label>股票貸款 (LS)</label>
+      <input class="macro" id="in_ls" value="1020268" onchange="recalc()">
+    </div>
+    <div class="macro-grp">
+      <label>總現金餘額</label>
+      <input class="macro" id="in_cash" value="2231951" onchange="recalc()">
+    </div>
+    <div class="macro-grp">
+      <label>房貸餘額 (Lm)</label>
+      <input class="macro" id="in_lm" value="8800000" onchange="recalc()">
+    </div>
+    <div class="macro-grp">
+      <label>房產估值 (H)</label>
+      <input class="macro" id="in_h" value="11500000" onchange="recalc()">
+    </div>
+    <div class="macro-grp">
+      <label>美元匯率</label>
+      <div class="rate-badge" id="usdBadge">
+        <small>USDTWD=X 即時</small>
+        <span id="usdBadgeVal">—</span>
+      </div>
+    </div>
+    <div class="macro-grp" style="margin-left:4px;">
+      <label style="color:var(--mu);">API 設定</label>
+      <button class="btn-sec" onclick="document.getElementById('apiPanel').style.display=document.getElementById('apiPanel').style.display==='none'?'flex':'none'" style="font-size:11px;padding:4px 10px;">⚙️ API Key / Token</button>
+      <button class="btn-add" onclick="fetchAllDividends()" style="margin-top:3px;">🔄 更新配息</button>
+    </div>
+    <div class="macro-grp" style="border-left:2px solid var(--ac);padding-left:10px;margin-left:4px;">
+      <label style="color:var(--ac);font-weight:700;">📐 操作建議門檻（報酬率%）</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
+        <label style="font-size:10px;display:flex;flex-direction:column;gap:2px;color:var(--rd);">🔴減倉<input class="macro" id="th_h"  value="30"  onchange="THRESHOLDS.high=+this.value;recalc();" style="width:58px;border-color:rgba(239,68,68,.4);"></label>
+        <label style="font-size:10px;display:flex;flex-direction:column;gap:2px;color:var(--yw);">🟡收割<input class="macro" id="th_mh" value="15"  onchange="THRESHOLDS.midH=+this.value;recalc();" style="width:58px;border-color:rgba(245,158,11,.4);"></label>
+        <label style="font-size:10px;display:flex;flex-direction:column;gap:2px;color:var(--yw);">🟡加碼<input class="macro" id="th_ml" value="-10" onchange="THRESHOLDS.midL=+this.value;recalc();" style="width:58px;border-color:rgba(245,158,11,.4);"></label>
+        <label style="font-size:10px;display:flex;flex-direction:column;gap:2px;color:var(--gr);">🟢跌深<input class="macro" id="th_l"  value="-20" onchange="THRESHOLDS.low=+this.value;recalc();" style="width:58px;border-color:rgba(34,197,94,.4);"></label>
+      </div>
+    </div>
+  </div>
+  <!-- 隱藏 API 面板（預設收起） -->
+  <div id="apiPanel" style="display:none;gap:14px;flex-wrap:wrap;padding:10px 12px;margin-top:8px;background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.2);border-radius:8px;align-items:flex-start;">
+    <div style="font-size:10px;color:var(--mu);flex-basis:100%;margin-bottom:2px;">🔒 Key 僅存於你的瀏覽器 localStorage，不寫入 HTML，不傳給第三方，無使用期限。</div>
+    <div class="macro-grp">
+      <label style="color:var(--bl);font-weight:700;">🔑 Twelve Data Key <small style="font-weight:400;">（美股報價）</small></label>
+      <div style="display:flex;gap:4px;align-items:center;">
+        <input type="password" class="macro" id="in_tdkey" placeholder="貼上 API Key" style="width:200px;" oninput="localStorage.setItem('tdKey',this.value.trim())">
+        <button class="btn-sec" onclick="var e=document.getElementById('in_tdkey');e.type=e.type==='password'?'text':'password'" style="font-size:11px;padding:3px 7px;">👁</button>
+      </div>
+    </div>
+    <div class="macro-grp">
+      <label style="color:var(--gr);font-weight:700;">🏦 FinMind Token <small style="font-weight:400;">（台股配息自動更新）</small></label>
+      <div style="display:flex;gap:4px;align-items:center;">
+        <input type="password" class="macro" id="in_fmtoken" placeholder="貼上 Token" style="width:200px;" oninput="localStorage.setItem('fmToken',this.value.trim())">
+        <button class="btn-sec" onclick="var e=document.getElementById('in_fmtoken');e.type=e.type==='password'?'text':'password'" style="font-size:11px;padding:3px 7px;">👁</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ② 再平衡 -->
+<div class="sec">
+  <h2>⚖️ 再平衡導航（不含債券-類現金）</h2>
+  <div class="tw"><table>
+    <thead><tr>
+      <th class="L">類別</th>
+      <th class="L">策略備註 <span style="font-weight:400;font-size:10px;">（可編輯）</span></th>
+      <th>應有%</th><th>目前%</th>
+      <th>現值(TWD)</th><th>目標金額</th><th>差額</th>
+      <th>操作建議</th><th>進度</th>
+    </tr></thead>
+    <tbody id="pvtBody"></tbody>
+    <tfoot id="pvtFoot"></tfoot>
+  </table></div>
+</div>
+
+<!-- ③ 總表 -->
+<div class="sec">
+  <h2>📋 投資組合總表</h2>
+  <div class="legend">
+    <span class="leg"><span class="leg-dot" style="background:var(--ret-red)"></span>≥25%（紅）</span>
+    <span class="leg"><span class="leg-dot" style="background:var(--ret-blue)"></span>≥10%（藍）</span>
+    <span class="leg"><span class="leg-dot" style="background:var(--ret-yellow)"></span>≤−10%（黃）</span>
+    <span class="leg"><span class="leg-dot" style="background:var(--ret-green)"></span>≤−25%（綠）</span>
+    <span class="leg" style="margin-left:auto;font-size:10px;color:var(--mu);">✏️ 名稱/代碼/股數/成本 可點擊編輯</span>
+  </div>
+  <div class="tw"><table id="ptTable">
+    <thead><tr>
+      <th class="L" style="min-width:160px;">股票名稱</th>
+      <th class="L" style="min-width:110px;">代碼</th>
+      <th style="min-width:75px;">持有股數</th>
+      <th style="min-width:75px;">每股成本</th>
+      <th>成本(TWD)</th>
+      <th>今日現值</th>
+      <th>現值總額(TWD)</th>
+      <th>未實現損益</th>
+      <th>報酬率</th>
+      <th>資金占比</th>
+      <th></th>
+    </tr></thead>
+    <tbody id="ptBody"></tbody>
+    <tfoot id="ptFoot"></tfoot>
+  </table></div>
+
+  <!-- Add new stock bar -->
+  <div class="add-stock-bar">
+    <span style="font-size:11px;color:var(--gr);font-weight:700;">＋ 新增持股</span>
+    <label>類別
+      <select id="new_cat"></select>
+    </label>
+    <label>名稱
+      <input type="text" id="new_name" placeholder="股票名稱" style="min-width:110px;">
+    </label>
+    <label>Yahoo代碼
+      <input type="text" id="new_tick" placeholder="例: 2330.TW">
+    </label>
+    <label>股數
+      <input type="number" id="new_shares" placeholder="0" min="0">
+    </label>
+    <label>每股成本
+      <input type="number" id="new_persh" placeholder="0" min="0" step="0.01">
+    </label>
+    <label>幣別
+      <select id="new_cur"><option value="TWD">TWD</option><option value="USD">USD</option></select>
+    </label>
+    <button class="btn btn-pri" onclick="addNewStock()" style="margin-top:18px;">新增</button>
+  </div>
+
+  <!-- 投資借款部位 (was 質押借款) -->
+  <div class="loan-sep">
+    <div class="loan-lbl">🔒 投資借款部位 — 不計入投資組合及再平衡</div>
+    <div class="tw"><table id="plTable">
+      <thead><tr>
+        <th class="L" style="min-width:150px;">股票名稱</th>
+        <th class="L">Yahoo代碼</th>
+        <th>持有股數</th><th>借入成本/股</th>
+        <th>成本(TWD)</th><th>今日現值</th>
+        <th>現值總額(TWD)</th><th>未實現損益</th><th>報酬率</th><th>維持率</th><th>質押金額</th><th></th>
+      </tr></thead>
+      <tbody id="plBody"></tbody>
+    </table></div>
+    <div style="margin-top:8px;">
+      <button class="btn-add" onclick="addLoan()">＋ 新增借款部位</button>
+    </div>
+  </div>
+</div>
+
+<!-- ④ 美國個股占比 (was 主要個股合計) -->
+<div class="sec">
+  <h2>🔬 美國個股占比曝險（ETF內含 ＋ 直接持有，依金額排序）</h2>
+  <div class="tw"><table>
+    <thead><tr>
+      <th class="L">個股</th>
+      <th>ETF內含(TWD)</th><th>直接持有(TWD)</th>
+      <th>合計(TWD)</th><th>佔投資組合%</th>
+    </tr></thead>
+    <tbody id="expBody"></tbody>
+  </table></div>
+</div>
+
+<!-- ⑤ 股利追蹤 -->
+<div class="sec">
+  <h2>💵 股利追蹤</h2>
+  <div style="display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap;">
+    <div class="mc" style="flex:1;min-width:140px;">
+      <div class="lb">未來30天預估股利</div>
+      <div class="v" id="div_upcoming" style="color:var(--yw);">—</div>
+      <div class="sb">除息日在本月內</div>
+    </div>
+    <div class="mc" style="flex:1;min-width:140px;">
+      <div class="lb">今年已領股利 (YTD)</div>
+      <div class="v" id="div_ytd" style="color:var(--gr);">—</div>
+      <div class="sb">累計已入帳</div>
+    </div>
+    <div class="mc" style="flex:1;min-width:140px;">
+      <div class="lb">本年度累計殖利率</div>
+      <div class="v" id="div_yield" style="color:var(--gr);">—</div>
+      <div class="sb">YTD股利 / 全部持股成本</div>
+    </div>
+  </div>
+  <!-- 上表：近一個月除息通知 -->
+  <div class="div-sub-h">📅 近一個月除息通知</div>
+  <div class="tw"><table>
+    <thead><tr>
+      <th class="L">股票名稱</th><th>除息日</th><th>發放日</th><th>距除息(天)</th>
+      <th>每股股利</th><th>持有股數</th><th>預估金額</th><th></th>
+    </tr></thead>
+    <tbody id="divUpcomingBody"></tbody>
+  </table></div>
+  <div style="margin-top:6px;">
+    <button class="btn-add" onclick="addDividend()">＋ 新增即將到來股利</button>
+  </div>
+
+  <!-- 下表：今年度累計股利 -->
+  <div class="div-sub-h" style="margin-top:14px;">📊 今年度累計股利（2026年 1月–5/11）<span class="est-tag">估計值可點擊修改</span></div>
+  <div class="tw"><table>
+    <thead><tr>
+      <th class="L">股票名稱</th><th class="L">說明</th><th>除息日</th>
+      <th>每股</th><th>股數</th><th>金額(TWD)</th><th>入帳</th><th></th>
+    </tr></thead>
+    <tbody id="divYtdBody"></tbody>
+    <tfoot id="divYtdFoot"></tfoot>
+  </table></div>
+  <div style="margin-top:6px;">
+    <button class="btn-add" onclick="addYtdRecord()">＋ 新增今年股利記錄</button>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+// ═══════════════════════════════════════════════
+// PORTFOLIO DATA
+// ═══════════════════════════════════════════════
+let P = [
+  {cat:'台灣大盤ETF',   name:'00631L 元大台灣正2',      tick:'00631L.TW', shares:77000,  perSh:9.49,    cost:730730,    price:32.66,  cur:'TWD', note:'上限20%'},
+  {cat:'台灣大盤ETF',   name:'00981A 統一台股增長ETF',   tick:'00981A.TW', shares:21000,  perSh:18.465,  cost:387765,    price:29.69,  cur:'TWD', note:'上限10%'},
+  {cat:'台灣大盤ETF',   name:'00850 元大台灣ESG',        tick:'00850.TW',  shares:1000,   perSh:15,      cost:15000,     price:83.2,   cur:'TWD', note:''},
+  {cat:'台灣大盤ETF',   name:'野村高科技基金',           tick:null,        shares:314,    perSh:92.3,    cost:28999.74,  price:119.54, cur:'TWD', note:'每月28付3000'},
+  {cat:'成長-美股ETF',  name:'00893 國泰電動車',         tick:'00893.TW',  shares:3000,   perSh:12.48,   cost:37440,     price:45.05,  cur:'TWD', note:'零成本'},
+  {cat:'成長-美股ETF',  name:'00924 復華S&P500',         tick:'00924.TW',  shares:6747,   perSh:27.4,    cost:184867.80, price:31.75,  cur:'TWD', note:'每月定額17000'},
+  {cat:'成長-美股ETF',  name:'00830 國泰費城半導體',     tick:'00830.TW',  shares:6000,   perSh:38.84,   cost:233040,    price:82.3,   cur:'TWD', note:''},
+  {cat:'成長-美股ETF',  name:'TOPT iShares美國20大',     tick:'TOPT',      shares:242,    perSh:26.84,   cost:204000.51, price:33.47,  cur:'USD', note:'上限10%'},
+  {cat:'成長-美股ETF',  name:'00990A 元大全球AI主動式',  tick:'00990A.TW', shares:15000,  perSh:10.4,    cost:156000,    price:17.08,  cur:'TWD', note:''},
+  {cat:'成長-美股ETF',  name:'00910 第一金太空衛星',     tick:'00910.TW',  shares:1000,   perSh:55.25,   cost:55250,     price:71.5,   cur:'TWD', note:''},
+  {cat:'成長-國外基金', name:'群益印度基金',             tick:null,        shares:7395.3, perSh:33.13,   cost:245006.29, price:31.07,  cur:'TWD', note:'每月3號'},
+  {cat:'成長-國外基金', name:'00887 永豐中國科技50大',   tick:'00887.TW',  shares:15000,  perSh:12.5,    cost:187500,    price:15.23,  cur:'TWD', note:'無配息'},
+  {cat:'成長-美股個股', name:'Uipath PATH',              tick:'PATH',      shares:50,     perSh:23.91,   cost:37547.67,  price:10.79,  cur:'USD', note:''},
+  {cat:'成長-美股個股', name:'蘋果 AAPL',               tick:'AAPL',      shares:2,      perSh:171.43,  cost:10768.38,  price:211.16, cur:'USD', note:''},
+  {cat:'成長-美股個股', name:'Nvidia NVDA',              tick:'NVDA',      shares:30,     perSh:185.283, cost:174578.27, price:115.13, cur:'USD', note:'富邦16 元大14'},
+  {cat:'成長-美股個股', name:'禮來 LLY',                tick:'LLY',       shares:5,      perSh:930.93,  cost:146190.92, price:748.08, cur:'USD', note:''},
+  {cat:'成長-美股個股', name:'特斯拉 TSLA',              tick:'TSLA',      shares:19,     perSh:400.172, cost:238799.64, price:321.46, cur:'USD', note:'富邦11 元大8'},
+  {cat:'成長-美股個股', name:'Google GOOGL',             tick:'GOOGL',     shares:17,     perSh:300.142, cost:153072.42, price:160.01, cur:'USD', note:''},
+  {cat:'成長-美股個股', name:'PANW',                     tick:'PANW',      shares:7,      perSh:168.169, cost:36972.38,  price:187.95, cur:'USD', note:''},
+  {cat:'成長-美股個股', name:'STCE 虛擬幣',              tick:null,        shares:10,     perSh:68.53,   cost:21523.56,  price:73.62,  cur:'USD', note:'手動'},
+  {cat:'波段-個股',     name:'生達 1620',               tick:'1620.TW',   shares:2000,   perSh:55.9,    cost:111800,    price:61.1,   cur:'TWD', note:''},
+  {cat:'波段-個股',     name:'鈊象 3293',               tick:'3293.TW',   shares:100,    perSh:886,     cost:88600,     price:735,    cur:'TWD', note:''},
+  {cat:'波段-個股',     name:'大亞 1609',               tick:'1609.TW',   shares:192,    perSh:1,       cost:192,       price:36.35,  cur:'TWD', note:''},
+  {cat:'波段-個股',     name:'奇鋐 3017',               tick:'3017.TW',   shares:100,    perSh:769,     cost:76900,     price:2555,   cur:'TWD', note:''},
+  {cat:'波段-個股',     name:'緯穎 6669',               tick:'6669.TW',   shares:10,     perSh:4610,    cost:46100,     price:5340,   cur:'TWD', note:''},
+  {cat:'存股-ETF',      name:'00919 群益台灣精選高息',  tick:'00919.TW',  shares:20000,  perSh:20.2,    cost:404000,    price:25.75,  cur:'TWD', note:'中信15000/國泰5000'},
+  {cat:'存股-個股',     name:'台積電 2330',             tick:'2330.TW',   shares:100,    perSh:1795,    cost:179500,    price:2235,   cur:'TWD', note:''},
+  {cat:'存股-個股',     name:'中信金 2891',             tick:'2891.TW',   shares:4000,   perSh:28.64,   cost:114560,    price:55.3,   cur:'TWD', note:''},
+  {cat:'債券',          name:'00937B 群益ESG投等債20+', tick:'00937B.TW', shares:23000,  perSh:15.07,   cost:346610,    price:14.77,  cur:'TWD', note:'月配 20萬預備金'},
+  {cat:'債券-類現金',   name:'00772B 中信公司債',       tick:'00772B.TW', shares:9000,   perSh:34.4,    cost:309600,    price:33.57,  cur:'TWD', note:'月配'},
+  {cat:'債券-類現金',   name:'00719B 元大美債1-3',      tick:'00719B.TW', shares:9000,   perSh:31.28,   cost:281520,    price:30.77,  cur:'TWD', note:'貸款預備池'},
+];
+
+let LOAN = [
+  {name:'鴻海 2317', tick:'2317.TW', shares:1000, perSh:242, cost:242000, price:252, cur:'TWD', pledgeAmt:400000, note:'維持率≥140%'},
+];
+
+// 再平衡目標（不含債券-類現金，類現金已併入可用現金）
+const TARGETS = {
+  '台灣大盤ETF':   {pct:.31, strat:'正2:20% ＋ 00981A:10%'},
+  '成長-美股ETF':  {pct:.20, strat:'00924、TOPT'},
+  '成長-國外基金': {pct:.05, strat:'印度基金 ＋ 中國科技'},
+  '成長-美股個股': {pct:.10, strat:'Nvidia 40% / Tesla 30% / Google 30%'},
+  '波段-個股':     {pct:.06, strat:'儘快賣掉，轉債券停泊'},
+  '存股-ETF':      {pct:.05, strat:'00919，填息後轉正2'},
+  '存股-個股':     {pct:.08, strat:'中信金 ＋ 台積電'},
+  '債券':          {pct:.05, strat:'月配，目標存到288萬'},
+};
+const CAT_ORDER = Object.keys(TARGETS);
+const CASH_LIKE_CATS = ['債券-類現金'];
+
+const ALL_CATS = [...CAT_ORDER, ...CASH_LIKE_CATS];
+
+const ETF_W = {
+  '00893':  {NVDA:.1521, TSLA:.1633, AMD:.1363},
+  '00990A': {NVDA:.0812, MSFT:.0566, GOOGL:.0617, AVGO:.0587, META:.07, AMZN:.0278, LLY:.0098, TSM:.0592},
+  '00830':  {NVDA:.1243, AVGO:.0845, AMD:.0769, TSM:.0399},
+  '00924':  {NVDA:.1296, TSLA:.0286, MSFT:.0924, AAPL:.0595, GOOGL:.1039, AVGO:.0486, META:.0427, AMZN:.0387, AMD:.0103, LLY:.0299},
+  'TOPT':   {NVDA:.154,  TSLA:.035,  MSFT:.126,  AAPL:.141,  GOOGL:.115, AVGO:.045,  META:.058,  AMZN:.065,  AMD:.018,  LLY:.038},
+};
+const DIRECT_MAP = {NVDA:'Nvidia NVDA', TSLA:'特斯拉 TSLA', GOOGL:'Google GOOGL', LLY:'禮來 LLY', AAPL:'蘋果 AAPL', PATH:'Uipath PATH', PANW:'PANW'};
+
+// 股利追蹤 — 即將到來 / 未來（exDate=除息日, payDate=發放日）
+let DIVIDENDS = [
+  {stock:'00937B 群益ESG投等債20+', perShare:0.023, exDate:'2026-05-15', payDate:'2026-05-22', shares:23000, note:'5月月配'},
+  {stock:'00772B 中信公司債',       perShare:0.028, exDate:'2026-05-22', payDate:'2026-05-29', shares:9000,  note:'5月月配'},
+  {stock:'00719B 元大美債1-3',      perShare:0.021, exDate:'2026-05-27', payDate:'2026-06-03', shares:9000,  note:'5月月配'},
+  {stock:'00919 群益台灣精選高息',  perShare:0.12,  exDate:'2026-06-13', payDate:'2026-06-23', shares:20000, note:'6月月配'},
+];
+
+// 今年度累計股利記錄（2026 Jan–May11）— 金額為估計值，可點擊欄位修改
+let YTD_DIVS = [
+  // 00919 群益台灣精選高息（月配，20,000股）
+  {stock:'00919 群益台灣精選高息', shares:20000, perShare:0.12, date:'2026-01-16', note:'1月', received:true, est:true},
+  {stock:'00919 群益台灣精選高息', shares:20000, perShare:0.12, date:'2026-02-13', note:'2月', received:true, est:true},
+  {stock:'00919 群益台灣精選高息', shares:20000, perShare:0.13, date:'2026-03-13', note:'3月', received:true, est:true},
+  {stock:'00919 群益台灣精選高息', shares:20000, perShare:0.12, date:'2026-04-16', note:'4月', received:true, est:true},
+  // 00937B 群益ESG投等債20+（月配，23,000股）
+  {stock:'00937B 群益ESG投等債20+', shares:23000, perShare:0.022, date:'2026-01-15', note:'1月', received:true, est:true},
+  {stock:'00937B 群益ESG投等債20+', shares:23000, perShare:0.023, date:'2026-02-14', note:'2月', received:true, est:true},
+  {stock:'00937B 群益ESG投等債20+', shares:23000, perShare:0.023, date:'2026-03-13', note:'3月', received:true, est:true},
+  {stock:'00937B 群益ESG投等債20+', shares:23000, perShare:0.023, date:'2026-04-15', note:'4月', received:true, est:true},
+  // 00772B 中信公司債（月配，9,000股）
+  {stock:'00772B 中信公司債', shares:9000, perShare:0.028, date:'2026-01-22', note:'1月', received:true, est:true},
+  {stock:'00772B 中信公司債', shares:9000, perShare:0.028, date:'2026-02-20', note:'2月', received:true, est:true},
+  {stock:'00772B 中信公司債', shares:9000, perShare:0.028, date:'2026-03-20', note:'3月', received:true, est:true},
+  {stock:'00772B 中信公司債', shares:9000, perShare:0.028, date:'2026-04-22', note:'4月', received:true, est:true},
+  // 00719B 元大美債1-3（月配，9,000股）
+  {stock:'00719B 元大美債1-3', shares:9000, perShare:0.021, date:'2026-01-24', note:'1月', received:true, est:true},
+  {stock:'00719B 元大美債1-3', shares:9000, perShare:0.021, date:'2026-02-25', note:'2月', received:true, est:true},
+  {stock:'00719B 元大美債1-3', shares:9000, perShare:0.021, date:'2026-03-25', note:'3月', received:true, est:true},
+  {stock:'00719B 元大美債1-3', shares:9000, perShare:0.021, date:'2026-04-24', note:'4月', received:true, est:true},
+  // 00850 元大台灣ESG（季配，1,000股）
+  {stock:'00850 元大台灣ESG', shares:1000, perShare:0.55, date:'2026-03-20', note:'Q1', received:true, est:true},
+  // 00893 國泰電動車（季配，3,000股）
+  {stock:'00893 國泰電動車', shares:3000, perShare:0.11, date:'2026-03-17', note:'Q1', received:true, est:true},
+  // 00924 復華S&P500（季配，6,747股）
+  {stock:'00924 復華S&P500', shares:6747, perShare:0.10, date:'2026-04-10', note:'Q1', received:true, est:true},
+  // 00830 國泰費城半導體（季配，6,000股）
+  {stock:'00830 國泰費城半導體', shares:6000, perShare:0.16, date:'2026-03-18', note:'Q1', received:true, est:true},
+  // 00910 第一金太空衛星（季配，1,000股）
+  {stock:'00910 第一金太空衛星', shares:1000, perShare:0.08, date:'2026-03-20', note:'Q1', received:true, est:true},
+  // 00919 群益台灣精選高息（5月）
+  {stock:'00919 群益台灣精選高息', shares:20000, perShare:0.12, date:'2026-05-08', note:'5月', received:true, est:true},
+  // 台積電 2330（季配，100股）
+  {stock:'台積電 2330', shares:100, perShare:3.5, date:'2026-03-25', note:'Q1', received:true, est:true},
+  // 中信金 2891（年配預估半年，4,000股）
+  {stock:'中信金 2891', shares:4000, perShare:1.45, date:'2026-03-20', note:'股利', received:true, est:true},
+  // 鴻海 2317（年配預估，1,000股）
+  {stock:'鴻海 2317', shares:1000, perShare:4.5, date:'2026-03-27', note:'股利', received:true, est:true},
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let usdRate = 31.41;
+let liveP = {};
+let portV = {};
+let portCostGlobal = 0;   // 全部持股成本（供殖利率計算用）
+let divCollapsed = {};    // 股利群組收折狀態 {stock: true/false}
+// 系統操作建議門檻（報酬率%，可在介面調整）
+let THRESHOLDS = {high:30, midH:15, midL:-10, low:-20};
+
+// ═══════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════
+const f  = (n,d=0) => isNaN(n)||!isFinite(n) ? '—' : n.toLocaleString('zh-TW',{minimumFractionDigits:d,maximumFractionDigits:d});
+const pct= (n,d=1) => isNaN(n)||!isFinite(n) ? '—' : n.toFixed(d)+'%';
+const clr= n => n>0?'pos':n<0?'neg':'neu';
+const valTWD = h => { const p=liveP[h.tick]??h.price; return h.cur==='USD'?h.shares*p*usdRate:h.shares*p; };
+const rawP   = h => liveP[h.tick]??h.price;
+const pTWD   = h => { const p=rawP(h); return h.cur==='USD'?p*usdRate:p; };
+
+function retClass(ret){
+  if(ret>=25) return 'rr-red';
+  if(ret>=10) return 'rr-blue';
+  if(ret<=-25) return 'rr-green';
+  if(ret<=-10) return 'rr-yellow';
+  return '';
+}
+function retIcon(ret){
+  if(ret>=25)  return '<span class="ri">▲</span>';
+  if(ret>=10)  return '<span class="ri">↑</span>';
+  if(ret<=-25) return '<span class="ri">▼</span>';
+  if(ret<=-10) return '<span class="ri">↓</span>';
+  return '<span class="ri" style="color:transparent">○</span>';
+}
+
+// ═══════════════════════════════════════════════
+// FETCH PRICES
+// ═══════════════════════════════════════════════
+function tOut(fn,ms){
+  return new Promise((res,rej)=>{
+    const t=setTimeout(()=>rej(new Error('timeout')),ms);
+    fn().then(v=>{clearTimeout(t);res(v);}).catch(e=>{clearTimeout(t);rej(e);});
+  });
+}
+
+// ── Yahoo Finance（透過 CORS proxy，作為通用備援）────────────────
+async function fetchYahoo(syms){
+  if(!syms.length) return [];
+  const s=syms.join(',');
+  const yhUrl=`https://query1.finance.yahoo.com/v7/finance/quote?symbols=${s}&fields=regularMarketPrice,currency`;
+  const attempts=[
+    tOut(async()=>{
+      const r=await fetch(`https://corsproxy.io/?${encodeURIComponent(yhUrl)}`);
+      const d=await r.json();
+      if(!d?.quoteResponse?.result?.length) throw 0;
+      return d.quoteResponse.result;
+    },9000),
+    tOut(async()=>{
+      const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(yhUrl)}`);
+      const w=await r.json(); const d=JSON.parse(w.contents);
+      if(!d?.quoteResponse?.result?.length) throw 0;
+      return d.quoteResponse.result;
+    },12000),
+    tOut(async()=>{
+      const r=await fetch(`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(yhUrl)}`);
+      const d=await r.json();
+      if(!d?.quoteResponse?.result?.length) throw 0;
+      return d.quoteResponse.result;
+    },12000),
+    tOut(async()=>{
+      const r=await fetch(yhUrl);
+      const d=await r.json();
+      if(!d?.quoteResponse?.result?.length) throw 0;
+      return d.quoteResponse.result;
+    },6000),
+  ];
+  return Promise.any(attempts);
+}
+
+// ── TWSE 台灣證券交易所官方 API（台股主要來源）─────────────────────
+async function fetchTWSE(twTickers){
+  // 先試 tse_（上市），失敗的再試 otc_（上櫃）
+  const toExCh=(prefix,tks)=>tks.map(t=>`${prefix}${t.replace('.TW','').toLowerCase()}.tw`).join('%7C');
+  const parseResult=(arr)=>{
+    const out={};
+    (arr||[]).forEach(q=>{
+      const sym=q.c.toUpperCase()+'.TW';
+      const price=(q.z&&q.z!=='-')?parseFloat(q.z):(q.y&&q.y!=='-')?parseFloat(q.y):NaN;
+      if(!isNaN(price)&&price>0) out[sym]=price;
+    });
+    return out;
+  };
+
+  // 嘗試抓取單一 prefix（tse_ 或 otc_），支援直連 + CORS proxy 備援
+  async function tryFetch(prefix, tks){
+    const exCh=toExCh(prefix,tks);
+    const base=`https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${exCh}&json=1&delay=0`;
+    const proxied=`https://corsproxy.io/?${encodeURIComponent(base)}`;
+    const attempts=[
+      tOut(async()=>{ const r=await fetch(base);  const d=await r.json(); if(!d.msgArray) throw 0; return d; },9000),
+      tOut(async()=>{ const r=await fetch(proxied);const d=await r.json(); if(!d.msgArray) throw 0; return d; },11000),
+      tOut(async()=>{ const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(base)}`); const w=await r.json(); return JSON.parse(w.contents); },13000),
+    ];
+    const d=await Promise.any(attempts);
+    return parseResult(d.msgArray);
+  }
+
+  // 1st pass: TSE
+  let found={};
+  try{ found=await tryFetch('tse_',twTickers); console.log('[TWSE TSE]',found); }catch(e){ console.warn('[TWSE TSE] failed',e); }
+
+  // 2nd pass: OTC for any still missing
+  const missing=twTickers.filter(t=>!found[t]);
+  if(missing.length){
+    try{ const r=await tryFetch('otc_',missing); Object.assign(found,r); console.log('[TWSE OTC]',r); }
+    catch(e){ console.warn('[TWSE OTC] failed',e); }
+  }
+  return found;
+}
+
+// ── Twelve Data（美股主力，支援批次，每日800次免費）──────────────
+async function fetchTwelveData(usTickers,apiKey){
+  if(!usTickers.length||!apiKey){ console.log('[TD] skipped: no tickers or no key'); return {}; }
+  const syms=usTickers.join(',');
+  const tdUrl=`https://api.twelvedata.com/price?symbol=${syms}&apikey=${apiKey}`;
+  console.log('[TD] fetching:', syms);
+  const attempts=[
+    tOut(async()=>{const r=await fetch(tdUrl);return r.json();},8000),
+    tOut(async()=>{
+      const r=await fetch(`https://corsproxy.io/?${encodeURIComponent(tdUrl)}`);
+      return r.json();
+    },10000),
+    tOut(async()=>{
+      const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(tdUrl)}`);
+      const w=await r.json(); return JSON.parse(w.contents);
+    },12000),
+  ];
+  let raw;
+  try{ raw=await Promise.any(attempts); }catch(e){ console.warn('[TD] all attempts failed',e); return {}; }
+  console.log('[TD] raw response:', raw);
+  const out={};
+  if(usTickers.length===1){
+    const p=parseFloat(raw?.price);
+    if(!isNaN(p)&&p>0) out[usTickers[0]]=p;
+  } else {
+    usTickers.forEach(sym=>{
+      const p=parseFloat(raw?.[sym]?.price);
+      if(!isNaN(p)&&p>0) out[sym]=p;
+    });
+  }
+  console.log('[TD] parsed:', out);
+  return out;
+}
+
+// ── FinMind 台股配息自動抓取 ──────────────────────────────────────
+async function fetchFinMindDividends(token){
+  if(!token) return;
+  const today=new Date().toISOString().slice(0,10);
+  const yr=new Date().getFullYear();
+  const startOfYear=yr+'-01-01';
+
+  // 建立股票清單（TW股 + 借款部位）
+  const stockMap={};
+  [...P,...LOAN].filter(h=>h.tick?.endsWith('.TW')).forEach(h=>{
+    const id=h.tick.replace('.TW','');
+    if(!stockMap[id]) stockMap[id]={id,name:h.name,shares:h.shares};
+    else stockMap[id].shares=Math.max(stockMap[id].shares,h.shares);
+  });
+
+  const newDiv=[],newYtd=[];
+  const stocks=Object.values(stockMap);
+
+  for(const stock of stocks){
+    try{
+      const url=`https://api.finmindtrade.com/api/v4/data?dataset=TaiwanStockDividend&data_id=${stock.id}&start_date=${startOfYear}&token=${token}`;
+      const attempts=[
+        tOut(async()=>{const r=await fetch(url);return r.json();},12000),
+        tOut(async()=>{
+          const r=await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+          return r.json();
+        },14000),
+      ];
+      let res;
+      try{ res=await Promise.any(attempts); }catch(e){ continue; }
+
+      if(res?.status===200&&res.data?.length){
+        res.data.forEach(d=>{
+          const cash=parseFloat(d.CashEarningsDistribution||0)+parseFloat(d.CashStatutorySurplus||0);
+          const exDate=d.CashExDividendTradingDate;
+          const payDate=d.CashDividendPaymentDate||null;
+          if(cash<=0||!exDate||exDate==='') return;
+
+          const note=d.year||'';
+          if(exDate>=today){
+            // 即將到來
+            newDiv.push({stock:stock.name,perShare:cash,exDate,payDate,shares:stock.shares,note});
+          } else if(exDate>=startOfYear){
+            // 今年已過
+            const paid=payDate?new Date(payDate)<=new Date():new Date(exDate)<=new Date();
+            newYtd.push({stock:stock.name,shares:stock.shares,perShare:cash,date:exDate,note,received:paid,est:false});
+          }
+        });
+      }
+      await new Promise(r=>setTimeout(r,150)); // 輕量 rate limit
+    }catch(e){}
+  }
+
+  if(newDiv.length)  DIVIDENDS=newDiv.sort((a,b)=>a.exDate.localeCompare(b.exDate));
+  if(newYtd.length)  YTD_DIVS=newYtd.sort((a,b)=>a.date.localeCompare(b.date));
+  save();
+}
+
+// ── 配息全更新（含 FinMind + 顯示）────────────────────────────────
+async function fetchAllDividends(){
+  const token=(document.getElementById('in_fmtoken')?.value||localStorage.getItem('fmToken')||'').trim();
+  if(!token){ showErr('請先填入 FinMind Token 以自動更新配息資料'); return; }
+  document.getElementById('ts').textContent='配息更新中…';
+  await fetchFinMindDividends(token);
+  renderDividends();
+  document.getElementById('ts').textContent='配息已更新：'+new Date().toLocaleString('zh-TW');
+}
+
+// ── 主要更新函式：TWSE（台股）+ AV/Yahoo（美股）+ Yahoo（匯率）────
+async function fetchAllPrices(){
+  setDot('spin');
+  document.getElementById('ts').textContent='更新中…';
+  hideErr();
+
+  const allTicks=[...new Set([
+    ...P.filter(h=>h.tick).map(h=>h.tick),
+    ...LOAN.filter(h=>h.tick).map(h=>h.tick),
+  ])];
+  const twTicks=allTicks.filter(t=>t.endsWith('.TW'));
+  const usTicks=allTicks.filter(t=>!t.endsWith('.TW'));
+  const tdKey=(document.getElementById('in_tdkey')?.value||localStorage.getItem('tdKey')||'').trim();
+  const errs=[];
+
+  const srcs=[];  // 成功來源記錄
+
+  // 1. 台股：TWSE 官方 API（主）→ Yahoo fallback
+  if(twTicks.length){
+    try{
+      const twData=await fetchTWSE(twTicks);
+      const got=Object.keys(twData);
+      if(got.length){ Object.assign(liveP,twData); srcs.push('TWSE('+got.length+'檔)'); }
+      const missing=twTicks.filter(t=>!liveP[t]);
+      if(missing.length){
+        try{
+          const res=await fetchYahoo(missing);
+          res.forEach(q=>{if(q.regularMarketPrice>0) liveP[q.symbol]=q.regularMarketPrice;});
+          srcs.push('Yahoo備援(台股)');
+        }catch(e){ errs.push('台股備援'); }
+      }
+    }catch(e){
+      errs.push('TWSE');
+      try{
+        const res=await fetchYahoo(twTicks);
+        res.forEach(q=>{if(q.regularMarketPrice>0) liveP[q.symbol]=q.regularMarketPrice;});
+        srcs.push('Yahoo(台股)');
+      }catch(e2){ errs.push('Yahoo(台股)'); }
+    }
+  }
+
+  // 2. 美股：Twelve Data（主）→ Yahoo fallback
+  if(usTicks.length){
+    let tdGot=[];
+    if(tdKey){
+      const tdData=await fetchTwelveData(usTicks,tdKey);
+      const got=Object.keys(tdData);
+      if(got.length){ Object.assign(liveP,tdData); tdGot=got; srcs.push('TwelveData('+got.length+'檔)'); }
+    } else { errs.push('未填Twelve Data Key'); }
+    const usRemain=usTicks.filter(t=>!tdGot.includes(t));
+    if(usRemain.length){
+      try{
+        const res=await fetchYahoo(usRemain);
+        res.forEach(q=>{if(q.regularMarketPrice>0) liveP[q.symbol]=q.regularMarketPrice;});
+        srcs.push('Yahoo(美股)');
+      }catch(e){ errs.push('Yahoo(美股)'); }
+    }
+  }
+
+  // 3. USD/TWD 匯率（Yahoo Finance）
+  try{
+    const res=await fetchYahoo(['USDTWD=X']);
+    res.forEach(q=>{liveP[q.symbol]=q.regularMarketPrice;});
+    srcs.push('匯率');
+  }catch(e){ errs.push('匯率'); }
+
+  if(liveP['USDTWD=X']) usdRate=liveP['USDTWD=X'];
+  localStorage.setItem('lp',JSON.stringify(liveP));
+  localStorage.setItem('usd',usdRate);
+  console.log('[prices] liveP:', liveP, '| errors:', errs);
+
+  if(errs.length){
+    setDot('err');
+    document.getElementById('ts').textContent='⚠️ '+errs.join('、')+(srcs.length?'（已更新：'+srcs.join('、')+'）':'');
+    showErr('部分數據源失敗（'+errs.join('、')+'），其餘已更新。可點「更新」重試。');
+  }else{
+    setDot('ok');
+    document.getElementById('ts').textContent='✅ 更新完成 '+new Date().toLocaleTimeString('zh-TW')+' ｜ '+srcs.join('、');
+  }
+  recalc();
+}
+
+const setDot = s => document.getElementById('dot').className='dot '+s;
+const showErr= m => { const e=document.getElementById('errbar'); e.textContent='⚠️ '+m; e.style.display='block'; };
+const hideErr= () => document.getElementById('errbar').style.display='none';
+
+// ═══════════════════════════════════════════════
+// RECALC — main computation
+// ═══════════════════════════════════════════════
+function recalc(){
+  const LS   = +document.getElementById('in_ls').value  || 0;
+  const CASH = +document.getElementById('in_cash').value|| 0;
+  const LM   = +document.getElementById('in_lm').value  || 0;
+  const H    = +document.getElementById('in_h').value   || 0;
+
+  // Separate cash-like from investment portfolio
+  const cashLikeItems = P.filter(h => CASH_LIKE_CATS.includes(h.cat));
+  const portItems     = P.filter(h => !CASH_LIKE_CATS.includes(h.cat));
+
+  const cashLikeV = cashLikeItems.reduce((a,h) => a+valTWD(h), 0);
+
+  let portTot=0, portCost=0;
+  const catV={}, catC={};
+  portV={};
+
+  P.forEach(h => {
+    const v=valTWD(h);
+    portV[h.name]=v;
+    if(!CASH_LIKE_CATS.includes(h.cat)){
+      portTot  += v;
+      portCost += h.cost;
+      catV[h.cat]=(catV[h.cat]||0)+v;
+      catC[h.cat]=(catC[h.cat]||0)+h.cost;
+    }
+  });
+
+  portCostGlobal = P.reduce((a,h)=>a+h.cost,0); // 全部持股成本（含類現金）
+  const portPNL = portTot - portCost;
+  const portRet = portCost>0 ? portPNL/portCost*100 : 0;
+
+  // 可用現金 = 現金 + 類現金ETF
+  const availCash = CASH + cashLikeV;
+
+  // 投資借款部位
+  const loanVal  = LOAN.reduce((a,h)=>a+valTWD(h),0);
+  const loanAmt  = LOAN.reduce((a,h)=>a+(h.pledgeAmt||0),0);
+  const loanCost = LOAN.reduce((a,h)=>a+(h.cost||0),0);
+  const loanPnl  = loanVal - loanCost;  // 借款部位未實現損益 = 現值 − 買入成本
+
+  // 金融資產淨值 = 投資組合總值 + 借款部位總現值 + 可用現金 - 股票貸款
+  const nav = portTot + loanVal + availCash - LS;
+
+  // 負債率 = 總負債 / 總資產
+  const totalDebt  = LS + LM + loanAmt;
+  const totalAsset = portTot + cashLikeV + CASH + H + loanVal;
+  const dr = totalAsset>0 ? totalDebt/totalAsset*100 : 0;
+
+  // 系統操作建議（依整體投資組合報酬率，門檻可調整）
+  const T=THRESHOLDS;
+  let sysOp, sysOpSub;
+  if(portRet>=T.high)       { sysOp='🔴 大幅獲利 建議減倉'; sysOpSub=`報酬率 ${pct(portRet)} ≥ ${T.high}% — 考慮分批出場`; }
+  else if(portRet>=T.midH)  { sysOp='🟡 穩定獲利 部分收割'; sysOpSub=`報酬率 ${pct(portRet)} ≥ ${T.midH}% — 維持觀察`; }
+  else if(portRet<=T.low)   { sysOp='🟢 跌深加碼 考慮進場'; sysOpSub=`報酬率 ${pct(portRet)} ≤ ${T.low}% — 分批佈局`; }
+  else if(portRet<=T.midL)  { sysOp='🟡 回檔區間 小量加碼'; sysOpSub=`報酬率 ${pct(portRet)} ≤ ${T.midL}% — 謹慎操作`; }
+  else                      { sysOp='⚪ 正常範圍 維持配置'; sysOpSub=`報酬率 ${pct(portRet)}`; }
+
+  // 正2導航燈號
+  const p2=P.find(h=>h.name.includes('正2'));
+  let nav2='⚪ 觀察中', nav2sub='尚未達觸發點';
+  if(p2){
+    const r2=(rawP(p2)-p2.perSh)/p2.perSh*100;
+    if(r2>=50)       { nav2='🔴 強勢過熱'; nav2sub='報酬率'+pct(r2)+' — 收割獲利'; }
+    else if(r2>=25)  { nav2='🟡 持續偏強'; nav2sub='報酬率'+pct(r2)+' — 注意風控'; }
+    else if(r2<=-25) { nav2='🟢 跌深買進'; nav2sub='報酬率'+pct(r2)+' — 分批進場'; }
+    else             { nav2='⚪ 觀察中';   nav2sub='正2報酬率 '+pct(r2); }
+  }
+
+  // Render sections
+  renderPortfolio(portTot, portCost);
+  renderLoan();
+  renderPivot(catV, portTot);
+  renderExposure(portTot);
+  renderDividends();
+
+  // Update USD display
+  document.getElementById('usdBadgeVal').textContent = usdRate.toFixed(2);
+  document.getElementById('rateDisp').textContent = 'USD/TWD '+usdRate.toFixed(2);
+
+  // Update metrics
+  G('m_ptot',   f(portTot));
+  G('m_pnl',    (portPNL>=0?'+':'')+f(portPNL)); GC('m_pnl','v '+(portPNL>=0?'pos':'neg'));
+  G('m_pnl_sub','報酬率 '+pct(portRet));
+  G('m_cash',   f(availCash));
+  G('m_cash_sub','現金'+f(CASH)+' ＋ 類現金'+f(cashLikeV));
+  G('m_nav',    f(nav));     GC('m_nav','v '+(nav>=0?'pos':'neg'));
+  G('m_sysop',  sysOp);     G('m_sysop_sub', sysOpSub);
+  G('m_nav2',   nav2);      G('m_nav2_sub', nav2sub);
+  G('m_dr',     pct(dr));   GC('m_dr','v '+(dr<70?'pos':dr<80?'':'neg'));
+  G('m_pledge', (loanPnl>=0?'+':'')+f(loanPnl));
+  GC('m_pledge','v '+(loanPnl>=0?'pos':'neg'));
+}
+const G  = (id,v) => { const e=document.getElementById(id); if(e) e.textContent=v; };
+const GC = (id,c) => { const e=document.getElementById(id); if(e) e.className=c; };
+
+// ═══════════════════════════════════════════════
+// RENDER PORTFOLIO
+// ═══════════════════════════════════════════════
+function renderPortfolio(portTot, portCost){
+  let html='', sumV=0, sumC=0;
+  const cats = [...new Set(ALL_CATS.filter(c => P.some(h=>h.cat===c)))];
+
+  cats.forEach(cat=>{
+    const items = P.map((h,i)=>({h,i})).filter(({h})=>h.cat===cat);
+    if(!items.length) return;
+
+    // Sort by return rate descending within category
+    items.sort((a,b)=>{
+      const ra=a.h.cost>0?(valTWD(a.h)-a.h.cost)/a.h.cost:0;
+      const rb=b.h.cost>0?(valTWD(b.h)-b.h.cost)/b.h.cost:0;
+      return rb-ra;
+    });
+
+    const isCashLike = CASH_LIKE_CATS.includes(cat);
+    const catLabel = isCashLike ? cat+' <span style="color:var(--gr);font-size:10px;">（計入可用現金）</span>' : cat;
+    html+=`<tr class="cat-hdr"><td colspan="11">▸ ${catLabel}</td></tr>`;
+
+    items.forEach(({h,i})=>{
+      const v=valTWD(h), pnl=v-h.cost, ret=h.cost>0?pnl/h.cost*100:0;
+      sumV+=v; sumC+=h.cost;
+      const rc=retClass(ret), icon=retIcon(ret);
+      const wt=portTot>0?v/portTot*100:0;
+      const rp=rawP(h);
+      const priceCell=h.tick
+        ?`<span class="pv">${h.cur==='USD'?'$'+rp.toFixed(2):f(rp,2)}</span>${h.cur==='USD'?` <span style="font-size:10px;color:var(--mu)">≈${f(pTWD(h))}</span>`:''}`
+        :`<input class="manual-p" value="${rp}" onchange="setManual(${i},this.value)" title="手動輸入價格">`;
+      html+=`<tr class="${rc}" data-i="${i}">
+        <td class="L">${icon}<input class="ie name" value="${h.name}" onchange="upd(${i},'name',this.value)">${h.note?`<span class="bdg">${h.note}</span>`:''}</td>
+        <td class="L"><input class="ie tick" value="${h.tick||''}" onchange="upd(${i},'tick',this.value)" placeholder="代碼"></td>
+        <td><input class="ie num" value="${h.shares}" onchange="upd(${i},'shares',+this.value)"></td>
+        <td><input class="ie num" value="${h.perSh}" onchange="upd(${i},'perSh',+this.value)"></td>
+        <td>${f(h.cost)}</td>
+        <td>${priceCell}</td>
+        <td>${f(v)}</td>
+        <td class="${clr(pnl)}">${f(pnl)}</td>
+        <td class="ret-cell">${pct(ret)}</td>
+        <td>${isCashLike?'—':pct(wt)}</td>
+        <td><button class="btn-del" onclick="delItem(${i})" title="刪除">✕</button></td>
+      </tr>`;
+    });
+    html+=`<tr class="add-row"><td colspan="11"><button class="btn-add" onclick="addItem('${cat}')">＋ 新增至 ${cat}</button></td></tr>`;
+  });
+
+  document.getElementById('ptBody').innerHTML=html;
+  const pnl=sumV-sumC;
+  document.getElementById('ptFoot').innerHTML=`<tr class="tot-row">
+    <td class="L" colspan="4">📊 全部持股合計（含類現金）</td>
+    <td>${f(sumC)}</td><td></td><td>${f(sumV)}</td>
+    <td class="${clr(pnl)}">${f(pnl)}</td>
+    <td class="ret-cell ${clr(pnl)}">${pct(sumC>0?pnl/sumC*100:0)}</td>
+    <td>—</td><td></td>
+  </tr>`;
+
+  // Populate category dropdown for add bar
+  const sel=document.getElementById('new_cat');
+  if(sel && sel.options.length===0){
+    ALL_CATS.forEach(c=>{ const o=document.createElement('option'); o.value=o.textContent=c; sel.appendChild(o); });
+  }
+}
+
+// ═══════════════════════════════════════════════
+// RENDER LOAN (was PLEDGE)
+// ═══════════════════════════════════════════════
+function renderLoan(){
+  let html='';
+  LOAN.forEach((h,i)=>{
+    const v=valTWD(h), pnl=v-h.cost, ret=h.cost>0?pnl/h.cost*100:0;
+    const rc=retClass(ret), icon=retIcon(ret);
+    const mg=h.pledgeAmt>0?v/h.pledgeAmt*100:0;
+    const rp=rawP(h);
+    const priceCell=h.tick?`<span class="pv">${f(rp,2)}</span>`:`<input class="manual-p" value="${rp}" onchange="LOAN[${i}].price=+this.value;recalc()">`;
+    html+=`<tr class="${rc}">
+      <td class="L">${icon}<input class="ie name" value="${h.name}" onchange="LOAN[${i}].name=this.value;recalc()"></td>
+      <td class="L"><input class="ie tick" value="${h.tick||''}" onchange="LOAN[${i}].tick=this.value;recalc()"></td>
+      <td><input class="ie num" value="${h.shares}" onchange="LOAN[${i}].shares=+this.value;updLoanCost(${i});recalc()"></td>
+      <td><input class="ie num" value="${h.perSh}" onchange="LOAN[${i}].perSh=+this.value;updLoanCost(${i});recalc()"></td>
+      <td>${f(h.cost)}</td>
+      <td>${priceCell}</td>
+      <td>${f(v)}</td>
+      <td class="${clr(pnl)}">${f(pnl)}</td>
+      <td class="ret-cell">${pct(ret)}</td>
+      <td class="${mg>=200?'pos':mg>=140?'':'neg'}">${pct(mg)}</td>
+      <td><input class="ie num" value="${h.pledgeAmt}" onchange="LOAN[${i}].pledgeAmt=+this.value;recalc()" title="質押貸款金額"></td>
+      <td><button class="btn-del" onclick="delLoan(${i})" title="刪除">✕</button></td>
+    </tr>`;
+  });
+  document.getElementById('plBody').innerHTML=html;
+}
+function updLoanCost(i){LOAN[i].cost=LOAN[i].shares*LOAN[i].perSh;}
+
+// ═══════════════════════════════════════════════
+// RENDER PIVOT (再平衡)
+// ═══════════════════════════════════════════════
+function renderPivot(catV, portTot){
+  // Target sum for normalization (should be ~0.90 after removing 類現金)
+  const tSum = Object.values(TARGETS).reduce((a,t)=>a+t.pct,0);
+  let html='';
+  CAT_ORDER.forEach(cat=>{
+    const t=TARGETS[cat], cv=catV[cat]||0;
+    const tp=t.pct/tSum*100; // normalized %
+    const cp=portTot>0?cv/portTot*100:0;
+    const tamt=portTot*(t.pct/tSum);
+    const diff=cv-tamt;
+    const op=Math.abs(diff)<portTot*.005?'ok':diff>0?'sell':'buy';
+    const opTxt=op==='ok'?'✓ 持平':op==='sell'?`賣出 ${f(Math.abs(diff))}`:`買入 ${f(Math.abs(diff))}`;
+    const bw=Math.min(cp/(tp||1)*50,100);
+    const bc=op==='ok'?'var(--gr)':op==='sell'?'var(--rd)':'var(--bl)';
+    html+=`<tr>
+      <td class="L"><b>${cat}</b></td>
+      <td class="L" style="max-width:180px;white-space:normal;padding-right:4px;">
+        <input class="ie strat" value="${t.strat}" onchange="TARGETS['${cat}'].strat=this.value;save();" title="可編輯策略備註">
+      </td>
+      <td style="color:var(--cy);">${pct(tp)}</td>
+      <td class="${op==='sell'?'neg':op==='buy'?'pos':'neu'}">${pct(cp)}</td>
+      <td>${f(cv)}</td>
+      <td style="color:var(--mu);">${f(tamt)}</td>
+      <td class="${clr(-diff)}">${diff?((diff>0?'↑':'↓')+' '+f(Math.abs(diff))):'-'}</td>
+      <td><span class="sig ${op}">${opTxt}</span></td>
+      <td>
+        <div class="prog"><div class="prog-f" style="width:${bw}%;background:${bc}"></div><div class="prog-t"></div></div>
+        <span style="font-size:10px;color:var(--mu);"> ${pct(cp,0)}/${pct(tp,0)}</span>
+      </td>
+    </tr>`;
+  });
+  document.getElementById('pvtBody').innerHTML=html;
+  document.getElementById('pvtFoot').innerHTML=`<tr class="tot-row">
+    <td class="L" colspan="2">投資組合合計（不含類現金）</td>
+    <td style="color:var(--cy);">100%</td><td>100%</td>
+    <td>${f(portTot)}</td><td></td><td></td><td></td><td></td>
+  </tr>`;
+}
+
+// ═══════════════════════════════════════════════
+// RENDER EXPOSURE（美國個股占比，依金額排序）
+// ═══════════════════════════════════════════════
+function renderExposure(portTot){
+  const exp={};
+  P.forEach(h=>{
+    const v=portV[h.name]||0;
+    const prefix=h.tick?(h.tick.replace('.TW','')):'';
+    if(ETF_W[prefix]){
+      Object.entries(ETF_W[prefix]).forEach(([t,w])=>{
+        exp[t]=exp[t]||{etf:0,direct:0};
+        exp[t].etf+=v*w;
+      });
+    }
+    Object.entries(DIRECT_MAP).forEach(([t,nm])=>{
+      if(h.name===nm){exp[t]=exp[t]||{etf:0,direct:0};exp[t].direct+=v;}
+    });
+  });
+
+  // Sort by total descending
+  const sorted=Object.entries(exp)
+    .map(([t,e])=>({t,etf:e.etf,direct:e.direct,sum:e.etf+e.direct}))
+    .filter(e=>e.sum>500)
+    .sort((a,b)=>b.sum-a.sum);
+
+  let html='';
+  sorted.forEach(({t,etf,direct,sum})=>{
+    const tp=portTot>0?sum/portTot*100:0;
+    html+=`<tr>
+      <td class="L"><b>${t}</b></td>
+      <td style="color:var(--mu);">${f(etf)}</td>
+      <td class="pos"><b>${f(direct)}</b></td>
+      <td><b>${f(sum)}</b></td>
+      <td class="${tp>20?'neg':tp>10?'':'pos'}">${pct(tp)}</td>
+    </tr>`;
+  });
+  document.getElementById('expBody').innerHTML=html||'<tr><td colspan="5" style="color:var(--mu);text-align:center;padding:16px;">報價更新後自動顯示</td></tr>';
+}
+
+// ═══════════════════════════════════════════════
+// RENDER DIVIDENDS — 兩個表格（下表可收折）
+// ═══════════════════════════════════════════════
+function renderDividends(){
+  const now = new Date(); now.setHours(0,0,0,0);
+  const in30 = new Date(now.getTime()+30*24*3600*1000);
+
+  // ── 上表：近一個月除息通知 ──
+  const showList = DIVIDENDS
+    .map((d,i)=>({d,i}))
+    .filter(({d})=>new Date(d.exDate)>=now)
+    .sort((a,b)=>a.d.exDate.localeCompare(b.d.exDate));
+
+  let upcomingTotal=0;
+  let uHtml='';
+  if(!showList.length){
+    uHtml='<tr><td colspan="8" style="color:var(--mu);text-align:center;padding:12px;">近期無除息事件</td></tr>';
+  } else {
+    showList.forEach(({d,i})=>{
+      const ex=new Date(d.exDate);
+      const pay=d.payDate?new Date(d.payDate):null;
+      const days=Math.ceil((ex-now)/(1000*3600*24));
+      const total=(d.perShare||0)*(d.shares||0);
+      const isSoon=days<=30;
+      if(isSoon) upcomingTotal+=total;
+      const payStr=pay?pay.toLocaleDateString('zh-TW',{month:'2-digit',day:'2-digit'}):'—';
+      const urgency=days<=3?'var(--rd)':days<=7?'var(--yw)':days<=14?'var(--cy)':'var(--mu)';
+      uHtml+=`<tr style="${isSoon?'background:rgba(245,158,11,.04)':''}">
+        <td class="L">
+          <b>${d.stock}</b>
+          ${d.note?`<span class="bdg">${d.note}</span>`:''}
+        </td>
+        <td style="color:var(--yw);">${ex.toLocaleDateString('zh-TW',{month:'2-digit',day:'2-digit'})}</td>
+        <td style="color:var(--gr);">${payStr}</td>
+        <td style="color:${urgency};font-weight:${days<=7?'700':'400'};">${days}天</td>
+        <td><input class="ie num" value="${d.perShare}" onchange="DIVIDENDS[${i}].perShare=+this.value;save();renderDividends();" style="width:60px;"></td>
+        <td>${f(d.shares)}</td>
+        <td class="pos"><b>+${f(total)}</b></td>
+        <td><button class="btn-del" onclick="delDiv(${i})" style="opacity:1;">✕</button></td>
+      </tr>`;
+    });
+  }
+  document.getElementById('divUpcomingBody').innerHTML=uHtml;
+  G('div_upcoming', f(upcomingTotal));
+
+  // ── 下表：今年度累計股利（可收折） ──
+  const groups={};
+  YTD_DIVS.forEach((d,i)=>{
+    if(!groups[d.stock]) groups[d.stock]=[];
+    groups[d.stock].push({d,i});
+  });
+
+  let ytdTotal=0;
+  let yHtml='';
+
+  Object.entries(groups).forEach(([stock,items])=>{
+    items.sort((a,b)=>a.d.date.localeCompare(b.d.date));
+    const stockTotal=items.reduce((a,{d})=>a+(d.received?d.perShare*d.shares:0),0);
+    ytdTotal+=stockTotal;
+
+    // 預設收折（divCollapsed[stock] !== false 就是收折）
+    const collapsed = divCollapsed[stock]!==false;
+    const arrow = collapsed?'▶':'▼';
+    const sk = stock.replace(/\'/g,"\\'");
+
+    const confirmedCnt=items.filter(({d})=>d.received&&!d.est).length;
+    const receivedAmt=items.reduce((a,{d})=>a+(d.received?d.perShare*d.shares:0),0);
+    const hasEst=items.some(({d})=>d.received&&d.est);
+    yHtml+=`<tr class="div-group-hdr" onclick="toggleDiv('${sk}')" style="cursor:pointer;user-select:none;">
+      <td colspan="5" style="padding:5px 8px;">
+        <span style="font-size:13px;margin-right:6px;">${arrow}</span>
+        <b style="color:var(--bl);">${stock}</b>
+        ${hasEst?`<span class="est-tag" style="margin-left:6px;">含估計值</span>`:''}
+        <span style="margin-left:8px;color:var(--mu);font-size:10px;">(${items.length}筆，點擊${collapsed?'展開':'收折'})</span>
+      </td>
+      <td colspan="3" style="text-align:right;padding-right:10px;">
+        <b style="color:var(--gr);">已收 +${f(receivedAmt)}</b>
+      </td>
+    </tr>`;
+
+    if(!collapsed){
+      items.forEach(({d,i})=>{
+        const total=d.perShare*d.shares;
+        const dateStr=new Date(d.date).toLocaleDateString('zh-TW',{month:'2-digit',day:'2-digit'});
+        const rowBg=d.est?'rgba(245,158,11,.04)':d.received?'rgba(34,197,94,.03)':'';
+        yHtml+=`<tr style="background:${rowBg};">
+          <td class="L" style="padding-left:22px;color:var(--mu);font-size:11px;">${d.stock}</td>
+          <td class="L">
+            ${d.note?`<span style="color:var(--tx);">${d.note}</span>`:''}
+            ${d.est?'<span class="est-tag">估計，點每股欄位修改</span>':''}
+          </td>
+          <td style="color:var(--mu);">${dateStr}</td>
+          <td>
+            <input class="ie num" value="${d.perShare}"
+              onchange="YTD_DIVS[${i}].perShare=+this.value;YTD_DIVS[${i}].est=false;save();renderDividends();"
+              style="width:55px;" title="點擊修改每股金額">
+          </td>
+          <td>${f(d.shares)}</td>
+          <td class="${d.received?'pos':'neu'}" style="font-weight:${d.received?'700':'400'};">
+            ${d.received?`+${f(total)}`:`<span style="opacity:.5;">+${f(total)}</span>`}
+          </td>
+          <td style="text-align:center;">
+            <label style="cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;font-size:10px;color:var(--mu);">
+              <input type="checkbox" ${d.received?'checked':''} onchange="YTD_DIVS[${i}].received=this.checked;save();renderDividends();">
+              ${d.received?'已入帳':'確認'}
+            </label>
+          </td>
+          <td><button class="btn-del" onclick="delYtd(${i})" style="opacity:1;">✕</button></td>
+        </tr>`;
+      });
+    }
+  });
+
+  if(!yHtml) yHtml='<tr><td colspan="8" style="color:var(--mu);text-align:center;padding:12px;">尚無記錄，點「新增今年股利記錄」</td></tr>';
+  document.getElementById('divYtdBody').innerHTML=yHtml;
+  document.getElementById('divYtdFoot').innerHTML=`<tr class="div-tot-row">
+    <td class="L" colspan="5">2026 YTD 已確認入帳合計</td>
+    <td class="pos"><b>+${f(ytdTotal)}</b></td><td colspan="2"></td>
+  </tr>`;
+  G('div_ytd', f(ytdTotal));
+
+  // 本年度累計殖利率
+  const ytdYield = portCostGlobal>0 ? ytdTotal/portCostGlobal*100 : 0;
+  G('div_yield', pct(ytdYield,2));
+}
+
+function toggleDiv(stock){
+  divCollapsed[stock] = divCollapsed[stock]===false ? true : false;
+  renderDividends();
+}
+
+function addDividend(){
+  const stock=prompt('股票名稱（例：00919 群益台灣精選高息）');
+  if(!stock) return;
+  const exDate=prompt('除息日（YYYY-MM-DD）', new Date(Date.now()+7*86400000).toISOString().slice(0,10));
+  const payDate=prompt('發放日（YYYY-MM-DD，不確定可留空）','');
+  const perShare=parseFloat(prompt('每股股利（TWD）')||0);
+  const found=P.find(h=>h.name.startsWith(stock.split(' ')[0]));
+  const shares=found?found.shares:parseFloat(prompt('持有股數')||0);
+  const note=prompt('備註（例：5月月配）','');
+  DIVIDENDS.push({stock,perShare,exDate,payDate:payDate||null,shares,note});
+  save(); renderDividends();
+}
+function delDiv(i){DIVIDENDS.splice(i,1);save();renderDividends();}
+
+function addYtdRecord(){
+  const stock=prompt('股票名稱（例：00919 群益台灣精選高息）');
+  if(!stock) return;
+  const date=prompt('除息日（YYYY-MM-DD）', new Date().toISOString().slice(0,10));
+  const perShare=parseFloat(prompt('每股股利（TWD）')||0);
+  const found=P.find(h=>h.name.startsWith(stock.split(' ')[0]));
+  const shares=found?found.shares:parseFloat(prompt('持有股數')||0);
+  const note=prompt('說明（例：1月月配）','');
+  YTD_DIVS.push({stock,shares,perShare,date:date||new Date().toISOString().slice(0,10),note,received:false,est:false});
+  save(); renderDividends();
+}
+function delYtd(i){YTD_DIVS.splice(i,1);save();renderDividends();}
+
+function upd(i,k,v){
+  P[i][k]=v;
+  if(k==='shares'||k==='perSh') P[i].cost=P[i].shares*P[i].perSh;
+  save(); recalc();
+}
+function setManual(i,v){ P[i].price=parseFloat(v)||0; recalc(); }
+function delItem(i){ if(confirm('確定刪除 '+P[i].name+'？')){ P.splice(i,1); save(); recalc(); } }
+function addItem(cat){
+  P.push({cat,name:'新持股',tick:'',shares:0,perSh:0,cost:0,price:0,cur:'TWD',note:''});
+  save(); recalc();
+}
+function addLoan(){
+  LOAN.push({name:'新借款部位',tick:'',shares:0,perSh:0,cost:0,price:0,cur:'TWD',pledgeAmt:0,note:''});
+  save(); recalc();
+}
+function delLoan(i){ if(confirm('確定刪除借款部位？')){ LOAN.splice(i,1); save(); recalc(); } }
+function addNewStock(){
+  const cat=document.getElementById('new_cat').value;
+  const name=document.getElementById('new_name').value.trim();
+  const tick=document.getElementById('new_tick').value.trim();
+  const shares=parseFloat(document.getElementById('new_shares').value)||0;
+  const perSh=parseFloat(document.getElementById('new_persh').value)||0;
+  const cur=document.getElementById('new_cur').value;
+  if(!name){ alert('請輸入股票名稱'); return; }
+  P.push({cat,name,tick:tick||null,shares,perSh,cost:shares*perSh,price:perSh,cur,note:''});
+  document.getElementById('new_name').value='';
+  document.getElementById('new_tick').value='';
+  document.getElementById('new_shares').value='';
+  doc

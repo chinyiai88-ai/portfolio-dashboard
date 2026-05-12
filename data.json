@@ -1,0 +1,886 @@
+{
+  "updated_at": "2026-05-12T22:37:47.770761+08:00",
+  "exchange_rate": 31.5,
+  "summary": {
+    "nav": 8384956.0,
+    "portfolio_total": 7553896.0,
+    "portfolio_cost": 4653315.0,
+    "portfolio_return_pct": 62.33,
+    "loan_total": 252000,
+    "loan_pnl": 10000,
+    "available_cash": 579060.0,
+    "stock_loan": 0,
+    "cat_breakdown": [
+      {
+        "cat": "台灣大盤ETF",
+        "value": 3259046.0,
+        "cost": 1162495.0,
+        "return_pct": 180.35,
+        "actual_pct": 38.87,
+        "target_pct": 31.0,
+        "diff_pct": 7.87,
+        "strat": "正2:20% ＋ 00981A:10%"
+      },
+      {
+        "cat": "成長-美股ETF",
+        "value": 1426009.0,
+        "cost": 870598.0,
+        "return_pct": 63.8,
+        "actual_pct": 17.01,
+        "target_pct": 20.0,
+        "diff_pct": -2.99,
+        "strat": "00924、TOPT"
+      },
+      {
+        "cat": "成長-國外基金",
+        "value": 458222.0,
+        "cost": 432506.0,
+        "return_pct": 5.95,
+        "actual_pct": 5.46,
+        "target_pct": 5.0,
+        "diff_pct": 0.46,
+        "strat": "印度基金 ＋ 中國科技"
+      },
+      {
+        "cat": "成長-美股個股",
+        "value": 599630.0,
+        "cost": 819453.0,
+        "return_pct": -26.83,
+        "actual_pct": 7.15,
+        "target_pct": 10.0,
+        "diff_pct": -2.85,
+        "strat": "Nvidia 40% / Tesla 30% / Google 30%"
+      },
+      {
+        "cat": "波段-個股",
+        "value": 511579.0,
+        "cost": 323592,
+        "return_pct": 58.09,
+        "actual_pct": 6.1,
+        "target_pct": 6.0,
+        "diff_pct": 0.1,
+        "strat": "儘快賣掉，轉債券停泊"
+      },
+      {
+        "cat": "存股-ETF",
+        "value": 515000.0,
+        "cost": 404000,
+        "return_pct": 27.48,
+        "actual_pct": 6.14,
+        "target_pct": 5.0,
+        "diff_pct": 1.14,
+        "strat": "00919，填息後轉正2"
+      },
+      {
+        "cat": "存股-個股",
+        "value": 444700.0,
+        "cost": 294060,
+        "return_pct": 51.23,
+        "actual_pct": 5.3,
+        "target_pct": 8.0,
+        "diff_pct": -2.7,
+        "strat": "中信金 ＋ 台積電"
+      },
+      {
+        "cat": "債券",
+        "value": 339710.0,
+        "cost": 346610,
+        "return_pct": -1.99,
+        "actual_pct": 4.05,
+        "target_pct": 5.0,
+        "diff_pct": -0.95,
+        "strat": "月配，目標存到288萬"
+      }
+    ]
+  },
+  "portfolio": [
+    {
+      "cat": "台灣大盤ETF",
+      "name": "00631L 元大台灣正2",
+      "tick": "00631L.TW",
+      "shares": 77000,
+      "perSh": 9.49,
+      "cost": 730730,
+      "price": 32.66,
+      "cur": "TWD",
+      "note": "上限20%",
+      "value_twd": 2514820.0,
+      "return_pct": 244.15
+    },
+    {
+      "cat": "台灣大盤ETF",
+      "name": "00981A 統一台股增長ETF",
+      "tick": "00981A.TW",
+      "shares": 21000,
+      "perSh": 18.465,
+      "cost": 387765,
+      "price": 29.69,
+      "cur": "TWD",
+      "note": "上限10%",
+      "value_twd": 623490.0,
+      "return_pct": 60.79
+    },
+    {
+      "cat": "台灣大盤ETF",
+      "name": "00850 元大台灣ESG",
+      "tick": "00850.TW",
+      "shares": 1000,
+      "perSh": 15,
+      "cost": 15000,
+      "price": 83.2,
+      "cur": "TWD",
+      "note": "",
+      "value_twd": 83200.0,
+      "return_pct": 454.67
+    },
+    {
+      "cat": "台灣大盤ETF",
+      "name": "野村高科技基金",
+      "tick": null,
+      "shares": 314,
+      "perSh": 92.3,
+      "cost": 28999.74,
+      "price": 119.54,
+      "cur": "TWD",
+      "note": "每月28付3000",
+      "value_twd": 37535.56,
+      "return_pct": 29.43
+    },
+    {
+      "cat": "成長-美股ETF",
+      "name": "00893 國泰電動車",
+      "tick": "00893.TW",
+      "shares": 3000,
+      "perSh": 12.48,
+      "cost": 37440,
+      "price": 45.05,
+      "cur": "TWD",
+      "note": "零成本",
+      "value_twd": 135150.0,
+      "return_pct": 260.98
+    },
+    {
+      "cat": "成長-美股ETF",
+      "name": "00924 復華S&P500",
+      "tick": "00924.TW",
+      "shares": 6747,
+      "perSh": 27.4,
+      "cost": 184867.8,
+      "price": 31.75,
+      "cur": "TWD",
+      "note": "每月定額17000",
+      "value_twd": 214217.25,
+      "return_pct": 15.88
+    },
+    {
+      "cat": "成長-美股ETF",
+      "name": "00830 國泰費城半導體",
+      "tick": "00830.TW",
+      "shares": 6000,
+      "perSh": 38.84,
+      "cost": 233040,
+      "price": 82.3,
+      "cur": "TWD",
+      "note": "",
+      "value_twd": 493800.0,
+      "return_pct": 111.89
+    },
+    {
+      "cat": "成長-美股ETF",
+      "name": "TOPT iShares美國20大",
+      "tick": "TOPT",
+      "shares": 242,
+      "perSh": 26.84,
+      "cost": 204000.51,
+      "price": 33.47,
+      "cur": "USD",
+      "note": "上限10%",
+      "value_twd": 255141.81,
+      "return_pct": 25.07
+    },
+    {
+      "cat": "成長-美股ETF",
+      "name": "00990A 元大全球AI主動式",
+      "tick": "00990A.TW",
+      "shares": 15000,
+      "perSh": 10.4,
+      "cost": 156000,
+      "price": 17.08,
+      "cur": "TWD",
+      "note": "",
+      "value_twd": 256200.0,
+      "return_pct": 64.23
+    },
+    {
+      "cat": "成長-美股ETF",
+      "name": "00910 第一金太空衛星",
+      "tick": "00910.TW",
+      "shares": 1000,
+      "perSh": 55.25,
+      "cost": 55250,
+      "price": 71.5,
+      "cur": "TWD",
+      "note": "",
+      "value_twd": 71500.0,
+      "return_pct": 29.41
+    },
+    {
+      "cat": "成長-國外基金",
+      "name": "群益印度基金",
+      "tick": null,
+      "shares": 7395.3,
+      "perSh": 33.13,
+      "cost": 245006.29,
+      "price": 31.07,
+      "cur": "TWD",
+      "note": "每月3號",
+      "value_twd": 229771.97,
+      "return_pct": -6.22
+    },
+    {
+      "cat": "成長-國外基金",
+      "name": "00887 永豐中國科技50大",
+      "tick": "00887.TW",
+      "shares": 15000,
+      "perSh": 12.5,
+      "cost": 187500,
+      "price": 15.23,
+      "cur": "TWD",
+      "note": "無配息",
+      "value_twd": 228450.0,
+      "return_pct": 21.84
+    },
+    {
+      "cat": "成長-美股個股",
+      "name": "Uipath PATH",
+      "tick": "PATH",
+      "shares": 50,
+      "perSh": 23.91,
+      "cost": 37547.67,
+      "price": 10.79,
+      "cur": "USD",
+      "note": "",
+      "value_twd": 16994.25,
+      "return_pct": -54.74
+    },
+    {
+      "cat": "成長-美股個股",
+      "name": "蘋果 AAPL",
+      "tick": "AAPL",
+      "shares": 2,
+      "perSh": 171.43,
+      "cost": 10768.38,
+      "price": 211.16,
+      "cur": "USD",
+      "note": "",
+      "value_twd": 13303.08,
+      "return_pct": 23.54
+    },
+    {
+      "cat": "成長-美股個股",
+      "name": "Nvidia NVDA",
+      "tick": "NVDA",
+      "shares": 30,
+      "perSh": 185.283,
+      "cost": 174578.27,
+      "price": 115.13,
+      "cur": "USD",
+      "note": "富邦16 元大14",
+      "value_twd": 108797.85,
+      "return_pct": -37.68
+    },
+    {
+      "cat": "成長-美股個股",
+      "name": "禮來 LLY",
+      "tick": "LLY",
+      "shares": 5,
+      "perSh": 930.93,
+      "cost": 146190.92,
+      "price": 748.08,
+      "cur": "USD",
+      "note": "",
+      "value_twd": 117822.6,
+      "return_pct": -19.4
+    },
+    {
+      "cat": "成長-美股個股",
+      "name": "特斯拉 TSLA",
+      "tick": "TSLA",
+      "shares": 19,
+      "perSh": 400.172,
+      "cost": 238799.64,
+      "price": 321.46,
+      "cur": "USD",
+      "note": "富邦11 元大8",
+      "value_twd": 192393.81,
+      "return_pct": -19.43
+    },
+    {
+      "cat": "成長-美股個股",
+      "name": "Google GOOGL",
+      "tick": "GOOGL",
+      "shares": 17,
+      "perSh": 300.142,
+      "cost": 153072.42,
+      "price": 160.01,
+      "cur": "USD",
+      "note": "",
+      "value_twd": 85685.35,
+      "return_pct": -44.02
+    },
+    {
+      "cat": "成長-美股個股",
+      "name": "PANW",
+      "tick": "PANW",
+      "shares": 7,
+      "perSh": 168.169,
+      "cost": 36972.38,
+      "price": 187.95,
+      "cur": "USD",
+      "note": "",
+      "value_twd": 41442.97,
+      "return_pct": 12.09
+    },
+    {
+      "cat": "成長-美股個股",
+      "name": "STCE 虛擬幣",
+      "tick": null,
+      "shares": 10,
+      "perSh": 68.53,
+      "cost": 21523.56,
+      "price": 73.62,
+      "cur": "USD",
+      "note": "手動",
+      "value_twd": 23190.3,
+      "return_pct": 7.74
+    },
+    {
+      "cat": "波段-個股",
+      "name": "生達 1620",
+      "tick": "1620.TW",
+      "shares": 2000,
+      "perSh": 55.9,
+      "cost": 111800,
+      "price": 61.1,
+      "cur": "TWD",
+      "note": "",
+      "value_twd": 122200.0,
+      "return_pct": 9.3
+    },
+    {
+      "cat": "波段-個股",
+      "name": "鈊象 3293",
+      "tick": "3293.TW",
+      "shares": 100,
+      "perSh": 886,
+      "cost": 88600,
+      "price": 735,
+      "cur": "TWD",
+      "note": "",
+      "value_twd": 73500,
+      "return_pct": -17.04
+    },
+    {
+      "cat": "波段-個股",
+      "name": "大亞 1609",
+      "tick": "1609.TW",
+      "shares": 192,
+      "perSh": 1,
+      "cost": 192,
+      "price": 36.35,
+      "cur": "TWD",
+      "note": "",
+      "value_twd": 6979.2,
+      "return_pct": 3535.0
+    },
+    {
+      "cat": "波段-個股",
+      "name": "奇鋐 3017",
+      "tick": "3017.TW",
+      "shares": 100,
+      "perSh": 769,
+      "cost": 76900,
+      "price": 2555,
+      "cur": "TWD",
+      "note": "",
+      "value_twd": 255500,
+      "return_pct": 232.25
+    },
+    {
+      "cat": "波段-個股",
+      "name": "緯穎 6669",
+      "tick": "6669.TW",
+      "shares": 10,
+      "perSh": 4610,
+      "cost": 46100,
+      "price": 5340,
+      "cur": "TWD",
+      "note": "",
+      "value_twd": 53400,
+      "return_pct": 15.84
+    },
+    {
+      "cat": "存股-ETF",
+      "name": "00919 群益台灣精選高息",
+      "tick": "00919.TW",
+      "shares": 20000,
+      "perSh": 20.2,
+      "cost": 404000,
+      "price": 25.75,
+      "cur": "TWD",
+      "note": "中信15000/國泰5000",
+      "value_twd": 515000.0,
+      "return_pct": 27.48
+    },
+    {
+      "cat": "存股-個股",
+      "name": "台積電 2330",
+      "tick": "2330.TW",
+      "shares": 100,
+      "perSh": 1795,
+      "cost": 179500,
+      "price": 2235,
+      "cur": "TWD",
+      "note": "",
+      "value_twd": 223500,
+      "return_pct": 24.51
+    },
+    {
+      "cat": "存股-個股",
+      "name": "中信金 2891",
+      "tick": "2891.TW",
+      "shares": 4000,
+      "perSh": 28.64,
+      "cost": 114560,
+      "price": 55.3,
+      "cur": "TWD",
+      "note": "",
+      "value_twd": 221200.0,
+      "return_pct": 93.09
+    },
+    {
+      "cat": "債券",
+      "name": "00937B 群益ESG投等債20+",
+      "tick": "00937B.TW",
+      "shares": 23000,
+      "perSh": 15.07,
+      "cost": 346610,
+      "price": 14.77,
+      "cur": "TWD",
+      "note": "月配 20萬預備金",
+      "value_twd": 339710.0,
+      "return_pct": -1.99
+    },
+    {
+      "cat": "債券-類現金",
+      "name": "00772B 中信公司債",
+      "tick": "00772B.TW",
+      "shares": 9000,
+      "perSh": 34.4,
+      "cost": 309600,
+      "price": 33.57,
+      "cur": "TWD",
+      "note": "月配",
+      "value_twd": 302130.0,
+      "return_pct": -2.41
+    },
+    {
+      "cat": "債券-類現金",
+      "name": "00719B 元大美債1-3",
+      "tick": "00719B.TW",
+      "shares": 9000,
+      "perSh": 31.28,
+      "cost": 281520,
+      "price": 30.77,
+      "cur": "TWD",
+      "note": "貸款預備池",
+      "value_twd": 276930.0,
+      "return_pct": -1.63
+    }
+  ],
+  "loan": [
+    {
+      "name": "鴻海 2317",
+      "tick": "2317.TW",
+      "shares": 1000,
+      "perSh": 242,
+      "cost": 242000,
+      "price": 252,
+      "cur": "TWD",
+      "pledgeAmt": 400000,
+      "note": "維持率≥140%",
+      "value_twd": 252000,
+      "unrealized_pnl": 10000
+    }
+  ],
+  "dividends": {
+    "upcoming": [
+      {
+        "stock": "00937B 群益ESG投等債20+",
+        "perShare": 0.023,
+        "exDate": "2026-05-15",
+        "payDate": "2026-05-22",
+        "shares": 23000,
+        "note": "5月月配",
+        "amount": 529.0
+      },
+      {
+        "stock": "00772B 中信公司債",
+        "perShare": 0.028,
+        "exDate": "2026-05-22",
+        "payDate": "2026-05-29",
+        "shares": 9000,
+        "note": "5月月配",
+        "amount": 252.0
+      },
+      {
+        "stock": "00719B 元大美債1-3",
+        "perShare": 0.021,
+        "exDate": "2026-05-27",
+        "payDate": "2026-06-03",
+        "shares": 9000,
+        "note": "5月月配",
+        "amount": 189.0
+      },
+      {
+        "stock": "00919 群益台灣精選高息",
+        "perShare": 0.12,
+        "exDate": "2026-06-13",
+        "payDate": "2026-06-23",
+        "shares": 20000,
+        "note": "6月月配",
+        "amount": 2400.0
+      }
+    ],
+    "ytd": [
+      {
+        "stock": "00919 群益台灣精選高息",
+        "shares": 20000,
+        "perShare": 0.12,
+        "date": "2026-01-16",
+        "note": "1月",
+        "received": true,
+        "est": true,
+        "amount": 2400.0
+      },
+      {
+        "stock": "00919 群益台灣精選高息",
+        "shares": 20000,
+        "perShare": 0.12,
+        "date": "2026-02-13",
+        "note": "2月",
+        "received": true,
+        "est": true,
+        "amount": 2400.0
+      },
+      {
+        "stock": "00919 群益台灣精選高息",
+        "shares": 20000,
+        "perShare": 0.13,
+        "date": "2026-03-13",
+        "note": "3月",
+        "received": true,
+        "est": true,
+        "amount": 2600.0
+      },
+      {
+        "stock": "00919 群益台灣精選高息",
+        "shares": 20000,
+        "perShare": 0.12,
+        "date": "2026-04-16",
+        "note": "4月",
+        "received": true,
+        "est": true,
+        "amount": 2400.0
+      },
+      {
+        "stock": "00919 群益台灣精選高息",
+        "shares": 20000,
+        "perShare": 0.12,
+        "date": "2026-05-08",
+        "note": "5月",
+        "received": true,
+        "est": true,
+        "amount": 2400.0
+      },
+      {
+        "stock": "00937B 群益ESG投等債20+",
+        "shares": 23000,
+        "perShare": 0.022,
+        "date": "2026-01-15",
+        "note": "1月",
+        "received": true,
+        "est": true,
+        "amount": 506.0
+      },
+      {
+        "stock": "00937B 群益ESG投等債20+",
+        "shares": 23000,
+        "perShare": 0.023,
+        "date": "2026-02-14",
+        "note": "2月",
+        "received": true,
+        "est": true,
+        "amount": 529.0
+      },
+      {
+        "stock": "00937B 群益ESG投等債20+",
+        "shares": 23000,
+        "perShare": 0.023,
+        "date": "2026-03-13",
+        "note": "3月",
+        "received": true,
+        "est": true,
+        "amount": 529.0
+      },
+      {
+        "stock": "00937B 群益ESG投等債20+",
+        "shares": 23000,
+        "perShare": 0.023,
+        "date": "2026-04-15",
+        "note": "4月",
+        "received": true,
+        "est": true,
+        "amount": 529.0
+      },
+      {
+        "stock": "00772B 中信公司債",
+        "shares": 9000,
+        "perShare": 0.028,
+        "date": "2026-01-22",
+        "note": "1月",
+        "received": true,
+        "est": true,
+        "amount": 252.0
+      },
+      {
+        "stock": "00772B 中信公司債",
+        "shares": 9000,
+        "perShare": 0.028,
+        "date": "2026-02-20",
+        "note": "2月",
+        "received": true,
+        "est": true,
+        "amount": 252.0
+      },
+      {
+        "stock": "00772B 中信公司債",
+        "shares": 9000,
+        "perShare": 0.028,
+        "date": "2026-03-20",
+        "note": "3月",
+        "received": true,
+        "est": true,
+        "amount": 252.0
+      },
+      {
+        "stock": "00772B 中信公司債",
+        "shares": 9000,
+        "perShare": 0.028,
+        "date": "2026-04-22",
+        "note": "4月",
+        "received": true,
+        "est": true,
+        "amount": 252.0
+      },
+      {
+        "stock": "00719B 元大美債1-3",
+        "shares": 9000,
+        "perShare": 0.021,
+        "date": "2026-01-24",
+        "note": "1月",
+        "received": true,
+        "est": true,
+        "amount": 189.0
+      },
+      {
+        "stock": "00719B 元大美債1-3",
+        "shares": 9000,
+        "perShare": 0.021,
+        "date": "2026-02-25",
+        "note": "2月",
+        "received": true,
+        "est": true,
+        "amount": 189.0
+      },
+      {
+        "stock": "00719B 元大美債1-3",
+        "shares": 9000,
+        "perShare": 0.021,
+        "date": "2026-03-25",
+        "note": "3月",
+        "received": true,
+        "est": true,
+        "amount": 189.0
+      },
+      {
+        "stock": "00719B 元大美債1-3",
+        "shares": 9000,
+        "perShare": 0.021,
+        "date": "2026-04-24",
+        "note": "4月",
+        "received": true,
+        "est": true,
+        "amount": 189.0
+      },
+      {
+        "stock": "00850 元大台灣ESG",
+        "shares": 1000,
+        "perShare": 0.55,
+        "date": "2026-03-20",
+        "note": "Q1",
+        "received": true,
+        "est": true,
+        "amount": 550.0
+      },
+      {
+        "stock": "00893 國泰電動車",
+        "shares": 3000,
+        "perShare": 0.11,
+        "date": "2026-03-17",
+        "note": "Q1",
+        "received": true,
+        "est": true,
+        "amount": 330.0
+      },
+      {
+        "stock": "00924 復華S&P500",
+        "shares": 6747,
+        "perShare": 0.1,
+        "date": "2026-04-10",
+        "note": "Q1",
+        "received": true,
+        "est": true,
+        "amount": 674.7
+      },
+      {
+        "stock": "00830 國泰費城半導體",
+        "shares": 6000,
+        "perShare": 0.16,
+        "date": "2026-03-18",
+        "note": "Q1",
+        "received": true,
+        "est": true,
+        "amount": 960.0
+      },
+      {
+        "stock": "00910 第一金太空衛星",
+        "shares": 1000,
+        "perShare": 0.08,
+        "date": "2026-03-20",
+        "note": "Q1",
+        "received": true,
+        "est": true,
+        "amount": 80.0
+      },
+      {
+        "stock": "台積電 2330",
+        "shares": 100,
+        "perShare": 3.5,
+        "date": "2026-03-25",
+        "note": "Q1",
+        "received": true,
+        "est": true,
+        "amount": 350.0
+      },
+      {
+        "stock": "中信金 2891",
+        "shares": 4000,
+        "perShare": 1.45,
+        "date": "2026-03-20",
+        "note": "股利",
+        "received": true,
+        "est": true,
+        "amount": 5800.0
+      },
+      {
+        "stock": "鴻海 2317",
+        "shares": 1000,
+        "perShare": 4.5,
+        "date": "2026-03-27",
+        "note": "股利",
+        "received": true,
+        "est": true,
+        "amount": 4500.0
+      }
+    ],
+    "ytd_total": 29302.0,
+    "annual_estimate": 70324.0
+  },
+  "us_exposure": [
+    {
+      "sym": "TOPT",
+      "value_usd": 8099.74,
+      "value_twd": 255142.0
+    },
+    {
+      "sym": "NVDA",
+      "value_usd": 7596.81,
+      "value_twd": 239300.0
+    },
+    {
+      "sym": "TSLA",
+      "value_usd": 7002.87,
+      "value_twd": 220590.0
+    },
+    {
+      "sym": "LLY",
+      "value_usd": 4023.44,
+      "value_twd": 126738.0
+    },
+    {
+      "sym": "GOOGL",
+      "value_usd": 3928.57,
+      "value_twd": 123750.0
+    },
+    {
+      "sym": "AVGO",
+      "value_usd": 2132.57,
+      "value_twd": 67176.0
+    },
+    {
+      "sym": "AMD",
+      "value_usd": 1860.34,
+      "value_twd": 58601.0
+    },
+    {
+      "sym": "PANW",
+      "value_usd": 1315.65,
+      "value_twd": 41443.0
+    },
+    {
+      "sym": "TSM",
+      "value_usd": 1106.97,
+      "value_twd": 34870.0
+    },
+    {
+      "sym": "MSFT",
+      "value_usd": 1088.72,
+      "value_twd": 34295.0
+    },
+    {
+      "sym": "META",
+      "value_usd": 859.72,
+      "value_twd": 27081.0
+    },
+    {
+      "sym": "AAPL",
+      "value_usd": 826.95,
+      "value_twd": 26049.0
+    },
+    {
+      "sym": "PATH",
+      "value_usd": 539.5,
+      "value_twd": 16994.0
+    },
+    {
+      "sym": "AMZN",
+      "value_usd": 489.29,
+      "value_twd": 15413.0
+    }
+  ],
+  "logs": {
+    "yfinance": "pending (初始資料，使用持倉成本價)",
+    "finmind": "pending (GitHub Actions 執行後自動更新)"
+  }
+}
