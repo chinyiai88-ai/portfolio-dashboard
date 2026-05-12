@@ -2,18 +2,12 @@
 """
 發財888888 資產儀表板 — 自動抓價腳本
 由 GitHub Actions 每小時執行，更新 data.json
-
-數據來源:
-  - yfinance       : 美股 + 台股 + USD/TWD（主）
-  - TWSE API       : 台股即時報價（備援，無需 API Key）
-  - FinMind v4     : 台股除權息資料（需 token，GitHub Secret: FINMIND_TOKEN）
 """
 
 import json
 import os
 import sys
 import time
-import traceback
 from datetime import datetime, timezone, timedelta
 
 import requests
@@ -23,9 +17,6 @@ TZ_TW = timezone(timedelta(hours=8))
 FINMIND_TOKEN = os.environ.get("FINMIND_TOKEN", "")
 
 
-# ─────────────────────────────────────────
-# 工具函式
-# ─────────────────────────────────────────
 def now_tw() -> str:
     return datetime.now(TZ_TW).isoformat()
 
@@ -40,30 +31,16 @@ def load_portfolio() -> dict:
         return json.load(f)
 
 
-# ─────────────────────────────────────────
-# 1. yfinance 批次抓價（台股 + 美股 + 匯率）
-# ─────────────────────────────────────────
 def fetch_prices_yfinance(symbols: list[str]) -> dict[str, float]:
-    """
-    回傳 {symbol: price}
-    台股用 .TW 後綴（yfinance 支援）
-    匯率用 USDTWD=X
-    """
     prices: dict[str, float] = {}
     if not symbols:
         return prices
-
     try:
         raw = yf.download(
-            tickers=symbols,
-            period="5d",
-            interval="1d",
-            progress=False,
-            auto_adjust=True,
-            threads=True,
+            tickers=symbols, period="5d", interval="1d",
+            progress=False, auto_adjust=True, threads=True,
         )
         close = raw["Close"] if "Close" in raw else raw
-
         if len(symbols) == 1:
             sym = symbols[0]
             series = close.dropna()
@@ -85,18 +62,10 @@ def fetch_prices_yfinance(symbols: list[str]) -> dict[str, float]:
                     pass
     except Exception as e:
         print(f"[yfinance] error: {e}", file=sys.stderr)
-
     return prices
 
 
-# ─────────────────────────────────────────
-# 2. TWSE 即時 API 備援（台股，無需 Key）
-# ─────────────────────────────────────────
 def fetch_prices_twse(tw_tickers: list[str]) -> dict[str, float]:
-    """
-    直接呼叫 TWSE MIS API（無 CORS 問題，伺服器端）
-    先試上市（tse_），再試上櫃（otc_）
-    """
     prices: dict[str, float] = {}
 
     def _parse(msg_array: list) -> dict:
@@ -114,24 +83,17 @@ def fetch_prices_twse(tw_tickers: list[str]) -> dict[str, float]:
         return out
 
     def _fetch(prefix: str, tickers: list[str]) -> dict:
-        ex_ch = "|".join(
-            f"{prefix}{t.replace('.TW','').lower()}.tw" for t in tickers
-        )
-        url = (
-            f"https://mis.twse.com.tw/stock/api/getStockInfo.jsp"
-            f"?ex_ch={ex_ch}&json=1&delay=0"
-        )
+        ex_ch = "|".join(f"{prefix}{t.replace('.TW','').lower()}.tw" for t in tickers)
+        url = f"https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch={ex_ch}&json=1&delay=0"
         r = requests.get(url, timeout=15)
         r.raise_for_status()
         return _parse(r.json().get("msgArray", []))
 
-    # TSE（上市）
     try:
         prices.update(_fetch("tse_", tw_tickers))
     except Exception as e:
         print(f"[TWSE tse_] error: {e}", file=sys.stderr)
 
-    # OTC（上櫃）for missing
     missing = [t for t in tw_tickers if t not in prices]
     if missing:
         try:
@@ -142,18 +104,7 @@ def fetch_prices_twse(tw_tickers: list[str]) -> dict[str, float]:
     return prices
 
 
-# ─────────────────────────────────────────
-# 3. FinMind 配息資料
-# ─────────────────────────────────────────
-def fetch_finmind_dividends(
-    token: str,
-    stock_map: dict[str, dict],   # {stock_id: {name, shares}}
-) -> tuple[list, list]:
-    """
-    回傳 (upcoming, ytd)
-    upcoming: 除息日 >= 今天
-    ytd     : 今年除息日 < 今天
-    """
+def fetch_finmind_dividends(token: str, stock_map: dict) -> tuple[list, list]:
     today = today_str()
     yr_start = year_start_str()
     upcoming: list[dict] = []
@@ -171,21 +122,17 @@ def fetch_finmind_dividends(
             r = requests.get(url, params=params, timeout=15)
             r.raise_for_status()
             body = r.json()
-
             if body.get("status") != 200:
                 continue
-
             for d in body.get("data", []):
                 cash = (
                     float(d.get("CashEarningsDistribution") or 0)
                     + float(d.get("CashStatutorySurplus") or 0)
                 )
-                ex_date = d.get("CashExDividendTradingDate", "")
+                ex_date  = d.get("CashExDividendTradingDate", "")
                 pay_date = d.get("CashDividendPaymentDate", "") or ""
-
                 if cash <= 0 or not ex_date:
                     continue
-
                 item = {
                     "stock": info["name"],
                     "stock_id": stock_id,
@@ -196,16 +143,13 @@ def fetch_finmind_dividends(
                     "note": str(d.get("year", "")),
                     "amount": round(cash * info["shares"], 2),
                 }
-
                 if ex_date >= today:
                     upcoming.append(item)
                 elif ex_date >= yr_start:
                     item["received"] = bool(pay_date and pay_date <= today)
                     item["est"] = False
                     ytd.append(item)
-
-            time.sleep(0.2)   # 避免超過 FinMind rate limit
-
+            time.sleep(0.2)
         except Exception as e:
             print(f"[FinMind] {stock_id}: {e}", file=sys.stderr)
 
@@ -214,81 +158,74 @@ def fetch_finmind_dividends(
     return upcoming, ytd
 
 
-# ─────────────────────────────────────────
-# 4. 美股曝險計算（直接持股 + ETF 內含）
-# ─────────────────────────────────────────
 def calc_us_exposure(portfolio, loan, prices, usd_twd, etf_weights):
-    exposure: dict[str, dict] = {}
+    """回傳 {sym: {value_usd, value_twd, direct_usd, etf_usd}}，分開直接持股與 ETF 內含"""
+    direct_usd: dict[str, float] = {}
+    etf_usd:    dict[str, float] = {}
 
-    def add(sym: str, value_usd: float):
-        if sym not in exposure:
-            exposure[sym] = {"value_usd": 0.0, "value_twd": 0.0}
-        exposure[sym]["value_usd"] += value_usd
-        exposure[sym]["value_twd"] += value_usd * usd_twd
+    def add(d: dict, sym: str, val: float):
+        d[sym] = d.get(sym, 0.0) + val
 
     for h in list(portfolio) + list(loan):
         tick = h.get("tick") or ""
         if not tick:
             continue
-
         etf_id = tick.replace(".TW", "")
 
-        # 直接美股
-        if not tick.endswith(".TW") and h["cur"] == "USD":
-            price = prices.get(tick, h["price"])
-            add(tick, h["shares"] * price)
+        # 台股 ETF 含美股成分
+        if tick.endswith(".TW") and etf_id in etf_weights:
+            p = prices.get(tick, h["price"])
+            val_usd = h["shares"] * p / usd_twd
+            for us_sym, w in etf_weights[etf_id].items():
+                add(etf_usd, us_sym, val_usd * w)
 
-        # 含美股的台股 ETF
-        elif etf_id in etf_weights:
-            etf_price = prices.get(tick, h["price"])
-            etf_value_twd = h["shares"] * etf_price
-            etf_value_usd = etf_value_twd / usd_twd
-            for us_sym, weight in etf_weights[etf_id].items():
-                add(us_sym, etf_value_usd * weight)
-
-        # 美股 ETF (TOPT etc.)
+        # 美股 ETF（如 TOPT）展開成分
         elif not tick.endswith(".TW") and h["cur"] == "USD" and etf_id in etf_weights:
-            etf_price = prices.get(tick, h["price"])
-            etf_value_usd = h["shares"] * etf_price
-            for us_sym, weight in etf_weights[etf_id].items():
-                add(us_sym, etf_value_usd * weight)
+            p = prices.get(tick, h["price"])
+            val_usd = h["shares"] * p
+            for us_sym, w in etf_weights[etf_id].items():
+                add(etf_usd, us_sym, val_usd * w)
 
-    # 排序
-    return dict(
-        sorted(exposure.items(), key=lambda x: x[1]["value_twd"], reverse=True)
-    )
+        # 直接持有美股
+        elif not tick.endswith(".TW") and h["cur"] == "USD":
+            p = prices.get(tick, h["price"])
+            add(direct_usd, tick, h["shares"] * p)
+
+    all_syms = set(list(direct_usd.keys()) + list(etf_usd.keys()))
+    exposure = {}
+    for sym in all_syms:
+        d = direct_usd.get(sym, 0.0)
+        e = etf_usd.get(sym, 0.0)
+        total = d + e
+        exposure[sym] = {
+            "value_usd":  round(total, 2),
+            "value_twd":  round(total * usd_twd, 0),
+            "direct_usd": round(d, 2),
+            "etf_usd":    round(e, 2),
+        }
+
+    return dict(sorted(exposure.items(), key=lambda x: x[1]["value_twd"], reverse=True))
 
 
-# ─────────────────────────────────────────
-# MAIN
-# ─────────────────────────────────────────
 def main():
     logs: dict = {}
-    cfg = load_portfolio()
-    portfolio = cfg["portfolio"]
-    loan_list = cfg["loan"]
+    cfg         = load_portfolio()
+    portfolio   = cfg["portfolio"]
+    loan_list   = cfg["loan"]
     etf_weights = cfg.get("etf_weights", {})
+    thresholds  = cfg.get("thresholds", {"high": 30, "midH": 15, "midL": -10, "low": -20})
 
-    # ── 收集所有 ticker ──────────────────
-    all_ticks = list({
-        h["tick"]
-        for h in portfolio + loan_list
-        if h.get("tick")
-    })
-    tw_ticks = [t for t in all_ticks if t.endswith(".TW")]
-    us_ticks = [t for t in all_ticks if not t.endswith(".TW")]
+    all_ticks  = list({h["tick"] for h in portfolio + loan_list if h.get("tick")})
+    tw_ticks   = [t for t in all_ticks if t.endswith(".TW")]
     yf_symbols = all_ticks + ["USDTWD=X"]
 
-    # ── 抓價（yfinance 主，TWSE 備援台股）───
     prices: dict[str, float] = {}
-
     try:
         prices = fetch_prices_yfinance(yf_symbols)
         logs["yfinance"] = f"ok ({len(prices)} prices)"
     except Exception as e:
         logs["yfinance"] = f"error: {e}"
 
-    # 任何台股 yfinance 沒抓到 → TWSE 備援
     tw_missing = [t for t in tw_ticks if t not in prices]
     if tw_missing:
         try:
@@ -301,7 +238,6 @@ def main():
     usd_twd = prices.get("USDTWD=X", 31.5)
     logs["usd_twd"] = round(usd_twd, 4)
 
-    # ── 計算持倉現值 ─────────────────────
     def val_twd(h) -> float:
         p = prices.get(h["tick"], h["price"]) if h.get("tick") else h["price"]
         return h["shares"] * p * usd_twd if h["cur"] == "USD" else h["shares"] * p
@@ -315,80 +251,71 @@ def main():
         v = val_twd(h)
         c = h["cost"]
         ret = (v - c) / c * 100 if c > 0 else 0
-        portfolio_items.append({
-            **h,
-            "price": round(p, 4),
-            "value_twd": round(v, 2),
-            "return_pct": round(ret, 2),
-        })
+        portfolio_items.append({**h, "price": round(p, 4), "value_twd": round(v, 2), "return_pct": round(ret, 2)})
 
     loan_items = []
     for h in loan_list:
         p = price_for(h)
         v = val_twd(h)
         c = h.get("cost", h["shares"] * h["perSh"])
-        pnl = v - c
-        loan_items.append({
-            **h,
-            "price": round(p, 4),
-            "value_twd": round(v, 2),
-            "unrealized_pnl": round(pnl, 2),
-        })
+        loan_items.append({**h, "price": round(p, 4), "value_twd": round(v, 2), "unrealized_pnl": round(v - c, 2)})
 
-    # ── 匯總 ─────────────────────────────
-    cash_like = set(cfg.get("cash_like_cats", []))
-    targets = cfg.get("targets", {})
-    cat_order = list(targets.keys())
+    cash_like  = set(cfg.get("cash_like_cats", []))
+    targets    = cfg.get("targets", {})
 
-    port_total = sum(h["value_twd"] for h in portfolio_items
-                     if h["cat"] not in cash_like)
-    port_cost   = sum(h["cost"] for h in portfolio_items
-                      if h["cat"] not in cash_like)
-    cash_pool   = sum(h["value_twd"] for h in portfolio_items
-                      if h["cat"] in cash_like)
-    loan_total  = sum(h["value_twd"] for h in loan_items)
-    loan_cost   = sum(h.get("cost", h["shares"] * h["perSh"]) for h in loan_list)
-    loan_pnl    = loan_total - loan_cost
-    avail_cash  = cfg.get("available_cash", 0) + cash_pool
-    stock_loan  = cfg.get("stock_loan", 0)
-    nav         = port_total + loan_total + avail_cash - stock_loan
+    port_total = sum(h["value_twd"] for h in portfolio_items if h["cat"] not in cash_like)
+    port_cost  = sum(h["cost"]      for h in portfolio_items if h["cat"] not in cash_like)
+    cash_pool  = sum(h["value_twd"] for h in portfolio_items if h["cat"] in cash_like)
+    loan_total = sum(h["value_twd"] for h in loan_items)
+    loan_cost  = sum(h.get("cost", h["shares"] * h["perSh"]) for h in loan_list)
+    loan_pnl   = loan_total - loan_cost
+    avail_cash = cfg.get("available_cash", 0) + cash_pool
+    stock_loan = cfg.get("stock_loan", 0)
+    nav        = port_total + loan_total + avail_cash - stock_loan
+    port_ret   = (port_total - port_cost) / port_cost * 100 if port_cost > 0 else 0
 
-    port_ret = (port_total - port_cost) / port_cost * 100 if port_cost > 0 else 0
+    # 操作建議
+    if port_ret >= thresholds["high"]:
+        signal, signal_level = "減倉", "high"
+    elif port_ret >= thresholds["midH"]:
+        signal, signal_level = "收割", "midH"
+    elif port_ret >= thresholds["midL"]:
+        signal, signal_level = "持倉", "neutral"
+    elif port_ret >= thresholds["low"]:
+        signal, signal_level = "加碼", "midL"
+    else:
+        signal, signal_level = "跌深", "low"
 
-    # 各分類 breakdown
+    # 分類 breakdown
     cat_breakdown = []
-    investable = nav - avail_cash + stock_loan  # for % calculation base
     for cat, tgt in targets.items():
-        items = [h for h in portfolio_items if h["cat"] == cat]
-        cat_val  = sum(h["value_twd"] for h in items)
-        cat_cost = sum(h["cost"] for h in items)
-        cat_ret  = (cat_val - cat_cost) / cat_cost * 100 if cat_cost > 0 else 0
-        actual_pct = cat_val / nav * 100 if nav > 0 else 0
-        target_pct = tgt["pct"] * 100
-        diff_pct   = actual_pct - target_pct
+        items     = [h for h in portfolio_items if h["cat"] == cat]
+        cat_val   = sum(h["value_twd"] for h in items)
+        cat_cost  = sum(h["cost"]      for h in items)
+        cat_ret   = (cat_val - cat_cost) / cat_cost * 100 if cat_cost > 0 else 0
+        actual_pct  = cat_val / nav * 100 if nav > 0 else 0
+        target_pct  = tgt["pct"] * 100
+        target_amt  = nav * tgt["pct"]
         cat_breakdown.append({
-            "cat":        cat,
-            "value":      round(cat_val, 0),
-            "cost":       round(cat_cost, 0),
-            "return_pct": round(cat_ret, 2),
-            "actual_pct": round(actual_pct, 2),
-            "target_pct": round(target_pct, 2),
-            "diff_pct":   round(diff_pct, 2),
-            "strat":      tgt.get("strat", ""),
+            "cat":           cat,
+            "value":         round(cat_val, 0),
+            "cost":          round(cat_cost, 0),
+            "return_pct":    round(cat_ret, 2),
+            "actual_pct":    round(actual_pct, 2),
+            "target_pct":    round(target_pct, 2),
+            "diff_pct":      round(actual_pct - target_pct, 2),
+            "target_amount": round(target_amt, 0),
+            "diff_amount":   round(cat_val - target_amt, 0),
+            "strat":         tgt.get("strat", ""),
         })
 
-    # ── 美股曝險 ─────────────────────────
-    us_exposure = calc_us_exposure(
-        portfolio_items, loan_items, prices, usd_twd, etf_weights
-    )
+    # 美股曝險
     us_exp_list = [
-        {"sym": k, **v, "value_twd": round(v["value_twd"], 0),
-         "value_usd": round(v["value_usd"], 2)}
-        for k, v in us_exposure.items()
+        {"sym": k, **v}
+        for k, v in calc_us_exposure(portfolio_items, loan_items, prices, usd_twd, etf_weights).items()
     ]
 
-    # ── 配息資料 ─────────────────────────
-    # 建立 stock_id → {name, shares}
+    # 配息
     stock_map = {}
     for h in portfolio + loan_list:
         tick = h.get("tick", "")
@@ -397,16 +324,12 @@ def main():
             if sid not in stock_map:
                 stock_map[sid] = {"name": h["name"], "shares": h["shares"]}
             else:
-                stock_map[sid]["shares"] = max(
-                    stock_map[sid]["shares"], h["shares"]
-                )
+                stock_map[sid]["shares"] = max(stock_map[sid]["shares"], h["shares"])
 
     div_upcoming, div_ytd = [], []
     if FINMIND_TOKEN:
         try:
-            div_upcoming, div_ytd = fetch_finmind_dividends(
-                FINMIND_TOKEN, stock_map
-            )
+            div_upcoming, div_ytd = fetch_finmind_dividends(FINMIND_TOKEN, stock_map)
             logs["finmind"] = f"ok (upcoming:{len(div_upcoming)}, ytd:{len(div_ytd)})"
         except Exception as e:
             logs["finmind"] = f"error: {e}"
@@ -417,32 +340,42 @@ def main():
         div_upcoming = cfg.get("dividends_upcoming", [])
         div_ytd      = cfg.get("dividends_ytd", [])
 
-    ytd_total = sum(d.get("amount", d.get("perShare", 0) * d.get("shares", 0))
-                    for d in div_ytd)
+    ytd_total       = sum(d.get("amount", d.get("perShare", 0) * d.get("shares", 0)) for d in div_ytd)
     annual_estimate = ytd_total * (12 / max(datetime.now(TZ_TW).month, 1))
+    ytd_yield       = ytd_total / nav * 100 if nav > 0 else 0
+    thirty_days_later = str((datetime.now(TZ_TW) + timedelta(days=30)).date())
+    next30d = sum(
+        d.get("amount", d.get("perShare", 0) * d.get("shares", 0))
+        for d in div_upcoming
+        if d.get("exDate", "") <= thirty_days_later
+    )
 
-    # ── 輸出 data.json ───────────────────
     output = {
-        "updated_at": now_tw(),
+        "updated_at":    now_tw(),
         "exchange_rate": round(usd_twd, 4),
         "summary": {
-            "nav":                round(nav, 0),
-            "portfolio_total":    round(port_total, 0),
-            "portfolio_cost":     round(port_cost, 0),
+            "nav":                  round(nav, 0),
+            "portfolio_total":      round(port_total, 0),
+            "portfolio_cost":       round(port_cost, 0),
             "portfolio_return_pct": round(port_ret, 2),
-            "loan_total":         round(loan_total, 0),
-            "loan_pnl":           round(loan_pnl, 0),
-            "available_cash":     round(avail_cash, 0),
-            "stock_loan":         round(stock_loan, 0),
-            "cat_breakdown":      cat_breakdown,
+            "loan_total":           round(loan_total, 0),
+            "loan_pnl":             round(loan_pnl, 0),
+            "available_cash":       round(avail_cash, 0),
+            "stock_loan":           round(stock_loan, 0),
+            "signal":               signal,
+            "signal_level":         signal_level,
+            "thresholds":           thresholds,
+            "cat_breakdown":        cat_breakdown,
         },
         "portfolio": portfolio_items,
-        "loan": loan_items,
+        "loan":      loan_items,
         "dividends": {
-            "upcoming":        div_upcoming,
-            "ytd":             div_ytd,
-            "ytd_total":       round(ytd_total, 0),
-            "annual_estimate": round(annual_estimate, 0),
+            "upcoming":         div_upcoming,
+            "ytd":              div_ytd,
+            "ytd_total":        round(ytd_total, 0),
+            "annual_estimate":  round(annual_estimate, 0),
+            "next30d_estimate": round(next30d, 0),
+            "ytd_yield_pct":    round(ytd_yield, 2),
         },
         "us_exposure": us_exp_list,
         "logs": logs,

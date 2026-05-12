@@ -4,36 +4,35 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>發財888888 資產儀表板</title>
-  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
-  <!-- PWA -->
   <link rel="manifest" href="manifest.json"/>
-  <meta name="theme-color" content="#0f1117"/>
+  <meta name="theme-color" content="#0a0c12"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <style>
     :root {
-      --bg:     #0f1117;
-      --card:   #1a1d23;
-      --border: #2a2d35;
-      --text:   #e2e8f0;
-      --muted:  #8892a4;
-      --blue:   #4361ee;
-      --green:  #22c55e;
-      --red:    #ef4444;
-      --yellow: #f59e0b;
-      --teal:   #14b8a6;
+      --bg:      #0a0c12;
+      --card:    #13161e;
+      --card2:   #1c2030;
+      --border:  #252a38;
+      --text:    #dde4f0;
+      --muted:   #6b7592;
+      --blue:    #4f6ef7;
+      --green:   #1fd87a;
+      --red:     #f25c54;
+      --yellow:  #f5a623;
+      --teal:    #00d4b4;
+      --purple:  #9b72f5;
     }
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: -apple-system, 'Segoe UI', sans-serif;
+      font-family: -apple-system, 'Segoe UI', 'PingFang TC', sans-serif;
       font-size: 14px;
-      padding-bottom: 70px;  /* room for bottom nav */
-      padding-top: 56px;     /* room for header */
+      padding-bottom: 72px;
+      padding-top: 56px;
     }
 
     /* ── Header ── */
@@ -42,16 +41,15 @@
       background: var(--card);
       border-bottom: 1px solid var(--border);
       height: 56px;
-      display: flex; align-items: center; padding: 0 16px;
-      gap: 10px;
+      display: flex; align-items: center; padding: 0 16px; gap: 10px;
     }
-    #app-header h1 { font-size: 15px; font-weight: 700; margin: 0; }
+    #app-header h1 { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
     #update-time   { font-size: 11px; color: var(--muted); margin-left: auto; }
-    #dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
-    #dot.ok   { background: var(--green); }
+    #dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+    #dot.ok   { background: var(--green); box-shadow: 0 0 6px var(--green); }
     #dot.err  { background: var(--red); }
     #dot.spin { background: var(--yellow); animation: pulse 1s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
 
     /* ── Bottom Nav ── */
     #bottom-nav {
@@ -66,8 +64,7 @@
       flex: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
       gap: 2px; border: none; background: none;
-      color: var(--muted); cursor: pointer;
-      transition: color .15s;
+      color: var(--muted); cursor: pointer; transition: color .15s;
       font-size: 10px;
     }
     .nav-btn i { font-size: 20px; }
@@ -77,94 +74,165 @@
     .card-dark {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 14px 16px;
       margin-bottom: 10px;
     }
-    .card-label  { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
-    .card-value  { font-size: 22px; font-weight: 700; }
-    .card-sub    { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .card-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; letter-spacing: .3px; }
+    .card-value { font-size: 24px; font-weight: 800; letter-spacing: -.5px; }
+    .card-sub   { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
     /* ── KPI grid ── */
     .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-    .kpi-box  {
+    .kpi-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .kpi-box {
       background: var(--card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 10px 12px;
+      border-radius: 12px; padding: 10px 12px;
     }
-    .kpi-label { font-size: 10px; color: var(--muted); }
-    .kpi-val   { font-size: 16px; font-weight: 700; margin-top: 2px; }
-    .kpi-val.editable {
+    .kpi-label { font-size: 10px; color: var(--muted); margin-bottom: 3px; }
+    .kpi-val   { font-size: 15px; font-weight: 700; }
+    .editable  {
       border-bottom: 1px dashed var(--blue);
-      cursor: text; outline: none; min-width: 80px;
+      cursor: text; outline: none; min-width: 60px;
       display: inline-block;
+    }
+
+    /* ── Signal card ── */
+    .signal-card {
+      border-radius: 14px; padding: 16px; margin-bottom: 10px;
+      text-align: center; margin-top: 2px;
+    }
+    .signal-card.high    { background: rgba(242,92,84,.1);  border: 1px solid rgba(242,92,84,.35); }
+    .signal-card.midH    { background: rgba(245,166,35,.1); border: 1px solid rgba(245,166,35,.35); }
+    .signal-card.neutral { background: rgba(79,110,247,.1); border: 1px solid rgba(79,110,247,.35); }
+    .signal-card.midL    { background: rgba(0,212,180,.1);  border: 1px solid rgba(0,212,180,.35); }
+    .signal-card.low     { background: rgba(31,216,122,.1); border: 1px solid rgba(31,216,122,.35); }
+    .signal-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; letter-spacing: .5px; text-transform: uppercase; }
+    .signal-text  { font-size: 32px; font-weight: 900; letter-spacing: 4px; }
+    .signal-card.high    .signal-text { color: var(--red); }
+    .signal-card.midH    .signal-text { color: var(--yellow); }
+    .signal-card.neutral .signal-text { color: var(--blue); }
+    .signal-card.midL    .signal-text { color: var(--teal); }
+    .signal-card.low     .signal-text { color: var(--green); }
+    .signal-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+
+    /* ── Debt ratio bar ── */
+    .debt-track {
+      position: relative; height: 10px;
+      background: var(--border); border-radius: 5px;
+      overflow: hidden; margin: 8px 0 4px;
+    }
+    .debt-healthy {
+      position: absolute; left: 30%; width: 40%; height: 100%;
+      background: rgba(31,216,122,.15);
+    }
+    .debt-fill {
+      position: absolute; left: 0; top: 0; height: 100%;
+      border-radius: 5px; transition: width .4s;
+    }
+    .debt-ticks {
+      display: flex; justify-content: space-between;
+      font-size: 10px; color: var(--muted);
     }
 
     /* ── Colours ── */
     .pos  { color: var(--green); }
     .neg  { color: var(--red); }
     .neu  { color: var(--muted); }
+    .yel  { color: var(--yellow); }
 
-    /* ── Rebalancing table ── */
-    .rb-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    .rb-table th { color: var(--muted); font-weight: 500; padding: 6px 4px; border-bottom: 1px solid var(--border); text-align: left; }
-    .rb-table td { padding: 6px 4px; border-bottom: 1px solid #1e2128; }
-    .bar-bg   { background: var(--border); border-radius: 3px; height: 5px; overflow: hidden; margin-top: 3px; }
-    .bar-fill { height: 5px; border-radius: 3px; }
-
-    /* ── Portfolio list ── */
-    .cat-header {
-      font-size: 11px; font-weight: 700; color: var(--muted);
-      text-transform: uppercase; letter-spacing: .5px;
-      padding: 12px 0 4px;
+    /* ── Rebalance table ── */
+    .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .rb-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 560px; }
+    .rb-table th {
+      color: var(--muted); font-weight: 500; padding: 6px 6px;
+      border-bottom: 1px solid var(--border); white-space: nowrap;
     }
-    .stock-row {
-      display: flex; align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid #1a1d23;
-      gap: 8px;
-    }
-    .stock-name  { flex: 1; font-size: 13px; font-weight: 500; }
-    .stock-note  { font-size: 10px; color: var(--muted); }
-    .stock-price { font-size: 12px; color: var(--muted); text-align: right; }
-    .stock-val   { font-size: 13px; font-weight: 600; text-align: right; min-width: 72px; }
-    .stock-ret   { font-size: 12px; text-align: right; min-width: 52px; }
+    .rb-table td { padding: 7px 6px; border-bottom: 1px solid rgba(255,255,255,.03); vertical-align: middle; }
+    .prog-bg   { background: var(--border); border-radius: 3px; height: 4px; margin-top: 4px; }
+    .prog-fill { height: 4px; border-radius: 3px; }
 
-    /* ── Dividend cards ── */
+    /* ── Suggest badge ── */
+    .badge-s {
+      display: inline-block; border-radius: 5px;
+      padding: 2px 7px; font-size: 11px; font-weight: 600; white-space: nowrap;
+    }
+    .s-sell { background: rgba(242,92,84,.15);  color: var(--red); }
+    .s-trim { background: rgba(245,166,35,.15); color: var(--yellow); }
+    .s-hold { background: rgba(255,255,255,.06); color: var(--muted); }
+    .s-add  { background: rgba(0,212,180,.15);  color: var(--teal); }
+    .s-buy  { background: rgba(31,216,122,.15); color: var(--green); }
+
+    /* ── Portfolio rows ── */
+    .cat-hdr {
+      font-size: 10px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .8px;
+      padding: 12px 0 4px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .cat-hdr-right { font-size: 12px; font-weight: 600; color: var(--text); }
+    .s-row { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.03); }
+    .s-row-top { display: flex; align-items: center; gap: 8px; }
+    .s-name { flex: 1; font-size: 13px; font-weight: 600; }
+    .s-val  { font-size: 13px; font-weight: 700; min-width: 72px; text-align: right; }
+    .s-ret  { font-size: 12px; min-width: 52px; text-align: right; }
+    .s-row-btm {
+      display: flex; flex-wrap: wrap; gap: 4px 10px;
+      margin-top: 3px; font-size: 10px; color: var(--muted);
+    }
+    .tag {
+      background: rgba(255,255,255,.06); border-radius: 4px;
+      padding: 1px 6px; font-size: 10px;
+    }
+    .tag-blue { color: var(--blue); }
+    .tag-yel  { color: var(--yellow); }
+
+    /* ── US Exposure table ── */
+    .exp-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 320px; }
+    .exp-table th {
+      color: var(--muted); font-weight: 500; padding: 5px 6px;
+      border-bottom: 1px solid var(--border); text-align: right;
+    }
+    .exp-table th:first-child { text-align: left; }
+    .exp-table td { padding: 5px 6px; border-bottom: 1px solid rgba(255,255,255,.03); text-align: right; }
+    .exp-table td:first-child { text-align: left; font-weight: 700; color: var(--text); }
+
+    /* ── Dividend card ── */
     .div-card {
       background: var(--card); border: 1px solid var(--border);
-      border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+      border-radius: 12px; padding: 12px 14px; margin-bottom: 8px;
       display: flex; align-items: center; gap: 12px;
     }
-    .div-date  { font-size: 12px; color: var(--muted); }
     .div-stock { font-size: 13px; font-weight: 600; }
-    .div-amt   { font-size: 15px; font-weight: 700; color: var(--teal); margin-left: auto; text-align: right; }
+    .div-date  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .div-days  { display: inline-block; background: rgba(79,110,247,.15); color: var(--blue); border-radius: 4px; padding: 1px 6px; font-size: 10px; margin-left: 4px; }
+    .div-amt   { margin-left: auto; text-align: right; }
+    .div-amt-val  { font-size: 15px; font-weight: 700; color: var(--teal); }
+    .div-per-sh   { font-size: 11px; color: var(--muted); margin-top: 1px; }
 
     /* ── YTD table ── */
     .ytd-table { width: 100%; border-collapse: collapse; font-size: 12px; }
     .ytd-table th { color: var(--muted); font-weight: 500; padding: 5px 4px; border-bottom: 1px solid var(--border); }
-    .ytd-table td { padding: 5px 4px; border-bottom: 1px solid #1a1d23; }
+    .ytd-table td { padding: 5px 4px; border-bottom: 1px solid rgba(255,255,255,.03); }
 
     /* ── Log badges ── */
-    .badge-ok  { background: rgba(34,197,94,.15);  color: var(--green); border-radius: 6px; padding: 2px 8px; font-size: 11px; }
-    .badge-err { background: rgba(239,68,68,.15);  color: var(--red);   border-radius: 6px; padding: 2px 8px; font-size: 11px; }
-    .badge-info{ background: rgba(67,97,238,.15);  color: var(--blue);  border-radius: 6px; padding: 2px 8px; font-size: 11px; }
+    .b-ok   { background: rgba(31,216,122,.12); color: var(--green); border-radius: 6px; padding: 2px 8px; font-size: 11px; }
+    .b-err  { background: rgba(242,92,84,.12);  color: var(--red);   border-radius: 6px; padding: 2px 8px; font-size: 11px; }
+    .b-info { background: rgba(79,110,247,.12); color: var(--blue);  border-radius: 6px; padding: 2px 8px; font-size: 11px; }
 
-    /* ── Tab pane ── */
-    .tab-pane { padding: 12px 14px; }
-
-    /* ── Section title ── */
+    /* ── Tab & section ── */
+    .tab-pane { padding: 0 14px 12px; }
     .sec-title {
-      font-size: 12px; font-weight: 700; color: var(--muted);
-      text-transform: uppercase; letter-spacing: .8px;
-      margin: 14px 0 8px;
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .9px;
+      margin: 16px 0 8px;
     }
+
     /* ── Loading ── */
     #loading {
       position: fixed; inset: 0; background: var(--bg);
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      gap: 12px; z-index: 9999;
-      font-size: 13px; color: var(--muted);
+      gap: 14px; z-index: 9999; font-size: 13px; color: var(--muted);
     }
     .spinner {
       width: 32px; height: 32px; border: 3px solid var(--border);
@@ -176,37 +244,42 @@
 </head>
 <body>
 
-<!-- ── Loading screen ── -->
 <div id="loading">
-  <div style="font-size:32px;">💰</div>
+  <div style="font-size:36px;">💰</div>
   <div class="spinner"></div>
   <div>載入資料中…</div>
 </div>
 
-<!-- ── Fixed header ── -->
 <div id="app-header" style="display:none;">
   <div id="dot"></div>
   <h1>發財888888</h1>
   <div id="update-time">—</div>
 </div>
 
-<!-- ── Main content ── -->
 <div id="app" style="display:none;">
   <div class="tab-content">
 
     <!-- ════ Tab A：總覽 ════ -->
     <div class="tab-pane fade show active" id="tab-summary">
+
+      <!-- 操作建議燈號 -->
+      <div id="signal-card" class="signal-card neutral">
+        <div class="signal-label">🚦 操作建議</div>
+        <div class="signal-text" id="signal-text">持倉</div>
+        <div class="signal-sub" id="signal-sub">—</div>
+      </div>
+
       <!-- NAV 主卡 -->
-      <div class="card-dark" style="margin-top:2px;">
+      <div class="card-dark">
         <div class="card-label">💎 金融資產淨值（NAV）</div>
         <div class="card-value" id="s-nav">—</div>
         <div class="card-sub">
-          報酬率 <span id="s-ret" class="neu">—</span>
-          &nbsp;｜&nbsp;USD/TWD <span id="s-fx">—</span>
+          組合報酬 <span id="s-ret" class="neu">—</span>
+          &nbsp;｜&nbsp; USD/TWD <span id="s-fx">—</span>
         </div>
       </div>
 
-      <!-- 4 KPI -->
+      <!-- KPI 4格 -->
       <div class="kpi-grid">
         <div class="kpi-box">
           <div class="kpi-label">📊 組合總值</div>
@@ -217,41 +290,73 @@
           <div class="kpi-val" id="s-loan">—</div>
         </div>
         <div class="kpi-box">
-          <div class="kpi-label">💵 可用現金 <span style="font-size:9px;color:var(--blue);">✎可編輯</span></div>
+          <div class="kpi-label">💵 可用現金 <span style="font-size:9px;color:var(--blue);">✎</span></div>
           <div class="kpi-val">
-            <span class="kpi-val editable" id="cash-input"
-                  contenteditable="true" inputmode="numeric">0</span>
+            <span class="editable" id="cash-input" contenteditable="true" inputmode="numeric">0</span>
           </div>
         </div>
         <div class="kpi-box">
-          <div class="kpi-label">📉 股票貸款 <span style="font-size:9px;color:var(--blue);">✎可編輯</span></div>
+          <div class="kpi-label">📉 股票貸款 <span style="font-size:9px;color:var(--blue);">✎</span></div>
           <div class="kpi-val">
-            <span class="kpi-val editable" id="loan-input"
-                  contenteditable="true" inputmode="numeric">0</span>
+            <span class="editable" id="loan-input" contenteditable="true" inputmode="numeric">0</span>
           </div>
         </div>
       </div>
 
-      <!-- 借款 P&L -->
+      <!-- 借款獲利 -->
       <div class="kpi-box" style="margin-bottom:10px;">
         <div class="kpi-label">📈 借款部位未實現損益</div>
         <div class="kpi-val" id="s-loanpnl">—</div>
       </div>
 
-      <!-- 再平衡 -->
+      <!-- 房貸 / 房產 + 負債率 -->
+      <div class="card-dark">
+        <div class="kpi-grid" style="margin-bottom:12px;">
+          <div class="kpi-box">
+            <div class="kpi-label">🏠 房貸餘額 <span style="font-size:9px;color:var(--blue);">✎</span></div>
+            <div class="kpi-val">
+              <span class="editable" id="mortgage-input" contenteditable="true" inputmode="numeric">0</span>
+            </div>
+          </div>
+          <div class="kpi-box">
+            <div class="kpi-label">🏘️ 房產估值 <span style="font-size:9px;color:var(--blue);">✎</span></div>
+            <div class="kpi-val">
+              <span class="editable" id="house-input" contenteditable="true" inputmode="numeric">0</span>
+            </div>
+          </div>
+        </div>
+        <div class="kpi-label" style="margin-bottom:2px;">⚖️ 負債率（健康區間 30–70%）</div>
+        <div class="debt-track">
+          <div class="debt-healthy"></div>
+          <div class="debt-fill" id="debt-fill" style="width:0%;background:var(--muted);"></div>
+        </div>
+        <div class="debt-ticks">
+          <span>0%</span><span style="margin-left:30%;">30%</span>
+          <span style="margin-left:auto;margin-right:30%;">70%</span><span>100%</span>
+        </div>
+        <div style="text-align:center;font-size:20px;font-weight:800;margin-top:6px;" id="debt-val">—</div>
+      </div>
+
+      <!-- 再平衡導航 -->
       <div class="sec-title">⚖️ 再平衡導航</div>
       <div class="card-dark" style="padding:10px;">
-        <table class="rb-table">
-          <thead>
-            <tr>
-              <th>分類</th>
-              <th style="text-align:right;">目標%</th>
-              <th style="text-align:right;">現值%</th>
-              <th style="text-align:right;">差異</th>
-            </tr>
-          </thead>
-          <tbody id="rb-body"></tbody>
-        </table>
+        <div class="scroll-x">
+          <table class="rb-table">
+            <thead>
+              <tr>
+                <th>分類</th>
+                <th>策略</th>
+                <th style="text-align:right;">應有%</th>
+                <th style="text-align:right;">現值%</th>
+                <th style="text-align:right;">現值</th>
+                <th style="text-align:right;">目標金額</th>
+                <th style="text-align:right;">差額</th>
+                <th style="text-align:center;">建議</th>
+              </tr>
+            </thead>
+            <tbody id="rb-body"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -259,26 +364,42 @@
     <div class="tab-pane fade" id="tab-portfolio">
       <div id="portfolio-list"></div>
 
-      <div class="sec-title" style="margin-top:16px;">🏦 借款部位</div>
+      <div class="sec-title">🏦 借款部位</div>
       <div id="loan-list"></div>
 
-      <div class="sec-title" style="margin-top:16px;">🇺🇸 美股曝險總覽（含 ETF 內含）</div>
+      <div class="sec-title">🇺🇸 美股曝險（直接持股 + ETF 內含）</div>
       <div id="us-exposure"></div>
     </div>
 
     <!-- ════ Tab C：股利 ════ -->
     <div class="tab-pane fade" id="tab-dividends">
+
+      <div class="kpi-grid-3" style="margin-top:2px;">
+        <div class="kpi-box">
+          <div class="kpi-label">📅 未來 30 天</div>
+          <div class="kpi-val pos" id="div-30d">—</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-label">💰 今年已領</div>
+          <div class="kpi-val pos" id="div-ytd-kpi">—</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-label">📈 年殖利率</div>
+          <div class="kpi-val pos" id="div-yield">—</div>
+        </div>
+      </div>
+
       <div class="sec-title">📅 近期除息預告</div>
       <div id="div-upcoming"></div>
 
-      <div class="sec-title" style="margin-top:8px;">📊 今年累計股利（YTD）</div>
+      <div class="sec-title">📊 今年累計股利（YTD）</div>
       <div class="card-dark" style="padding:10px;">
         <table class="ytd-table">
           <thead><tr>
             <th class="text-start">股票</th>
             <th style="text-align:right;">除息日</th>
             <th style="text-align:right;">金額</th>
-            <th style="text-align:right;">入帳</th>
+            <th style="text-align:center;">入帳</th>
           </tr></thead>
           <tbody id="div-ytd-body"></tbody>
           <tfoot id="div-ytd-foot"></tfoot>
@@ -295,31 +416,28 @@
     <div class="tab-pane fade" id="tab-logs">
       <div class="card-dark" style="margin-top:2px;">
         <div class="card-label">🕐 最後成功更新</div>
-        <div id="log-updated" style="font-size:15px;font-weight:600;">—</div>
+        <div id="log-updated" style="font-size:15px;font-weight:700;">—</div>
         <div class="card-sub" id="log-updated-ago">—</div>
       </div>
 
       <div class="sec-title">📡 數據來源狀態</div>
       <div id="log-sources"></div>
 
-      <div class="sec-title" style="margin-top:12px;">ℹ️ API 配額提醒</div>
-      <div class="card-dark">
-        <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;">
-          <div>🐍 <b>yfinance</b>：免費、無限制（Yahoo Finance 公開資料）</div>
-          <div>📊 <b>FinMind</b>：600 次/小時（免費方案）；配息資料每小時自動更新一次</div>
-          <div>🔑 <b>API Keys</b>：儲存於 GitHub Secrets，不寫入程式碼，不對外公開</div>
-          <div>🔄 <b>更新頻率</b>：GitHub Actions 每小時整點執行，非盤中時段顯示前收價</div>
-        </div>
+      <div class="sec-title">ℹ️ API 配額說明</div>
+      <div class="card-dark" style="font-size:12px;line-height:1.8;color:var(--muted);">
+        <div>🐍 <b style="color:var(--text);">yfinance</b>：免費，無次數限制</div>
+        <div>📊 <b style="color:var(--text);">FinMind</b>：600 次 / 小時（免費方案）</div>
+        <div>🔑 <b style="color:var(--text);">API Keys</b>：存於 GitHub Secrets，不對外公開</div>
+        <div>🔄 <b style="color:var(--text);">更新頻率</b>：每小時整點自動執行</div>
       </div>
 
-      <div class="sec-title" style="margin-top:12px;">📝 原始數據摘要</div>
+      <div class="sec-title">📝 原始數據摘要</div>
       <div class="card-dark" id="log-raw" style="font-size:11px;color:var(--muted);white-space:pre-wrap;word-break:break-all;"></div>
     </div>
 
-  </div><!-- /tab-content -->
-</div><!-- /app -->
+  </div>
+</div>
 
-<!-- ── Bottom navigation ── -->
 <nav id="bottom-nav" style="display:none;">
   <button class="nav-btn active" id="btn-summary"   onclick="switchTab('summary')">
     <i class="bi bi-pie-chart-fill"></i>總覽
@@ -337,188 +455,220 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// ══════════════════════════════════════
-// 工具函式
-// ══════════════════════════════════════
-const f  = (n, d=0) => (isNaN(n)||!isFinite(n)) ? '—' : Math.round(n).toLocaleString('zh-TW');
-const fp = (n, d=1) => (isNaN(n)||!isFinite(n)) ? '—' : n.toFixed(d)+'%';
+const f   = n => (isNaN(n)||!isFinite(n)) ? '—' : Math.round(n).toLocaleString('zh-TW');
+const fp  = (n,d=1) => (isNaN(n)||!isFinite(n)) ? '—' : n.toFixed(d)+'%';
 const clr = n => n > 0 ? 'pos' : n < 0 ? 'neg' : 'neu';
 const G   = id => document.getElementById(id);
 
-function relTime(isoStr) {
-  if (!isoStr) return '';
-  const diff = (Date.now() - new Date(isoStr)) / 60000;
-  if (diff < 2)   return '剛剛更新';
-  if (diff < 60)  return `${Math.round(diff)} 分鐘前`;
-  if (diff < 1440)return `${Math.round(diff/60)} 小時前`;
-  return `${Math.round(diff/1440)} 天前`;
+function relTime(iso) {
+  if (!iso) return '';
+  const m = (Date.now() - new Date(iso)) / 60000;
+  if (m < 2)    return '剛剛更新';
+  if (m < 60)   return `${Math.round(m)} 分鐘前`;
+  if (m < 1440) return `${Math.round(m/60)} 小時前`;
+  return `${Math.round(m/1440)} 天前`;
 }
 
-// ══════════════════════════════════════
-// Tab 切換
-// ══════════════════════════════════════
 const TABS = ['summary','portfolio','dividends','logs'];
-
 function switchTab(name) {
   TABS.forEach(t => {
-    G('tab-'+t).classList.toggle('show', t===name);
+    G('tab-'+t).classList.toggle('show',   t===name);
     G('tab-'+t).classList.toggle('active', t===name);
     G('btn-'+t).classList.toggle('active', t===name);
   });
   localStorage.setItem('activeTab', name);
 }
 
-// ══════════════════════════════════════
-// 可用現金 / 股票貸款 — 本地編輯
-// ══════════════════════════════════════
-let D = {};  // data.json content
+let D = {};
 
 function parseMoney(el) {
   return parseFloat(el.textContent.replace(/,/g,'')) || 0;
 }
 
 function setupEditables() {
-  const cashEl = G('cash-input');
-  const loanEl = G('loan-input');
-
-  // 初始值：localStorage → data.json
-  const savedCash = localStorage.getItem('availCash');
-  const savedLoan = localStorage.getItem('stockLoan');
-  cashEl.textContent = f(savedCash !== null ? +savedCash : (D.summary?.available_cash||0));
-  loanEl.textContent = f(savedLoan !== null ? +savedLoan : (D.summary?.stock_loan||0));
-
-  ['input','blur'].forEach(ev => {
-    cashEl.addEventListener(ev, () => {
-      localStorage.setItem('availCash', parseMoney(cashEl));
-      recalcNAV();
-    });
-    loanEl.addEventListener(ev, () => {
-      localStorage.setItem('stockLoan', parseMoney(loanEl));
-      recalcNAV();
-    });
+  const fields = [
+    ['cash-input',     'availCash',  D.summary?.available_cash || 0],
+    ['loan-input',     'stockLoan',  D.summary?.stock_loan || 0],
+    ['mortgage-input', 'mortgage',   0],
+    ['house-input',    'houseValue', 0],
+  ];
+  fields.forEach(([id, key, def]) => {
+    const el = G(id);
+    const saved = localStorage.getItem(key);
+    el.textContent = f(saved !== null ? +saved : def);
+    ['input','blur'].forEach(ev =>
+      el.addEventListener(ev, () => {
+        localStorage.setItem(key, parseMoney(el));
+        recalcAll();
+      })
+    );
   });
 }
 
-function recalcNAV() {
+function recalcAll() {
   if (!D.summary) return;
-  const cash = parseMoney(G('cash-input'));
-  const loan = parseMoney(G('loan-input'));
-  const nav  = (D.summary.portfolio_total||0)
-             + (D.summary.loan_total||0)
-             + cash - loan;
+  const cash  = parseMoney(G('cash-input'));
+  const loan  = parseMoney(G('loan-input'));
+  const mort  = parseMoney(G('mortgage-input'));
+  const house = parseMoney(G('house-input'));
+
+  const nav = (D.summary.portfolio_total||0) + (D.summary.loan_total||0) + cash - loan;
   G('s-nav').textContent = f(nav);
+
+  // 負債率 = 總負債 / 毛資產（含房產）
+  const grossAssets = nav + loan + house;
+  const totalDebt   = loan + mort;
+  const ratio       = grossAssets > 0 ? totalDebt / grossAssets * 100 : 0;
+  const inZone      = ratio >= 30 && ratio <= 70;
+  const color       = totalDebt === 0 ? 'var(--muted)' : inZone ? 'var(--green)' : 'var(--yellow)';
+
+  G('debt-fill').style.width      = Math.min(ratio, 100) + '%';
+  G('debt-fill').style.background = color;
+  G('debt-val').textContent       = totalDebt === 0 ? '—' : fp(ratio);
+  G('debt-val').style.color       = color;
 }
 
-// ══════════════════════════════════════
-// 渲染各 Tab
-// ══════════════════════════════════════
-
-// ── Tab A：總覽 ──
+// ── Tab A ──
 function renderSummary(s, fx) {
-  const cash = parseMoney(G('cash-input'));
-  const loanAmt = parseMoney(G('loan-input'));
-  const nav = (s.portfolio_total||0) + (s.loan_total||0) + cash - loanAmt;
-
-  G('s-nav').textContent = f(nav);
   G('s-port').textContent = f(s.portfolio_total);
   G('s-loan').textContent = f(s.loan_total);
   G('s-fx').textContent   = (fx||31.5).toFixed(2);
 
   const ret = s.portfolio_return_pct || 0;
-  G('s-ret').textContent  = (ret>=0?'+':'')+fp(ret);
-  G('s-ret').className    = clr(ret);
+  G('s-ret').textContent = (ret>=0?'+':'') + fp(ret);
+  G('s-ret').className   = clr(ret);
 
   const pnl = s.loan_pnl || 0;
-  G('s-loanpnl').textContent = (pnl>=0?'+':'')+f(pnl);
+  G('s-loanpnl').textContent = (pnl>=0?'+':'') + f(pnl);
   G('s-loanpnl').className   = 'kpi-val ' + clr(pnl);
 
-  // 再平衡
+  // 燈號
+  const sig = s.signal || '持倉';
+  const lvl = s.signal_level || 'neutral';
+  const thr = s.thresholds || {high:30, midH:15, midL:-10, low:-20};
+  G('signal-card').className = 'signal-card ' + lvl;
+  G('signal-text').textContent = sig;
+  G('signal-sub').textContent  =
+    `組合報酬 ${ret>=0?'+':''}${fp(ret)}　｜　收割線 +${thr.midH}% / 加碼線 ${thr.midL}%`;
+
+  // 再平衡表
   const tbody = G('rb-body');
   tbody.innerHTML = '';
   (s.cat_breakdown||[]).forEach(row => {
-    const diff = row.diff_pct || 0;
-    const barColor = diff > 5 ? 'var(--green)' : diff < -5 ? 'var(--red)' : 'var(--blue)';
-    const fillPct  = Math.min(Math.abs(row.actual_pct/row.target_pct)*100, 150);
+    const diff    = row.diff_pct || 0;
+    const diffAmt = row.diff_amount || 0;
+    const fill    = Math.min(Math.abs(row.actual_pct / Math.max(row.target_pct,1))*100, 150);
+    const barColor = diff > 5 ? 'var(--red)' : diff < -5 ? 'var(--green)' : 'var(--blue)';
+
+    let sc, st;
+    if      (diff >  5) { sc='s-sell'; st='減倉'; }
+    else if (diff >  2) { sc='s-trim'; st='輕減'; }
+    else if (diff < -5) { sc='s-buy';  st='加碼'; }
+    else if (diff < -2) { sc='s-add';  st='輕加'; }
+    else                { sc='s-hold'; st='持倉'; }
+
     tbody.innerHTML += `
       <tr>
         <td>
-          <div style="font-size:12px;">${row.cat}</div>
-          <div class="bar-bg"><div class="bar-fill" style="width:${fillPct}%;background:${barColor};"></div></div>
+          <div style="font-weight:700;font-size:12px;">${row.cat}</div>
+          <div class="prog-bg"><div class="prog-fill" style="width:${fill}%;background:${barColor};"></div></div>
         </td>
+        <td style="font-size:10px;color:var(--muted);max-width:88px;line-height:1.4;">${row.strat||''}</td>
         <td style="text-align:right;color:var(--muted);">${row.target_pct.toFixed(0)}%</td>
-        <td style="text-align:right;">${fp(row.actual_pct)}</td>
-        <td style="text-align:right;" class="${clr(diff)}">${diff>=0?'+':''}${fp(diff)}</td>
+        <td style="text-align:right;" class="${clr(diff)}">${fp(row.actual_pct)}</td>
+        <td style="text-align:right;">${f(row.value)}</td>
+        <td style="text-align:right;color:var(--muted);">${f(row.target_amount)}</td>
+        <td style="text-align:right;" class="${clr(diffAmt)}">${diffAmt>=0?'+':''}${f(diffAmt)}</td>
+        <td style="text-align:center;"><span class="badge-s ${sc}">${st}</span></td>
       </tr>`;
   });
 }
 
-// ── Tab B：投組 ──
+// ── Tab B ──
 function renderPortfolio(portfolio, loan, usExp) {
+  const totalPort = portfolio.reduce((a,h)=>a+h.value_twd, 0);
   const container = G('portfolio-list');
   container.innerHTML = '';
 
-  // 按 cat 分組
-  const groups = {};
-  const catOrder = [];
+  const groups = {}, catOrder = [];
   portfolio.forEach(h => {
-    if (!groups[h.cat]) { groups[h.cat] = []; catOrder.push(h.cat); }
+    if (!groups[h.cat]) { groups[h.cat]=[]; catOrder.push(h.cat); }
     groups[h.cat].push(h);
   });
-  // unique cat order
-  const uniqueCats = [...new Set(catOrder)];
 
-  uniqueCats.forEach(cat => {
-    const items = groups[cat];
-    const catTotal = items.reduce((a,h) => a+h.value_twd, 0);
-    const catCost  = items.reduce((a,h) => a+h.cost, 0);
-    const catRet   = catCost > 0 ? (catTotal-catCost)/catCost*100 : 0;
+  [...new Set(catOrder)].forEach(cat => {
+    const items   = groups[cat];
+    const catVal  = items.reduce((a,h)=>a+h.value_twd, 0);
+    const catCost = items.reduce((a,h)=>a+h.cost, 0);
+    const catRet  = catCost > 0 ? (catVal-catCost)/catCost*100 : 0;
 
     let html = `
-      <div class="cat-header">
-        ${cat}
-        <span style="float:right;font-size:11px;color:var(--text);">
-          ${f(catTotal)}
-          <span class="${clr(catRet)}" style="margin-left:4px;">${catRet>=0?'+':''}${fp(catRet)}</span>
+      <div class="cat-hdr">
+        <span>${cat}</span>
+        <span class="cat-hdr-right">
+          ${f(catVal)}
+          <span class="${clr(catRet)}" style="margin-left:5px;">${catRet>=0?'+':''}${fp(catRet)}</span>
         </span>
       </div>`;
 
     items.forEach(h => {
-      const ret = h.return_pct || 0;
-      const isFx = h.cur === 'USD';
+      const ret   = h.return_pct || 0;
+      const isFx  = h.cur === 'USD';
+      const pct   = totalPort > 0 ? h.value_twd/totalPort*100 : 0;
+      const pFmt  = isFx
+        ? `$${(h.price||0).toFixed(2)}`
+        : (h.price||0).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2});
+      const cFmt  = isFx
+        ? `$${(h.perSh||0).toFixed(2)}`
+        : (h.perSh||0).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2});
+      const tick  = h.tick ? h.tick.replace('.TW','') : '';
+
       html += `
-        <div class="stock-row">
-          <div style="flex:1;">
-            <div class="stock-name">${h.name}</div>
-            ${h.note ? `<div class="stock-note">${h.note}</div>` : ''}
+        <div class="s-row">
+          <div class="s-row-top">
+            <div class="s-name">${h.name}</div>
+            <div class="s-val">${f(h.value_twd)}</div>
+            <div class="s-ret ${clr(ret)}">${ret>=0?'+':''}${fp(ret)}</div>
           </div>
-          <div style="text-align:right;">
-            <div class="stock-price">${isFx?'$':''}${h.price?.toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2})||'—'} × ${h.shares.toLocaleString()}</div>
+          <div class="s-row-btm">
+            ${tick ? `<span class="tag">${tick}</span>` : ''}
+            <span>×${h.shares.toLocaleString()} 股</span>
+            <span>現價 ${pFmt}</span>
+            <span>成本 ${cFmt}/股</span>
+            <span>佔 <span class="neu">${fp(pct)}</span></span>
+            ${h.note ? `<span class="tag tag-blue">${h.note}</span>` : ''}
           </div>
-          <div class="stock-val">${f(h.value_twd)}</div>
-          <div class="stock-ret ${clr(ret)}">${ret>=0?'+':''}${fp(ret)}</div>
         </div>`;
     });
 
-    container.innerHTML += `<div style="margin-bottom:6px;">${html}</div>`;
+    container.innerHTML += `<div style="margin-bottom:4px;">${html}</div>`;
   });
 
-  // 借款
+  // 借款部位
   const loanEl = G('loan-list');
   loanEl.innerHTML = '';
-  if (!loan?.length) { loanEl.innerHTML = '<div style="color:var(--muted);font-size:12px;">無借款部位</div>'; }
+  if (!loan?.length) {
+    loanEl.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:4px 0;">無借款部位</div>';
+  }
   loan?.forEach(h => {
-    const pnl = h.unrealized_pnl || 0;
+    const pnl    = h.unrealized_pnl || 0;
+    const pledge = h.pledgeAmt || 0;
+    const maint  = pledge > 0 ? h.value_twd / pledge * 100 : null;
+    const tick   = h.tick ? h.tick.replace('.TW','') : '';
     loanEl.innerHTML += `
-      <div class="stock-row">
-        <div style="flex:1;">
-          <div class="stock-name">${h.name}</div>
-          <div class="stock-note">質押金額 ${f(h.pledgeAmt)} ｜ ${h.note||''}</div>
+      <div class="s-row">
+        <div class="s-row-top">
+          <div class="s-name">${h.name}</div>
+          <div class="s-val">${f(h.value_twd)}</div>
+          <div class="s-ret ${clr(pnl)}">${pnl>=0?'+':''}${f(pnl)}</div>
         </div>
-        <div class="stock-price" style="text-align:right;">
-          ${h.price?.toLocaleString()||'—'} × ${h.shares}
+        <div class="s-row-btm">
+          ${tick ? `<span class="tag">${tick}</span>` : ''}
+          <span>×${h.shares.toLocaleString()} 股</span>
+          <span>質押 ${f(pledge)}</span>
+          ${maint!==null ? `<span class="${maint>=130?'pos':'neg'}">維持率 ${maint.toFixed(0)}%</span>` : ''}
+          ${h.note ? `<span class="tag tag-yel">${h.note}</span>` : ''}
         </div>
-        <div class="stock-val">${f(h.value_twd)}</div>
-        <div class="stock-ret ${clr(pnl)}">${pnl>=0?'+':''}${f(pnl)}</div>
       </div>`;
   });
 
@@ -526,141 +676,144 @@ function renderPortfolio(portfolio, loan, usExp) {
   const expEl = G('us-exposure');
   expEl.innerHTML = '';
   if (!usExp?.length) { expEl.innerHTML = '<div style="color:var(--muted);font-size:12px;">無資料</div>'; return; }
-  const totalUsd = usExp.reduce((a,e) => a+e.value_usd, 0);
-  expEl.innerHTML = `<div class="card-dark" style="padding:10px;">`;
+  const totalUsd = usExp.reduce((a,e)=>a+e.value_usd, 0);
   let rows = '';
-  usExp.slice(0,12).forEach(e => {
+  usExp.slice(0,15).forEach(e => {
     const pct = totalUsd > 0 ? e.value_usd/totalUsd*100 : 0;
     rows += `
-      <div style="display:flex;align-items:center;padding:5px 0;border-bottom:1px solid #1a1d23;gap:8px;">
-        <div style="width:50px;font-weight:600;font-size:13px;">${e.sym}</div>
-        <div style="flex:1;">
-          <div class="bar-bg"><div class="bar-fill" style="width:${pct}%;background:var(--blue);"></div></div>
-        </div>
-        <div style="text-align:right;font-size:12px;min-width:80px;">$${Math.round(e.value_usd).toLocaleString()}</div>
-        <div style="text-align:right;font-size:11px;color:var(--muted);min-width:38px;">${pct.toFixed(1)}%</div>
-      </div>`;
+      <tr>
+        <td>${e.sym}</td>
+        <td>${e.direct_usd>0 ? '$'+Math.round(e.direct_usd).toLocaleString() : '<span style="color:var(--muted);">—</span>'}</td>
+        <td>${e.etf_usd>0   ? '$'+Math.round(e.etf_usd).toLocaleString()    : '<span style="color:var(--muted);">—</span>'}</td>
+        <td style="color:var(--text);">$${Math.round(e.value_usd).toLocaleString()}</td>
+        <td style="color:var(--muted);">${pct.toFixed(1)}%</td>
+      </tr>`;
   });
-  expEl.innerHTML = `<div class="card-dark" style="padding:10px;">${rows}</div>`;
+  expEl.innerHTML = `
+    <div class="card-dark" style="padding:10px;">
+      <div class="scroll-x">
+        <table class="exp-table">
+          <thead><tr>
+            <th>代號</th><th>直接持有</th><th>ETF 內含</th><th>合計</th><th>佔比</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
 }
 
-// ── Tab C：股利 ──
-function renderDividends(divData) {
-  // upcoming
-  const upEl = G('div-upcoming');
+// ── Tab C ──
+function renderDividends(div) {
+  G('div-30d').textContent    = div?.next30d_estimate > 0 ? '+'+f(div.next30d_estimate) : '—';
+  G('div-ytd-kpi').textContent = div?.ytd_total > 0 ? '+'+f(div.ytd_total) : '—';
+  G('div-yield').textContent  = div?.ytd_yield_pct > 0 ? fp(div.ytd_yield_pct) : '—';
+
+  const today = new Date().toISOString().slice(0,10);
+  const upEl  = G('div-upcoming');
   upEl.innerHTML = '';
-  if (!divData?.upcoming?.length) {
-    upEl.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:8px 0;">近期無除息資料</div>';
+  if (!div?.upcoming?.length) {
+    upEl.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:6px 0;">近期無除息資料</div>';
   } else {
-    divData.upcoming.forEach(d => {
-      const amt = d.amount || (d.perShare * d.shares);
+    div.upcoming.forEach(d => {
+      const amt  = d.amount || (d.perShare * d.shares);
+      const days = d.exDate ? Math.round((new Date(d.exDate)-new Date(today))/86400000) : null;
+      const daysTag = days !== null
+        ? `<span class="div-days">${days===0?'今日':days+' 天後'}</span>`
+        : '';
       upEl.innerHTML += `
         <div class="div-card">
-          <div>
+          <div style="flex:1;">
             <div class="div-stock">${d.stock}</div>
-            <div class="div-date">除息日 ${d.exDate}${d.payDate?' ▶ 入帳 '+d.payDate:''}</div>
-            <div class="div-date">${d.note||''}</div>
+            <div class="div-date">除息 ${d.exDate}${daysTag}${d.payDate?' → 入帳 '+d.payDate:''}</div>
           </div>
           <div class="div-amt">
-            <div>+${f(amt)}</div>
-            <div style="font-size:11px;color:var(--muted);">每股 ${d.perShare}</div>
+            <div class="div-amt-val">+${f(amt)}</div>
+            <div class="div-per-sh">每股 ${d.perShare}</div>
           </div>
         </div>`;
     });
   }
 
-  // ytd table
   const tbody = G('div-ytd-body');
   tbody.innerHTML = '';
-  let ytdTotal = 0;
-  divData?.ytd?.forEach(d => {
+  let total = 0;
+  div?.ytd?.forEach(d => {
     const amt = d.amount || (d.perShare * d.shares);
-    ytdTotal += amt;
+    total += amt;
     tbody.innerHTML += `
       <tr>
         <td>${d.stock}</td>
         <td style="text-align:right;">${d.date||d.exDate||''}</td>
         <td style="text-align:right;" class="pos">+${f(amt)}</td>
-        <td style="text-align:center;">${d.received ? '✅' : '⏳'}</td>
+        <td style="text-align:center;">${d.received?'✅':'⏳'}</td>
       </tr>`;
   });
   G('div-ytd-foot').innerHTML = `
     <tr style="border-top:1px solid var(--border);">
-      <td colspan="2" style="font-weight:600;">合計</td>
-      <td style="text-align:right;font-weight:700;" class="pos">+${f(ytdTotal)}</td>
+      <td colspan="2" style="font-weight:700;">合計</td>
+      <td style="text-align:right;font-weight:800;" class="pos">+${f(total)}</td>
       <td></td>
     </tr>`;
 
-  const annual = divData?.annual_estimate || 0;
-  G('div-annual').textContent = annual > 0 ? '+' + f(annual) : '—';
+  G('div-annual').textContent = (div?.annual_estimate||0) > 0 ? '+'+f(div.annual_estimate) : '—';
 }
 
-// ── Tab D：系統 ──
+// ── Tab D ──
 function renderLogs(data) {
-  const upd = data.updated_at;
-  G('log-updated').textContent = upd ? new Date(upd).toLocaleString('zh-TW') : '—';
-  G('log-updated-ago').textContent = relTime(upd);
+  G('log-updated').textContent    = data.updated_at ? new Date(data.updated_at).toLocaleString('zh-TW') : '—';
+  G('log-updated-ago').textContent = relTime(data.updated_at);
 
   const srcEl = G('log-sources');
   srcEl.innerHTML = '';
-  const logs = data.logs || {};
-  Object.entries(logs).forEach(([k,v]) => {
+  Object.entries(data.logs||{}).forEach(([k,v]) => {
     const ok = typeof v === 'string' && v.startsWith('ok');
     srcEl.innerHTML += `
       <div class="card-dark" style="padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-        <div style="flex:1;font-size:13px;font-weight:500;">${k}</div>
-        <span class="${ok?'badge-ok':'badge-err'}">${v}</span>
+        <div style="flex:1;font-size:13px;font-weight:600;">${k}</div>
+        <span class="${ok?'b-ok':'b-err'}">${v}</span>
       </div>`;
   });
 
-  G('log-raw').textContent = JSON.stringify(data.summary || {}, null, 2);
+  G('log-raw').textContent = JSON.stringify(data.summary||{}, null, 2);
 }
 
-// ══════════════════════════════════════
-// 載入 data.json 並渲染
-// ══════════════════════════════════════
+// ── 載入 data.json ──
 async function loadData() {
   try {
     const r = await fetch(`./data.json?t=${Date.now()}`);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     D = await r.json();
 
-    // 顯示畫面
     G('loading').style.display    = 'none';
     G('app-header').style.display = 'flex';
     G('app').style.display        = 'block';
     G('bottom-nav').style.display = 'flex';
     G('dot').className = 'ok';
 
-    const upd = D.updated_at;
-    G('update-time').textContent = upd
-      ? new Date(upd).toLocaleTimeString('zh-TW', {hour:'2-digit',minute:'2-digit'}) + ' 更新'
+    G('update-time').textContent = D.updated_at
+      ? new Date(D.updated_at).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}) + ' 更新'
       : '—';
 
     setupEditables();
-    renderSummary(D.summary || {}, D.exchange_rate);
-    renderPortfolio(D.portfolio || [], D.loan || [], D.us_exposure || []);
-    renderDividends(D.dividends || {});
+    renderSummary(D.summary||{}, D.exchange_rate);
+    renderPortfolio(D.portfolio||[], D.loan||[], D.us_exposure||[]);
+    renderDividends(D.dividends||{});
     renderLogs(D);
+    recalcAll();
 
-    // 恢復上次分頁
     const saved = localStorage.getItem('activeTab');
     if (saved && TABS.includes(saved)) switchTab(saved);
 
   } catch(e) {
     G('loading').innerHTML = `
-      <div style="font-size:32px;">⚠️</div>
-      <div style="color:var(--red);">無法載入 data.json</div>
+      <div style="font-size:36px;">⚠️</div>
+      <div style="color:var(--red);font-weight:700;">無法載入 data.json</div>
       <div style="font-size:11px;color:var(--muted);max-width:260px;text-align:center;">${e.message}</div>
-      <button onclick="location.reload()" style="margin-top:12px;padding:8px 20px;border-radius:8px;background:var(--blue);color:#fff;border:none;cursor:pointer;">重試</button>`;
+      <button onclick="location.reload()" style="margin-top:14px;padding:8px 22px;border-radius:10px;background:var(--blue);color:#fff;border:none;cursor:pointer;font-size:14px;">重試</button>`;
   }
 }
 
-// PWA Service Worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(() => {});
-}
-
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 loadData();
 </script>
 </body>
