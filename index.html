@@ -216,14 +216,14 @@
     <!-- 兩個燈號 -->
     <div class="sig-grid">
       <div class="sig-card neutral" id="sys-sig">
-        <div class="sig-label">🍊 系統操作建議</div>
-        <div class="sig-text" id="sys-sig-text">持倉</div>
+        <div class="sig-label">系統操作建議</div>
+        <div class="sig-text" id="sys-sig-text">🍊 持倉</div>
         <div class="sig-sub" id="sys-sig-sub">組合報酬 —</div>
         <div class="thr-bar" style="margin-top:6px" id="sys-thr-bar"></div>
       </div>
       <div class="sig-card neutral" id="pos2-sig">
-        <div class="sig-label">🍊 正2 導航</div>
-        <div class="sig-text" id="pos2-sig-text">持倉</div>
+        <div class="sig-label">正2 導航</div>
+        <div class="sig-text" id="pos2-sig-text">🍊 持倉</div>
         <div class="sig-sub" id="pos2-sig-sub">00631L 報酬 —</div>
         <div class="thr-bar" style="margin-top:6px" id="pos2-thr-bar"></div>
       </div>
@@ -255,17 +255,12 @@
       </div>
     </div>
 
-    <!-- Row 3: 銀行現金 | 類現金ETF | 總現金餘額 -->
-    <div class="kpi-grid-3">
+    <!-- Row 3: 銀行現金 | 總現金餘額 -->
+    <div class="kpi-grid">
       <div class="kpi-box">
         <div class="kpi-label">🏦 銀行現金 <span style="font-size:9px;color:var(--blue)">✎</span></div>
         <div class="kpi-val"><span class="editable" id="cash-input" contenteditable="true" inputmode="numeric">0</span></div>
         <div class="kpi-note">手動填入</div>
-      </div>
-      <div class="kpi-box">
-        <div class="kpi-label">💵 類現金 ETF</div>
-        <div class="kpi-val" id="s-cashlike">—</div>
-        <div class="kpi-note">從再平衡自動抓取</div>
       </div>
       <div class="kpi-box">
         <div class="kpi-label">💰 總現金餘額</div>
@@ -630,7 +625,6 @@ function renderSummaryContent(sum, rebal){
   G('s-unreal').className    = 'kpi-val '+clr(sum.pUnreal);
   G('s-nav').textContent     = f(sum.nav);
   G('s-fx').textContent      = (D.exchange_rate||31.5).toFixed(2);
-  G('s-cashlike').textContent= f(sum.cPool);
   G('s-totalcash').textContent=f(sum.cash);
   G('s-loanpnl').textContent = (sum.lPnl>=0?'+':'')+f(sum.lPnl);
   G('s-loanpnl').className   = 'kpi-val '+clr(sum.lPnl);
@@ -641,7 +635,7 @@ function renderSummaryContent(sum, rebal){
   const sRet = D.summary?.portfolio_return_pct||0;
   const sSig = computeSignal(sRet, THRESHOLDS.sys);
   G('sys-sig').className='sig-card '+sSig.level;
-  G('sys-sig-text').textContent=sSig.label;
+  G('sys-sig-text').textContent='🍊 '+sSig.label;
   G('sys-sig-sub').textContent=`組合報酬 ${sRet>=0?'+':''}${fp(sRet)}`;
   renderThrBar('sys-thr-bar','sys');
 
@@ -649,7 +643,7 @@ function renderSummaryContent(sum, rebal){
   const p2ret = D.summary?.pos2_return_pct||0;
   const p2Sig = computeSignal(p2ret, THRESHOLDS.pos2);
   G('pos2-sig').className='sig-card '+p2Sig.level;
-  G('pos2-sig-text').textContent=p2Sig.label;
+  G('pos2-sig-text').textContent='🍊 '+p2Sig.label;
   G('pos2-sig-sub').textContent=`00631L 報酬 ${p2ret>=0?'+':''}${fp(p2ret)}`;
   renderThrBar('pos2-thr-bar','pos2');
 
@@ -908,21 +902,25 @@ function renderUsExp(){
     el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px">ETF 內含曝險資料更新中（需觸發一次 GitHub Actions）</div>';
     return;
   }
-  const totalUsd=exp.reduce((a,r)=>a+(r.value_usd||0),0);
+  const fx=D.exchange_rate||31.5;
+  const totalTwd=exp.reduce((a,r)=>a+(r.value_twd||(r.value_usd||0)*fx),0);
   let html='';
   exp.forEach(r=>{
-    const pct=totalUsd>0?r.value_usd/totalUsd*100:0;
+    const directTwd=Math.round((r.direct_usd||0)*fx);
+    const etfTwd   =Math.round((r.etf_usd||0)*fx);
+    const totTwd   =r.value_twd||Math.round((r.value_usd||0)*fx);
+    const pct=totalTwd>0?totTwd/totalTwd*100:0;
     html+=`<tr>
       <td>${r.sym}</td>
-      <td>${(r.direct_usd||0)>0?'$'+Math.round(r.direct_usd).toLocaleString():'<span style="color:var(--muted)">—</span>'}</td>
-      <td>${(r.etf_usd||0)>0?'$'+Math.round(r.etf_usd).toLocaleString():'<span style="color:var(--muted)">—</span>'}</td>
-      <td style="color:var(--text)">$${Math.round(r.value_usd).toLocaleString()}</td>
+      <td>${directTwd>0?f(directTwd):'<span style="color:var(--muted)">—</span>'}</td>
+      <td>${etfTwd>0?f(etfTwd):'<span style="color:var(--muted)">—</span>'}</td>
+      <td style="color:var(--text)">${f(totTwd)}</td>
       <td style="color:var(--muted)">${pct.toFixed(1)}%</td>
     </tr>`;
   });
   el.innerHTML=`<div class="card-dark" style="padding:10px"><div class="scroll-x">
     <table class="exp-table">
-      <thead><tr><th>代號</th><th>直接持有 (USD)</th><th>ETF 內含 (USD)</th><th>合計 (USD)</th><th>佔比</th></tr></thead>
+      <thead><tr><th>代號</th><th>直接持有 (TWD)</th><th>ETF 內含 (TWD)</th><th>合計 (TWD)</th><th>佔比</th></tr></thead>
       <tbody>${html}</tbody>
     </table></div></div>`;
 }
