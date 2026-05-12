@@ -1,14 +1,14 @@
 {
-  "updated_at": "2026-05-13T06:40:11.174635+08:00",
+  "updated_at": "2026-05-13T07:16:22.674877+08:00",
   "exchange_rate": 31.557,
   "summary": {
-    "nav": 8755549.0,
-    "portfolio_total": 7926489.0,
-    "portfolio_cost": 4653315.0,
-    "portfolio_return_pct": 70.34,
+    "nav": 8760623.0,
+    "portfolio_total": 8510623.0,
+    "portfolio_cost": 5223579.0,
+    "portfolio_return_pct": 62.93,
     "loan_total": 250000.0,
     "loan_pnl": 8000.0,
-    "available_cash": 579060.0,
+    "available_cash": 0,
     "stock_loan": 0,
     "signal": "減倉",
     "signal_level": "high",
@@ -23,100 +23,100 @@
     },
     "cat_breakdown": [
       {
-        "cat": "台灣大盤ETF",
-        "value": 3264926.0,
-        "cost": 1162495.0,
-        "return_pct": 180.86,
-        "actual_pct": 37.29,
+        "cat": "å°ç£å¤§ç¤ETF",
+        "value": 0,
+        "cost": 0,
+        "return_pct": 0,
+        "actual_pct": 0.0,
         "target_pct": 31.0,
-        "diff_pct": 6.29,
-        "target_amount": 2714220.0,
-        "diff_amount": 550705.0,
-        "strat": "正2:20% ＋ 00981A:10%"
+        "diff_pct": -31.0,
+        "target_amount": 2715793.0,
+        "diff_amount": -2715793.0,
+        "strat": "æ­£2:20% ï¼ 00981A:10%"
       },
       {
-        "cat": "成長-美股ETF",
-        "value": 1443903.0,
-        "cost": 870598.0,
-        "return_pct": 65.85,
-        "actual_pct": 16.49,
+        "cat": "æé·-ç¾è¡ETF",
+        "value": 0,
+        "cost": 0,
+        "return_pct": 0,
+        "actual_pct": 0.0,
         "target_pct": 20.0,
-        "diff_pct": -3.51,
-        "target_amount": 1751110.0,
-        "diff_amount": -307206.0,
-        "strat": "00924、TOPT"
+        "diff_pct": -20.0,
+        "target_amount": 1752125.0,
+        "diff_amount": -1752125.0,
+        "strat": "00924ãTOPT"
       },
       {
-        "cat": "成長-國外基金",
-        "value": 472622.0,
-        "cost": 432506.0,
-        "return_pct": 9.28,
-        "actual_pct": 5.4,
+        "cat": "æé·-åå¤åºé",
+        "value": 0,
+        "cost": 0,
+        "return_pct": 0,
+        "actual_pct": 0.0,
         "target_pct": 5.0,
-        "diff_pct": 0.4,
-        "target_amount": 437777.0,
-        "diff_amount": 34845.0,
-        "strat": "印度基金 ＋ 中國科技"
+        "diff_pct": -5.0,
+        "target_amount": 438031.0,
+        "diff_amount": -438031.0,
+        "strat": "å°åº¦åºé ï¼ ä¸­åç§æ"
       },
       {
-        "cat": "成長-美股個股",
-        "value": 938150.0,
-        "cost": 819453.0,
-        "return_pct": 14.48,
-        "actual_pct": 10.71,
+        "cat": "æé·-ç¾è¡åè¡",
+        "value": 0,
+        "cost": 0,
+        "return_pct": 0,
+        "actual_pct": 0.0,
         "target_pct": 10.0,
-        "diff_pct": 0.71,
-        "target_amount": 875555.0,
-        "diff_amount": 62595.0,
+        "diff_pct": -10.0,
+        "target_amount": 876062.0,
+        "diff_amount": -876062.0,
         "strat": "Nvidia 40% / Tesla 30% / Google 30%"
       },
       {
-        "cat": "波段-個股",
-        "value": 512678.0,
-        "cost": 323592,
-        "return_pct": 58.43,
-        "actual_pct": 5.86,
+        "cat": "æ³¢æ®µ-åè¡",
+        "value": 0,
+        "cost": 0,
+        "return_pct": 0,
+        "actual_pct": 0.0,
         "target_pct": 6.0,
-        "diff_pct": -0.14,
-        "target_amount": 525333.0,
-        "diff_amount": -12655.0,
-        "strat": "儘快賣掉，轉債券停泊"
+        "diff_pct": -6.0,
+        "target_amount": 525637.0,
+        "diff_amount": -525637.0,
+        "strat": "åå¿«è³£æï¼è½åµå¸åæ³"
       },
       {
-        "cat": "存股-ETF",
-        "value": 515000.0,
-        "cost": 404000,
-        "return_pct": 27.48,
-        "actual_pct": 5.88,
+        "cat": "å­è¡-ETF",
+        "value": 0,
+        "cost": 0,
+        "return_pct": 0,
+        "actual_pct": 0.0,
         "target_pct": 5.0,
-        "diff_pct": 0.88,
-        "target_amount": 437777.0,
-        "diff_amount": 77223.0,
-        "strat": "00919，填息後轉正2"
+        "diff_pct": -5.0,
+        "target_amount": 438031.0,
+        "diff_amount": -438031.0,
+        "strat": "00919ï¼å¡«æ¯å¾è½æ­£2"
       },
       {
-        "cat": "存股-個股",
-        "value": 439500.0,
-        "cost": 294060,
-        "return_pct": 49.46,
-        "actual_pct": 5.02,
+        "cat": "å­è¡-åè¡",
+        "value": 0,
+        "cost": 0,
+        "return_pct": 0,
+        "actual_pct": 0.0,
         "target_pct": 8.0,
-        "diff_pct": -2.98,
-        "target_amount": 700444.0,
-        "diff_amount": -260944.0,
-        "strat": "中信金 ＋ 台積電"
+        "diff_pct": -8.0,
+        "target_amount": 700850.0,
+        "diff_amount": -700850.0,
+        "strat": "ä¸­ä¿¡é ï¼ å°ç©é»"
       },
       {
-        "cat": "債券",
-        "value": 339710.0,
-        "cost": 346610,
-        "return_pct": -1.99,
-        "actual_pct": 3.88,
+        "cat": "åµå¸",
+        "value": 0,
+        "cost": 0,
+        "return_pct": 0,
+        "actual_pct": 0.0,
         "target_pct": 5.0,
-        "diff_pct": -1.12,
-        "target_amount": 437777.0,
-        "diff_amount": -98067.0,
-        "strat": "月配，目標存到288萬"
+        "diff_pct": -5.0,
+        "target_amount": 438031.0,
+        "diff_amount": -438031.0,
+        "strat": "æéï¼ç®æ¨å­å°288è¬"
       }
     ]
   },
@@ -163,15 +163,15 @@
     {
       "cat": "台灣大盤ETF",
       "name": "野村高科技基金",
-      "tick": null,
+      "tick": "",
       "shares": 314,
       "perSh": 92.3,
-      "cost": 28999.74,
-      "price": 119.54,
       "cur": "TWD",
       "note": "每月28付3000",
-      "value_twd": 37535.56,
-      "return_pct": 29.43
+      "cost": 28982.2,
+      "price": 92.3,
+      "value_twd": 28982.2,
+      "return_pct": 0.0
     },
     {
       "cat": "成長-美股ETF",
@@ -254,15 +254,15 @@
     {
       "cat": "成長-國外基金",
       "name": "群益印度基金",
-      "tick": null,
+      "tick": "",
       "shares": 7395.3,
       "perSh": 33.13,
-      "cost": 245006.29,
-      "price": 31.07,
       "cur": "TWD",
       "note": "每月3號",
-      "value_twd": 229771.97,
-      "return_pct": -6.22
+      "cost": 245006.28900000002,
+      "price": 33.13,
+      "value_twd": 245006.29,
+      "return_pct": 0.0
     },
     {
       "cat": "成長-國外基金",
@@ -371,15 +371,15 @@
     {
       "cat": "成長-美股個股",
       "name": "STCE 虛擬幣",
-      "tick": null,
+      "tick": "",
       "shares": 10,
       "perSh": 68.53,
-      "cost": 21523.56,
-      "price": 73.62,
       "cur": "USD",
       "note": "手動",
-      "value_twd": 23232.26,
-      "return_pct": 7.94
+      "cost": 685.3,
+      "price": 68.53,
+      "value_twd": 21626.01,
+      "return_pct": 3055.7
     },
     {
       "cat": "波段-個股",
@@ -703,41 +703,41 @@
     }
   ],
   "targets": {
-    "台灣大盤ETF": {
+    "å°ç£å¤§ç¤ETF": {
       "pct": 0.31,
-      "strat": "正2:20% ＋ 00981A:10%"
+      "strat": "æ­£2:20% ï¼ 00981A:10%"
     },
-    "成長-美股ETF": {
+    "æé·-ç¾è¡ETF": {
       "pct": 0.2,
-      "strat": "00924、TOPT"
+      "strat": "00924ãTOPT"
     },
-    "成長-國外基金": {
+    "æé·-åå¤åºé": {
       "pct": 0.05,
-      "strat": "印度基金 ＋ 中國科技"
+      "strat": "å°åº¦åºé ï¼ ä¸­åç§æ"
     },
-    "成長-美股個股": {
+    "æé·-ç¾è¡åè¡": {
       "pct": 0.1,
       "strat": "Nvidia 40% / Tesla 30% / Google 30%"
     },
-    "波段-個股": {
+    "æ³¢æ®µ-åè¡": {
       "pct": 0.06,
-      "strat": "儘快賣掉，轉債券停泊"
+      "strat": "åå¿«è³£æï¼è½åµå¸åæ³"
     },
-    "存股-ETF": {
+    "å­è¡-ETF": {
       "pct": 0.05,
-      "strat": "00919，填息後轉正2"
+      "strat": "00919ï¼å¡«æ¯å¾è½æ­£2"
     },
-    "存股-個股": {
+    "å­è¡-åè¡": {
       "pct": 0.08,
-      "strat": "中信金 ＋ 台積電"
+      "strat": "ä¸­ä¿¡é ï¼ å°ç©é»"
     },
-    "債券": {
+    "åµå¸": {
       "pct": 0.05,
-      "strat": "月配，目標存到288萬"
+      "strat": "æéï¼ç®æ¨å­å°288è¬"
     }
   },
   "cash_like_cats": [
-    "債券-類現金"
+    "åµå¸-é¡ç¾é"
   ],
   "etf_weights": {
     "00893": {
@@ -797,44 +797,44 @@
     "ma240": 28106.47,
     "triggers": [
       {
-        "name": "跌10%(已破月線)投入15%",
+        "name": "è·10%(å·²ç ´æç·)æå¥15%",
         "trigger": 37740.4,
-        "amount": 274793.0,
+        "amount": 262819.0,
         "gap": 4050.0,
         "triggered": false
       },
       {
-        "name": "跌15%(已破季線)投入20%",
+        "name": "è·15%(å·²ç ´å­£ç·)æå¥20%",
         "trigger": 35643.71,
-        "amount": 366390.0,
+        "amount": 350425.0,
         "gap": 6146.0,
         "triggered": false
       },
       {
-        "name": "破季線投入25%",
+        "name": "ç ´å­£ç·æå¥25%",
         "trigger": 35210.52,
-        "amount": 457988.0,
+        "amount": 438031.0,
         "gap": 6580.0,
         "triggered": false
       },
       {
-        "name": "（約年線）破19%投入10%",
+        "name": "ï¼ç´å¹´ç·ï¼ç ´19%æå¥10%",
         "trigger": 33966.36,
-        "amount": 183195.0,
+        "amount": 175212.0,
         "gap": 7824.0,
         "triggered": false
       },
       {
-        "name": "破20%投入10%",
+        "name": "ç ´20%æå¥10%",
         "trigger": 33547.02,
-        "amount": 183195.0,
+        "amount": 175212.0,
         "gap": 8243.0,
         "triggered": false
       },
       {
-        "name": "年線下破20%投入10%",
+        "name": "å¹´ç·ä¸ç ´20%æå¥10%",
         "trigger": 33547.02,
-        "amount": 183195.0,
+        "amount": 175212.0,
         "gap": 8243.0,
         "triggered": false
       }
