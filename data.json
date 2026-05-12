@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-05-12T23:17:46.432006+08:00",
-  "exchange_rate": 31.517,
+  "updated_at": "2026-05-13T04:53:16.076093+08:00",
+  "exchange_rate": 31.512,
   "summary": {
-    "nav": 8729579.0,
-    "portfolio_total": 7900519.0,
+    "nav": 8753845.0,
+    "portfolio_total": 7924785.0,
     "portfolio_cost": 4653315.0,
-    "portfolio_return_pct": 69.78,
+    "portfolio_return_pct": 70.3,
     "loan_total": 250000.0,
     "loan_pnl": 8000.0,
     "available_cash": 579060.0,
@@ -21,74 +21,74 @@
     "cat_breakdown": [
       {
         "cat": "台灣大盤ETF",
-        "value": 3253696.0,
+        "value": 3264926.0,
         "cost": 1162495.0,
-        "return_pct": 179.89,
-        "actual_pct": 37.27,
+        "return_pct": 180.86,
+        "actual_pct": 37.3,
         "target_pct": 31.0,
-        "diff_pct": 6.27,
-        "target_amount": 2706170.0,
-        "diff_amount": 547526.0,
+        "diff_pct": 6.3,
+        "target_amount": 2713692.0,
+        "diff_amount": 551234.0,
         "strat": "正2:20% ＋ 00981A:10%"
       },
       {
         "cat": "成長-美股ETF",
-        "value": 1451663.0,
+        "value": 1443537.0,
         "cost": 870598.0,
-        "return_pct": 66.74,
-        "actual_pct": 16.63,
+        "return_pct": 65.81,
+        "actual_pct": 16.49,
         "target_pct": 20.0,
-        "diff_pct": -3.37,
-        "target_amount": 1745916.0,
-        "diff_amount": -294253.0,
+        "diff_pct": -3.51,
+        "target_amount": 1750769.0,
+        "diff_amount": -307232.0,
         "strat": "00924、TOPT"
       },
       {
         "cat": "成長-國外基金",
-        "value": 458222.0,
+        "value": 472622.0,
         "cost": 432506.0,
-        "return_pct": 5.95,
-        "actual_pct": 5.25,
+        "return_pct": 9.28,
+        "actual_pct": 5.4,
         "target_pct": 5.0,
-        "diff_pct": 0.25,
-        "target_amount": 436479.0,
-        "diff_amount": 21743.0,
+        "diff_pct": 0.4,
+        "target_amount": 437692.0,
+        "diff_amount": 34930.0,
         "strat": "印度基金 ＋ 中國科技"
       },
       {
         "cat": "成長-美股個股",
-        "value": 930752.0,
+        "value": 936812.0,
         "cost": 819453.0,
-        "return_pct": 13.58,
-        "actual_pct": 10.66,
+        "return_pct": 14.32,
+        "actual_pct": 10.7,
         "target_pct": 10.0,
-        "diff_pct": 0.66,
-        "target_amount": 872958.0,
-        "diff_amount": 57794.0,
+        "diff_pct": 0.7,
+        "target_amount": 875384.0,
+        "diff_amount": 61428.0,
         "strat": "Nvidia 40% / Tesla 30% / Google 30%"
       },
       {
         "cat": "波段-個股",
-        "value": 512378.0,
+        "value": 512678.0,
         "cost": 323592,
-        "return_pct": 58.34,
-        "actual_pct": 5.87,
+        "return_pct": 58.43,
+        "actual_pct": 5.86,
         "target_pct": 6.0,
-        "diff_pct": -0.13,
-        "target_amount": 523775.0,
-        "diff_amount": -11397.0,
+        "diff_pct": -0.14,
+        "target_amount": 525231.0,
+        "diff_amount": -12553.0,
         "strat": "儘快賣掉，轉債券停泊"
       },
       {
         "cat": "存股-ETF",
-        "value": 514600.0,
+        "value": 515000.0,
         "cost": 404000,
-        "return_pct": 27.38,
-        "actual_pct": 5.89,
+        "return_pct": 27.48,
+        "actual_pct": 5.88,
         "target_pct": 5.0,
-        "diff_pct": 0.89,
-        "target_amount": 436479.0,
-        "diff_amount": 78121.0,
+        "diff_pct": 0.88,
+        "target_amount": 437692.0,
+        "diff_amount": 77308.0,
         "strat": "00919，填息後轉正2"
       },
       {
@@ -96,11 +96,11 @@
         "value": 439500.0,
         "cost": 294060,
         "return_pct": 49.46,
-        "actual_pct": 5.03,
+        "actual_pct": 5.02,
         "target_pct": 8.0,
-        "diff_pct": -2.97,
-        "target_amount": 698366.0,
-        "diff_amount": -258866.0,
+        "diff_pct": -2.98,
+        "target_amount": 700308.0,
+        "diff_amount": -260808.0,
         "strat": "中信金 ＋ 台積電"
       },
       {
@@ -108,11 +108,11 @@
         "value": 339710.0,
         "cost": 346610,
         "return_pct": -1.99,
-        "actual_pct": 3.89,
+        "actual_pct": 3.88,
         "target_pct": 5.0,
-        "diff_pct": -1.11,
-        "target_amount": 436479.0,
-        "diff_amount": -96769.0,
+        "diff_pct": -1.12,
+        "target_amount": 437692.0,
+        "diff_amount": -97982.0,
         "strat": "月配，目標存到288萬"
       }
     ]
@@ -125,11 +125,11 @@
       "shares": 77000,
       "perSh": 9.49,
       "cost": 730730,
-      "price": 32.52,
+      "price": 32.66,
       "cur": "TWD",
       "note": "上限20%",
-      "value_twd": 2504040.04,
-      "return_pct": 242.68
+      "value_twd": 2514819.99,
+      "return_pct": 244.15
     },
     {
       "cat": "台灣大盤ETF",
@@ -151,11 +151,11 @@
       "shares": 1000,
       "perSh": 15,
       "cost": 15000,
-      "price": 82.75,
+      "price": 83.2,
       "cur": "TWD",
       "note": "",
-      "value_twd": 82750.0,
-      "return_pct": 451.67
+      "value_twd": 83200.0,
+      "return_pct": 454.67
     },
     {
       "cat": "台灣大盤ETF",
@@ -177,11 +177,11 @@
       "shares": 3000,
       "perSh": 12.48,
       "cost": 37440,
-      "price": 45.37,
+      "price": 45.05,
       "cur": "TWD",
       "note": "零成本",
-      "value_twd": 136110.0,
-      "return_pct": 263.54
+      "value_twd": 135150.0,
+      "return_pct": 260.98
     },
     {
       "cat": "成長-美股ETF",
@@ -203,11 +203,11 @@
       "shares": 6000,
       "perSh": 38.84,
       "cost": 233040,
-      "price": 83.4,
+      "price": 82.3,
       "cur": "TWD",
       "note": "",
-      "value_twd": 500400.01,
-      "return_pct": 114.73
+      "value_twd": 493800.02,
+      "return_pct": 111.89
     },
     {
       "cat": "成長-美股ETF",
@@ -216,11 +216,11 @@
       "shares": 242,
       "perSh": 26.84,
       "cost": 204000.51,
-      "price": 33.4,
+      "price": 33.6,
       "cur": "USD",
       "note": "上限10%",
-      "value_twd": 254745.62,
-      "return_pct": 24.87
+      "value_twd": 256230.36,
+      "return_pct": 25.6
     },
     {
       "cat": "成長-美股ETF",
@@ -242,11 +242,11 @@
       "shares": 1000,
       "perSh": 55.25,
       "cost": 55250,
-      "price": 73.55,
+      "price": 71.5,
       "cur": "TWD",
       "note": "",
-      "value_twd": 73550.0,
-      "return_pct": 33.12
+      "value_twd": 71500.0,
+      "return_pct": 29.41
     },
     {
       "cat": "成長-國外基金",
@@ -268,11 +268,11 @@
       "shares": 15000,
       "perSh": 12.5,
       "cost": 187500,
-      "price": 15.23,
+      "price": 16.19,
       "cur": "TWD",
       "note": "無配息",
-      "value_twd": 228450.0,
-      "return_pct": 21.84
+      "value_twd": 242850.0,
+      "return_pct": 29.52
     },
     {
       "cat": "成長-美股個股",
@@ -281,11 +281,11 @@
       "shares": 50,
       "perSh": 23.91,
       "cost": 37547.67,
-      "price": 10.22,
+      "price": 10.01,
       "cur": "USD",
       "note": "",
-      "value_twd": 16105.19,
-      "return_pct": -57.11
+      "value_twd": 15771.76,
+      "return_pct": -58.0
     },
     {
       "cat": "成長-美股個股",
@@ -294,11 +294,11 @@
       "shares": 2,
       "perSh": 171.43,
       "cost": 10768.38,
-      "price": 294.08,
+      "price": 294.8,
       "cur": "USD",
       "note": "",
-      "value_twd": 18537.04,
-      "return_pct": 72.14
+      "value_twd": 18579.47,
+      "return_pct": 72.54
     },
     {
       "cat": "成長-美股個股",
@@ -307,11 +307,11 @@
       "shares": 30,
       "perSh": 185.283,
       "cost": 174578.27,
-      "price": 216.67,
+      "price": 220.78,
       "cur": "USD",
       "note": "富邦16 元大14",
-      "value_twd": 204863.65,
-      "return_pct": 17.35
+      "value_twd": 208716.57,
+      "return_pct": 19.55
     },
     {
       "cat": "成長-美股個股",
@@ -320,11 +320,11 @@
       "shares": 5,
       "perSh": 930.93,
       "cost": 146190.92,
-      "price": 993.595,
+      "price": 989.87,
       "cur": "USD",
       "note": "",
-      "value_twd": 156575.66,
-      "return_pct": 7.1
+      "value_twd": 155963.91,
+      "return_pct": 6.69
     },
     {
       "cat": "成長-美股個股",
@@ -333,11 +333,11 @@
       "shares": 19,
       "perSh": 400.172,
       "cost": 238799.64,
-      "price": 428.43,
+      "price": 433.45,
       "cur": "USD",
       "note": "富邦11 元大8",
-      "value_twd": 256553.74,
-      "return_pct": 7.43
+      "value_twd": 259518.65,
+      "return_pct": 8.68
     },
     {
       "cat": "成長-美股個股",
@@ -346,11 +346,11 @@
       "shares": 17,
       "perSh": 300.142,
       "cost": 153072.42,
-      "price": 387.49,
+      "price": 387.35,
       "cur": "USD",
       "note": "",
-      "value_twd": 207612.88,
-      "return_pct": 35.63
+      "value_twd": 207504.94,
+      "return_pct": 35.56
     },
     {
       "cat": "成長-美股個股",
@@ -359,11 +359,11 @@
       "shares": 7,
       "perSh": 168.169,
       "cost": 36972.38,
-      "price": 214.4,
+      "price": 215.6,
       "cur": "USD",
       "note": "",
-      "value_twd": 47300.71,
-      "return_pct": 27.94
+      "value_twd": 47557.91,
+      "return_pct": 28.63
     },
     {
       "cat": "成長-美股個股",
@@ -375,8 +375,8 @@
       "price": 73.62,
       "cur": "USD",
       "note": "手動",
-      "value_twd": 23202.82,
-      "return_pct": 7.8
+      "value_twd": 23199.13,
+      "return_pct": 7.78
     },
     {
       "cat": "波段-個股",
@@ -398,11 +398,11 @@
       "shares": 100,
       "perSh": 886,
       "cost": 88600,
-      "price": 735,
+      "price": 738.0,
       "cur": "TWD",
       "note": "",
-      "value_twd": 73500,
-      "return_pct": -17.04
+      "value_twd": 73800.0,
+      "return_pct": -16.7
     },
     {
       "cat": "波段-個股",
@@ -450,11 +450,11 @@
       "shares": 20000,
       "perSh": 20.2,
       "cost": 404000,
-      "price": 25.73,
+      "price": 25.75,
       "cur": "TWD",
       "note": "中信15000/國泰5000",
-      "value_twd": 514599.99,
-      "return_pct": 27.38
+      "value_twd": 515000.0,
+      "return_pct": 27.48
     },
     {
       "cat": "存股-個股",
@@ -609,100 +609,100 @@
   "us_exposure": [
     {
       "sym": "NVDA",
-      "value_usd": 11959.37,
-      "value_twd": 376924.0,
-      "direct_usd": 6500.1,
-      "etf_usd": 5459.27
+      "value_usd": 12060.13,
+      "value_twd": 380039.0,
+      "direct_usd": 6623.4,
+      "etf_usd": 5436.73
     },
     {
       "sym": "TSLA",
-      "value_usd": 9323.18,
-      "value_twd": 293839.0,
-      "direct_usd": 8140.17,
-      "etf_usd": 1183.01
+      "value_usd": 9415.42,
+      "value_twd": 296699.0,
+      "direct_usd": 8235.55,
+      "etf_usd": 1179.87
     },
     {
       "sym": "GOOGL",
-      "value_usd": 8757.51,
-      "value_twd": 276010.0,
-      "direct_usd": 6587.33,
-      "etf_usd": 2170.18
+      "value_usd": 8760.89,
+      "value_twd": 276073.0,
+      "direct_usd": 6584.95,
+      "etf_usd": 2175.94
     },
     {
       "sym": "LLY",
-      "value_usd": 5563.47,
-      "value_twd": 175344.0,
-      "direct_usd": 4967.97,
-      "etf_usd": 595.49
+      "value_usd": 5546.73,
+      "value_twd": 174788.0,
+      "direct_usd": 4949.35,
+      "etf_usd": 597.38
     },
     {
       "sym": "AVGO",
-      "value_usd": 2543.29,
-      "value_twd": 80157.0,
+      "value_usd": 2528.11,
+      "value_twd": 79666.0,
       "direct_usd": 0.0,
-      "etf_usd": 2543.29
+      "etf_usd": 2528.11
     },
     {
       "sym": "MSFT",
-      "value_usd": 2136.7,
-      "value_twd": 67342.0,
+      "value_usd": 2142.98,
+      "value_twd": 67529.0,
       "direct_usd": 0.0,
-      "etf_usd": 2136.7
+      "etf_usd": 2142.98
     },
     {
       "sym": "AAPL",
-      "value_usd": 2133.27,
-      "value_twd": 67234.0,
-      "direct_usd": 588.16,
-      "etf_usd": 1545.11
+      "value_usd": 2141.6,
+      "value_twd": 67486.0,
+      "direct_usd": 589.6,
+      "etf_usd": 1552.0
     },
     {
       "sym": "AMD",
-      "value_usd": 2025.26,
-      "value_twd": 63830.0,
+      "value_usd": 2006.17,
+      "value_twd": 63218.0,
       "direct_usd": 0.0,
-      "etf_usd": 2025.26
+      "etf_usd": 2006.17
     },
     {
       "sym": "PANW",
-      "value_usd": 1500.8,
-      "value_twd": 47301.0,
-      "direct_usd": 1500.8,
+      "value_usd": 1509.2,
+      "value_twd": 47558.0,
+      "direct_usd": 1509.2,
       "etf_usd": 0.0
     },
     {
       "sym": "META",
-      "value_usd": 1364.1,
-      "value_twd": 42992.0,
+      "value_usd": 1367.05,
+      "value_twd": 43078.0,
       "direct_usd": 0.0,
-      "etf_usd": 1364.1
+      "etf_usd": 1367.05
     },
     {
       "sym": "TSM",
-      "value_usd": 1144.6,
-      "value_twd": 36074.0,
+      "value_usd": 1136.42,
+      "value_twd": 35811.0,
       "direct_usd": 0.0,
-      "etf_usd": 1144.6
+      "etf_usd": 1136.42
     },
     {
       "sym": "AMZN",
-      "value_usd": 1029.09,
-      "value_twd": 32434.0,
+      "value_usd": 1032.32,
+      "value_twd": 32530.0,
       "direct_usd": 0.0,
-      "etf_usd": 1029.09
+      "etf_usd": 1032.32
     },
     {
       "sym": "PATH",
-      "value_usd": 511.0,
-      "value_twd": 16105.0,
-      "direct_usd": 511.0,
+      "value_usd": 500.5,
+      "value_twd": 15772.0,
+      "direct_usd": 500.5,
       "etf_usd": 0.0
     }
   ],
   "logs": {
     "yfinance": "ok (24 prices)",
-    "twse_backup": "ok (0 prices)",
-    "usd_twd": 31.517,
+    "twse_backup": "ok (2 prices)",
+    "usd_twd": 31.512,
     "finmind": "ok (upcoming:0, ytd:5)"
   }
 }
