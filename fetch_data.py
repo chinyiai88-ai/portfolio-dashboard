@@ -207,7 +207,7 @@ def calc_us_exposure(portfolio, loan, prices, usd_twd, etf_weights):
     return dict(sorted(exposure.items(), key=lambda x: x[1]["value_twd"], reverse=True))
 
 
-def fetch_twii_market(cfg: dict, avail_cash: float,
+def fetch_twii_market(cfg: dict, nav: float,
                       existing_ath: float = 0, existing_ath_date: str = "") -> dict | None:
     """抓台股加權指數，計算移動平均線與進場觸發條件"""
     try:
@@ -234,7 +234,8 @@ def fetch_twii_market(cfg: dict, avail_cash: float,
         ma240 = round(float(close_s.rolling(240).mean().iloc[-1]), 2) if n >= 240 else None
 
         triggers_cfg = cfg.get("twii_triggers", {})
-        reserve      = triggers_cfg.get("reserve_cash", avail_cash) or avail_cash
+        reserve_pct  = triggers_cfg.get("reserve_pct", 0.20)
+        reserve      = nav * reserve_pct
         scenarios    = triggers_cfg.get("scenarios", [])
 
         triggers: list[dict] = []
@@ -429,7 +430,7 @@ def main():
             existing_ath_date = _mkt.get("ath_date", "")
     except Exception:
         pass
-    twii_market = fetch_twii_market(cfg, avail_cash, existing_ath, existing_ath_date)
+    twii_market = fetch_twii_market(cfg, nav, existing_ath, existing_ath_date)
     if twii_market:
         logs["twii"] = f"ok ({twii_market['close']:,.0f} | ATH:{twii_market['ath']:,.0f})"
     else:

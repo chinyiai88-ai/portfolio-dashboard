@@ -383,6 +383,24 @@
       </div>
     </div>
 
+    <div class="sec-title">🔗 同步到 GitHub</div>
+    <div class="card-dark" style="font-size:12px;color:var(--muted)">
+      <div style="line-height:1.8;margin-bottom:10px">
+        <div>• 將目前瀏覽器裡的持股結構同步回 <b style="color:var(--text)">portfolio.json</b>（存在 GitHub 上）</div>
+        <div>• 同步後自動觸發 GitHub Actions 重新抓價</div>
+        <div>• 需要 GitHub Fine-grained PAT，權限：<b style="color:var(--text)">Contents: Read & Write</b> ＋ <b style="color:var(--text)">Actions: Read & Write</b>（僅限 portfolio-dashboard repo）</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+        <input type="password" id="gh-token-input" placeholder="GitHub Token (ghp_…)" autocomplete="off"
+          style="flex:1;min-width:180px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:7px 10px;color:var(--text);font-size:12px;outline:none"/>
+        <button onclick="saveGhToken()" style="background:rgba(255,255,255,.07);color:var(--text);border:none;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;white-space:nowrap">💾 儲存 Token</button>
+        <button onclick="clearGhToken()" style="background:rgba(242,92,84,.1);color:var(--red);border:none;border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;white-space:nowrap">🗑 清除</button>
+      </div>
+      <div id="gh-token-status" style="font-size:11px;margin-bottom:10px;color:var(--muted)"></div>
+      <button id="gh-sync-btn" onclick="syncToGitHub()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;width:100%">🚀 同步到 GitHub</button>
+      <div id="gh-sync-status" style="font-size:11px;margin-top:8px;min-height:16px"></div>
+    </div>
+
   </div>
 
  </div>
@@ -574,6 +592,128 @@ function importPf(e){
   const r=new FileReader();
   r.onload=ev=>{ try{ LOCAL=JSON.parse(ev.target.result); savePf(); renderAll(); alert('匯入成功！'); }catch(x){ alert('格式錯誤'); } };
   r.readAsText(file);
+}
+
+/* ══════════════════════════════════════
+   GitHub Sync
+══════════════════════════════════════ */
+const GH_OWNER = 'chinyiai88-ai';
+const GH_REPO  = 'portfolio-dashboard';
+const GH_API   = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`;
+
+function saveGhToken(){
+  const v = G('gh-token-input').value.trim();
+  if(!v){ alert('Token 不能為空'); return; }
+  localStorage.setItem('gh_token', v);
+  G('gh-token-input').value = '';
+  updateGhTokenStatus();
+}
+
+function clearGhToken(){
+  localStorage.removeItem('gh_token');
+  G('gh-token-input').value = '';
+  updateGhTokenStatus();
+}
+
+function updateGhTokenStatus(){
+  const el = G('gh-token-status');
+  if(!el) return;
+  const t = localStorage.getItem('gh_token');
+  if(t) el.innerHTML = `<span style="color:var(--green)">✅ Token 已儲存（${t.slice(0,8)}…）</span>`;
+  else   el.textContent = '尚未設定 Token';
+}
+
+async function syncToGitHub(){
+  const btn = G('gh-sync-btn');
+  const statusEl = G('gh-sync-status');
+  const token = localStorage.getItem('gh_token');
+  const setSt = (msg, ok) => {
+    statusEl.innerHTML = msg;
+    statusEl.style.color = ok === true ? 'var(--green)' : ok === false ? 'var(--red)' : 'var(--muted)';
+  };
+
+  if(!token){ setSt('❌ 請先儲存 GitHub Token', false); return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ 同步中…';
+  setSt('取得 portfolio.json…', null);
+
+  try {
+    // Step 1: GET current file for SHA + existing structure
+    const getResp = await fetch(`${GH_API}/contents/portfolio.json`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if(!getResp.ok){ setSt(`❌ 取得檔案失敗（${getResp.status}）`, false); return; }
+    const getJson = await getResp.json();
+    const sha = getJson.sha;
+    const existing = JSON.parse(atob(getJson.content.replace(/\n/g, '')));
+
+    setSt('合併資料中…', null);
+
+    // Step 2: Merge LOCAL into existing structure (preserve thresholds/targets/etc.)
+    const merged = { ...existing };
+
+    // Build lookup maps by tick then name
+    const exPfMap = {};
+    (existing.portfolio||[]).forEach(h => { exPfMap[h.tick||h.name] = h; });
+    const exLoanMap = {};
+    (existing.loan||[]).forEach(h => { exLoanMap[h.tick||h.name] = h; });
+
+    // Portfolio: update from LOCAL, preserve cost from existing
+    merged.portfolio = (LOCAL.portfolio||[]).map(h => {
+      const orig = exPfMap[h.tick||h.name] || {};
+      const cost = orig.cost != null ? orig.cost : h.shares * h.perSh;
+      const price = orig.price != null ? orig.price : h.perSh;
+      return { ...orig, ...h, cost, price };
+    });
+
+    // Loan: same strategy
+    merged.loan = (LOCAL.loan||[]).map(h => {
+      const orig = exLoanMap[h.tick||h.name] || {};
+      const cost = orig.cost != null ? orig.cost : h.shares * h.perSh;
+      return { ...orig, ...h, cost };
+    });
+
+    // Cash fields
+    merged.available_cash = LOCAL.bankCash || 0;
+    merged.stock_loan     = LOCAL.stockLoan || 0;
+
+    setSt('上傳到 GitHub…', null);
+
+    // Step 3: PUT updated file (handle UTF-8 correctly)
+    const jsonStr = JSON.stringify(merged, null, 2);
+    const bytes   = new TextEncoder().encode(jsonStr);
+    const binStr  = Array.from(bytes, b => String.fromCharCode(b)).join('');
+    const content = btoa(binStr);
+
+    const putResp = await fetch(`${GH_API}/contents/portfolio.json`, {
+      method: 'PUT',
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'chore: sync portfolio from dashboard', content, sha })
+    });
+    if(!putResp.ok){ setSt(`❌ 上傳失敗（${putResp.status}）`, false); return; }
+
+    setSt('觸發 Actions 重新抓價…', null);
+
+    // Step 4: Trigger workflow_dispatch
+    const wfResp = await fetch(`${GH_API}/actions/workflows/update.yml/dispatches`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ref: 'main' })
+    });
+
+    if(wfResp.status === 204 || wfResp.ok){
+      setSt('✅ 同步完成！GitHub Actions 已啟動，約 1 分鐘後價格更新', true);
+    } else {
+      setSt('✅ portfolio.json 已同步，但觸發 Actions 失敗（需 Actions:write 權限）', true);
+    }
+
+  } catch(err){
+    setSt(`❌ 同步失敗：${err.message}`, false);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🚀 同步到 GitHub';
+  }
 }
 
 /* ══════════════════════════════════════
@@ -1099,6 +1239,7 @@ function renderLogs(){
     const ok=typeof v==='string'&&v.startsWith('ok');
     srcEl.innerHTML+=`<div class="card-dark" style="padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="flex:1;font-size:13px;font-weight:600">${k}</div><span class="${ok?'b-ok':'b-err'}">${v}</span></div>`;
   });
+  updateGhTokenStatus();
 }
 
 /* ══════════════════════════════════════

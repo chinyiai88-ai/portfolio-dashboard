@@ -17,7 +17,7 @@
   "cash_like_cats": ["債券-類現金"],
 
   "twii_triggers": {
-    "reserve_cash": 1831951,
+    "reserve_pct": 0.20,
     "scenarios": [
       { "name": "跌10%(已破月線)投入15%",  "pct_drop": 10.0, "invest_pct": 15 },
       { "name": "跌15%(已破季線)投入20%",  "pct_drop": 15.0, "invest_pct": 20 },
