@@ -1,7 +1,8 @@
 {
   "available_cash": 0,
   "stock_loan": 0,
-  "thresholds": { "high": 30, "midH": 15, "midL": -10, "low": -20 },
+  "thresholds":      { "high": 30, "midH": 15, "midL": -10, "low": -20 },
+  "pos2_thresholds": { "high": 50, "midH": 20, "midL": -20, "low": -40 },
 
   "targets": {
     "台灣大盤ETF":   { "pct": 0.31, "strat": "正2:20% ＋ 00981A:10%" },
@@ -14,6 +15,18 @@
     "債券":          { "pct": 0.05, "strat": "月配，目標存到288萬" }
   },
   "cash_like_cats": ["債券-類現金"],
+
+  "twii_triggers": {
+    "reserve_cash": 1831951,
+    "scenarios": [
+      { "name": "跌10%(已破月線)投入15%",  "pct_drop": 10.0, "invest_pct": 15 },
+      { "name": "跌15%(已破季線)投入20%",  "pct_drop": 15.0, "invest_pct": 20 },
+      { "name": "（約年線）破19%投入10%",  "pct_drop": 19.0, "invest_pct": 10 },
+      { "name": "破20%投入10%",            "pct_drop": 20.0, "invest_pct": 10 },
+      { "name": "年線下破20%投入10%",      "pct_drop": 20.0, "invest_pct": 10 },
+      { "name": "破季線投入25%",           "use_ma60": true,  "invest_pct": 25 }
+    ]
+  },
 
   "etf_weights": {
     "00893":  { "NVDA": 0.1521, "TSLA": 0.1633, "AMD": 0.1363 },

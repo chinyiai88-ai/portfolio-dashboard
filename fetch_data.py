@@ -207,13 +207,69 @@ def calc_us_exposure(portfolio, loan, prices, usd_twd, etf_weights):
     return dict(sorted(exposure.items(), key=lambda x: x[1]["value_twd"], reverse=True))
 
 
+def fetch_twii_market(cfg: dict, avail_cash: float,
+                      existing_ath: float = 0, existing_ath_date: str = "") -> dict | None:
+    """抓台股加權指數，計算移動平均線與進場觸發條件"""
+    try:
+        ticker = yf.Ticker('^TWII')
+        hist = ticker.history(period='2y')
+        if hist.empty:
+            return None
+
+        close_s = hist['Close'].dropna()
+        close   = round(float(close_s.iloc[-1]), 2)
+        close_date = hist.index[-1].strftime('%Y/%m/%d')
+
+        hist_max      = round(float(close_s.max()), 2)
+        hist_max_date = close_s.idxmax().strftime('%Y/%m/%d')
+        if hist_max >= existing_ath:
+            ath, ath_date = hist_max, hist_max_date
+        else:
+            ath, ath_date = existing_ath, existing_ath_date
+
+        drop_pct = round((close - ath) / ath * 100, 2) if ath > 0 else 0
+        n        = len(close_s)
+        ma20  = round(float(close_s.rolling(20).mean().iloc[-1]),  2) if n >= 20  else None
+        ma60  = round(float(close_s.rolling(60).mean().iloc[-1]),  2) if n >= 60  else None
+        ma240 = round(float(close_s.rolling(240).mean().iloc[-1]), 2) if n >= 240 else None
+
+        triggers_cfg = cfg.get("twii_triggers", {})
+        reserve      = triggers_cfg.get("reserve_cash", avail_cash) or avail_cash
+        scenarios    = triggers_cfg.get("scenarios", [])
+
+        triggers: list[dict] = []
+        for sc in scenarios:
+            if sc.get("use_ma60") and ma60:
+                level = round(ma60, 2)
+            elif "pct_drop" in sc and sc["pct_drop"] > 0:
+                level = round(ath * (1 - sc["pct_drop"] / 100), 2)
+            elif "fixed_trigger" in sc:
+                level = float(sc["fixed_trigger"])
+            else:
+                continue
+            amount    = round(reserve * sc["invest_pct"] / 100, 0)
+            gap       = round(close - level, 0)
+            triggered = close <= level
+            triggers.append({"name": sc["name"], "trigger": level,
+                              "amount": amount, "gap": gap, "triggered": triggered})
+
+        triggers.sort(key=lambda x: -x["trigger"])
+        return {"close": close, "close_date": close_date,
+                "ath": ath, "ath_date": ath_date, "drop_pct": drop_pct,
+                "ma20": ma20, "ma60": ma60, "ma240": ma240, "triggers": triggers}
+    except Exception as e:
+        print(f"[TWII] error: {e}", file=sys.stderr)
+        return None
+
+
 def main():
     logs: dict = {}
     cfg         = load_portfolio()
     portfolio   = cfg["portfolio"]
     loan_list   = cfg["loan"]
     etf_weights = cfg.get("etf_weights", {})
-    thresholds  = cfg.get("thresholds", {"high": 30, "midH": 15, "midL": -10, "low": -20})
+    thresholds  = cfg.get("thresholds",      {"high": 30, "midH": 15, "midL": -10, "low": -20})
+    pos2_thr    = cfg.get("pos2_thresholds", {"high": 50, "midH": 20, "midL": -20, "low": -40})
 
     all_ticks  = list({h["tick"] for h in portfolio + loan_list if h.get("tick")})
     tw_ticks   = [t for t in all_ticks if t.endswith(".TW")]
@@ -286,18 +342,18 @@ def main():
     else:
         signal, signal_level = "跌深", "low"
 
-    # 正2導航燈號（00631L 個別報酬率）
+    # 正2導航燈號（00631L 個別報酬率，使用獨立門檻）
     pos2_ret, pos2_signal, pos2_level = 0.0, "持倉", "neutral"
     pos2 = next((h for h in portfolio_items if h.get("tick") == "00631L.TW"), None)
     if pos2:
         c2 = pos2.get("perSh", 0)
         p2 = pos2.get("price", 0)
         pos2_ret = (p2 - c2) / c2 * 100 if c2 > 0 else 0
-        if pos2_ret >= thresholds["high"]:   pos2_signal, pos2_level = "減倉", "high"
-        elif pos2_ret >= thresholds["midH"]: pos2_signal, pos2_level = "收割", "midH"
-        elif pos2_ret >= thresholds["midL"]: pos2_signal, pos2_level = "持倉", "neutral"
-        elif pos2_ret >= thresholds["low"]:  pos2_signal, pos2_level = "加碼", "midL"
-        else:                                pos2_signal, pos2_level = "跌深", "low"
+        if pos2_ret >= pos2_thr["high"]:   pos2_signal, pos2_level = "減倉", "high"
+        elif pos2_ret >= pos2_thr["midH"]: pos2_signal, pos2_level = "收割", "midH"
+        elif pos2_ret >= pos2_thr["midL"]: pos2_signal, pos2_level = "持倉", "neutral"
+        elif pos2_ret >= pos2_thr["low"]:  pos2_signal, pos2_level = "加碼", "midL"
+        else:                              pos2_signal, pos2_level = "跌深", "low"
 
     # 分類 breakdown
     cat_breakdown = []
@@ -363,6 +419,22 @@ def main():
         if d.get("exDate", "") <= thirty_days_later
     )
 
+    # 台股大盤進場觸發狀況
+    existing_ath, existing_ath_date = 0.0, ""
+    try:
+        with open("data.json", "r", encoding="utf-8") as _f:
+            _prev = json.load(_f)
+            _mkt = _prev.get("twii_market") or {}
+            existing_ath      = float(_mkt.get("ath", 0) or 0)
+            existing_ath_date = _mkt.get("ath_date", "")
+    except Exception:
+        pass
+    twii_market = fetch_twii_market(cfg, avail_cash, existing_ath, existing_ath_date)
+    if twii_market:
+        logs["twii"] = f"ok ({twii_market['close']:,.0f} | ATH:{twii_market['ath']:,.0f})"
+    else:
+        logs["twii"] = "error: failed to fetch"
+
     output = {
         "updated_at":    now_tw(),
         "exchange_rate": round(usd_twd, 4),
@@ -399,6 +471,8 @@ def main():
             for cat, tgt in targets.items()
         },
         "cash_like_cats": list(cfg.get("cash_like_cats", [])),
+        "etf_weights":    etf_weights,
+        "twii_market":    twii_market,
         "logs": logs,
     }
 

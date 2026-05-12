@@ -45,7 +45,35 @@
     .editable{border-bottom:1px dashed var(--blue);cursor:text;outline:none;min-width:50px;display:inline-block}
 
     /* Section Title */
-    .sec-title{font-size:14px;font-weight:800;color:var(--text);letter-spacing:.5px;margin:16px 0 8px;text-shadow:0 0 12px rgba(79,110,247,.5)}
+    .sec-title{font-size:17px;font-weight:900;color:var(--text);letter-spacing:.4px;margin:18px 0 8px;text-shadow:0 0 18px rgba(79,110,247,.7),0 2px 8px rgba(0,0,0,.5)}
+
+    /* 3-col KPI grid */
+    .kpi-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+
+    /* Threshold editable values in signal chips */
+    .thr-val{border-bottom:1px dashed currentColor;cursor:text;outline:none;min-width:18px;display:inline-block;text-align:center}
+    .thr-val:focus{background:rgba(255,255,255,.08);border-radius:2px}
+
+    /* Portfolio color legend */
+    .port-legend{display:flex;flex-wrap:wrap;gap:6px;padding:6px 4px 4px;margin-bottom:4px}
+    .pl-chip{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted)}
+    .pl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+    /* Market / gauge */
+    .gauge-wrap{position:relative;height:34px;margin:14px 0 36px}
+    .gauge-track{position:absolute;top:12px;left:0;right:0;height:8px;border-radius:4px;background:linear-gradient(90deg,#e84040 0%,#f58b05 35%,#ffc22f 55%,#3cc87a 80%,#00d4b4 100%)}
+    .gauge-pin{position:absolute;top:4px;font-size:18px;transform:translateX(-50%);line-height:1;z-index:2}
+    .gauge-lbl{position:absolute;top:24px;font-size:9px;color:var(--muted);white-space:nowrap;transform:translateX(-50%);text-align:center;line-height:1.2}
+    .tr-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+    .tr-item:last-child{border-bottom:none}
+    .tr-bar{width:4px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:36px}
+    .tr-body{flex:1;min-width:0}
+    .tr-name{font-size:12px;font-weight:700;margin-bottom:2px}
+    .tr-meta{font-size:10px;color:var(--muted)}
+    .tr-pill{display:inline-block;background:rgba(245,166,35,.12);color:var(--yellow);border-radius:4px;padding:1px 5px;margin-left:4px;font-size:10px}
+    .tr-prog{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:5px}
+    .tr-fill{height:3px;border-radius:2px}
+    .tr-amount{font-size:13px;font-weight:700;color:var(--teal);white-space:nowrap}
 
     /* Signal */
     .sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px;margin-bottom:10px}
@@ -72,6 +100,12 @@
     .thr-neu {background:rgba(79,110,247,.15);color:var(--blue)}
     .thr-midL{background:rgba(0,212,180,.15);color:var(--teal)}
     .thr-low {background:rgba(31,216,122,.15);color:var(--green)}
+
+    /* 正2 card: midH=blue, midL=yellow (override defaults) */
+    #pos2-sig.midH{background:rgba(79,110,247,.1)!important;border-color:rgba(79,110,247,.35)!important}
+    #pos2-sig.midH .sig-text{color:var(--blue)!important}
+    #pos2-sig.midL{background:rgba(245,166,35,.1)!important;border-color:rgba(245,166,35,.35)!important}
+    #pos2-sig.midL .sig-text{color:var(--yellow)!important}
 
     /* Colours */
     .pos{color:var(--green)} .neg{color:var(--red)} .neu{color:var(--muted)}
@@ -182,22 +216,32 @@
     <!-- 兩個燈號 -->
     <div class="sig-grid">
       <div class="sig-card neutral" id="sys-sig">
-        <div class="sig-label">🚦 系統操作建議</div>
+        <div class="sig-label">🍊 系統操作建議</div>
         <div class="sig-text" id="sys-sig-text">持倉</div>
         <div class="sig-sub" id="sys-sig-sub">組合報酬 —</div>
+        <div class="thr-bar" style="margin-top:6px" id="sys-thr-bar"></div>
       </div>
       <div class="sig-card neutral" id="pos2-sig">
-        <div class="sig-label">📊 正2 導航</div>
+        <div class="sig-label">🍊 正2 導航</div>
         <div class="sig-text" id="pos2-sig-text">持倉</div>
         <div class="sig-sub" id="pos2-sig-sub">00631L 報酬 —</div>
+        <div class="thr-bar" style="margin-top:6px" id="pos2-thr-bar"></div>
       </div>
     </div>
 
-    <!-- 門檻說明 -->
-    <div class="thr-bar" id="thr-bar"></div>
-
     <!-- 基礎數據 -->
     <div class="sec-title">📊 基礎數據</div>
+
+    <!-- Row 1: NAV 全寬 -->
+    <div class="kpi-grid">
+      <div class="kpi-box" style="grid-column:1/-1">
+        <div class="kpi-label">💎 金融資產淨值（NAV）</div>
+        <div class="kpi-val" style="font-size:22px;font-weight:900" id="s-nav">—</div>
+        <div class="kpi-note">組合 + 借款損益 + 現金 − 貸款 ｜ USD/TWD <span id="s-fx">—</span></div>
+      </div>
+    </div>
+
+    <!-- Row 2: 投組總值 + 未損益 -->
     <div class="kpi-grid">
       <div class="kpi-box">
         <div class="kpi-label">💼 投資組合總值</div>
@@ -209,34 +253,45 @@
         <div class="kpi-val" id="s-unreal">—</div>
         <div class="kpi-note">投組現值 − 投組成本</div>
       </div>
+    </div>
+
+    <!-- Row 3: 銀行現金 | 類現金ETF | 總現金餘額 -->
+    <div class="kpi-grid-3">
       <div class="kpi-box">
-        <div class="kpi-label">💵 可用現金 <span style="font-size:9px;color:var(--blue)">✎</span></div>
+        <div class="kpi-label">🏦 銀行現金 <span style="font-size:9px;color:var(--blue)">✎</span></div>
         <div class="kpi-val"><span class="editable" id="cash-input" contenteditable="true" inputmode="numeric">0</span></div>
-        <div class="kpi-note">現金 + 類現金 ETF</div>
+        <div class="kpi-note">手動填入</div>
       </div>
+      <div class="kpi-box">
+        <div class="kpi-label">💵 類現金 ETF</div>
+        <div class="kpi-val" id="s-cashlike">—</div>
+        <div class="kpi-note">從再平衡自動抓取</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">💰 總現金餘額</div>
+        <div class="kpi-val pos" id="s-totalcash">—</div>
+        <div class="kpi-note">銀行現金＋類現金 ETF</div>
+      </div>
+    </div>
+
+    <!-- Row 4: 股票貸款 + 借款獲利 -->
+    <div class="kpi-grid">
       <div class="kpi-box">
         <div class="kpi-label">📉 股票貸款 <span style="font-size:9px;color:var(--blue)">✎</span></div>
         <div class="kpi-val"><span class="editable" id="loan-input" contenteditable="true" inputmode="numeric">0</span></div>
         <div class="kpi-note">質押借款總額</div>
       </div>
-    </div>
-
-    <div class="kpi-grid">
-      <div class="kpi-box" style="grid-column:1/-1">
-        <div class="kpi-label">💎 金融資產淨值（NAV）</div>
-        <div class="kpi-val" style="font-size:22px;font-weight:900" id="s-nav">—</div>
-        <div class="kpi-note">組合 + 借款損益 + 現金 − 貸款 ｜ USD/TWD <span id="s-fx">—</span></div>
-      </div>
-    </div>
-
-    <div class="kpi-grid">
       <div class="kpi-box">
         <div class="kpi-label">🏦 借款部位獲利</div>
         <div class="kpi-val" id="s-loanpnl">—</div>
         <div class="kpi-note">借款現值 − 質押貸款額</div>
       </div>
+    </div>
+
+    <!-- Row 5: 組合報酬率 -->
+    <div class="kpi-grid">
       <div class="kpi-box">
-        <div class="kpi-label">📉 組合報酬率</div>
+        <div class="kpi-label">📊 組合報酬率</div>
         <div class="kpi-val" id="s-ret">—</div>
         <div class="kpi-note">整體投組含成本基準</div>
       </div>
@@ -263,11 +318,21 @@
         </table>
       </div>
     </div>
+    <!-- 台股進場觸發狀況 -->
+    <div class="sec-title">🇹🇼 台股進場觸發狀況</div>
+    <div id="market-section"></div>
+
   </div>
 
   <!-- ════ Tab B：投組 ════ -->
   <div class="tab-pane fade" id="tab-portfolio">
     <div class="sec-title">📋 投資組合</div>
+    <div class="port-legend">
+      <span class="pl-chip"><span class="pl-dot" style="background:var(--red)"></span>≥25% 減倉訊號</span>
+      <span class="pl-chip"><span class="pl-dot" style="background:var(--blue)"></span>≥10% 收割</span>
+      <span class="pl-chip"><span class="pl-dot" style="background:var(--yellow)"></span>≤-10% 加碼</span>
+      <span class="pl-chip"><span class="pl-dot" style="background:var(--green)"></span>≤-25% 跌深買進</span>
+    </div>
     <div id="portfolio-section"></div>
 
     <div class="sec-title">🏦 借款部位</div>
@@ -323,8 +388,6 @@
       </div>
     </div>
 
-    <div class="sec-title">📝 原始數據摘要</div>
-    <div class="card-dark" id="log-raw" style="font-size:10px;color:var(--muted);white-space:pre-wrap;word-break:break-all"></div>
   </div>
 
  </div>
@@ -384,6 +447,49 @@ function switchTab(name){
 }
 
 /* ══════════════════════════════════════
+   Threshold management
+══════════════════════════════════════ */
+const DEFAULT_THR = {
+  sys:  {high:30,  midH:15,  midL:-10, low:-20},
+  pos2: {high:50,  midH:20,  midL:-20, low:-40}
+};
+let THRESHOLDS = {sys:{...DEFAULT_THR.sys}, pos2:{...DEFAULT_THR.pos2}};
+
+function loadThresholds(){
+  ['sys','pos2'].forEach(k=>{
+    const s = localStorage.getItem('thr_'+k);
+    if(s){ try{ THRESHOLDS[k]=JSON.parse(s); }catch(e){} }
+  });
+}
+function saveThr(k){ localStorage.setItem('thr_'+k, JSON.stringify(THRESHOLDS[k])); }
+
+function computeSignal(ret, thr){
+  if(ret>=thr.high)  return {level:'high',   label:'減倉'};
+  if(ret>=thr.midH)  return {level:'midH',   label:'收割'};
+  if(ret>=thr.midL)  return {level:'neutral', label:'持倉'};
+  if(ret>=thr.low)   return {level:'midL',   label:'加碼'};
+  return {level:'low', label:'跌深'};
+}
+
+function onThrEdit(el, key, field){
+  const v = parseFloat(el.textContent)||0;
+  THRESHOLDS[key][field] = v;
+  saveThr(key);
+  renderSummaryTab();
+}
+
+function renderThrBar(barId, key){
+  const t = THRESHOLDS[key];
+  const el = G(barId);
+  if(!el) return;
+  el.innerHTML =
+    `<span class="thr-chip thr-high">減倉≥+<span class="thr-val" contenteditable="true" inputmode="decimal" onblur="onThrEdit(this,'${key}','high')">${t.high}</span>%</span>`+
+    `<span class="thr-chip thr-midH">收割≥+<span class="thr-val" contenteditable="true" inputmode="decimal" onblur="onThrEdit(this,'${key}','midH')">${t.midH}</span>%</span>`+
+    `<span class="thr-chip thr-midL">加碼≤<span class="thr-val" contenteditable="true" inputmode="decimal" onblur="onThrEdit(this,'${key}','midL')">${t.midL}</span>%</span>`+
+    `<span class="thr-chip thr-low">跌深≤<span class="thr-val" contenteditable="true" inputmode="decimal" onblur="onThrEdit(this,'${key}','low')">${t.low}</span>%</span>`;
+}
+
+/* ══════════════════════════════════════
    State
 ══════════════════════════════════════ */
 let D    = {};   // data.json
@@ -413,11 +519,12 @@ function computeSummary(enriched, loanEnr){
   const cPool  = enriched.filter(h=> cashLike.has(h.cat)).reduce((a,h)=>a+h.value_twd,0);
   const lTotal = loanEnr.reduce((a,h)=>a+h.value_twd,0);
   const lCost  = loanEnr.reduce((a,h)=>a+h.cost,0);
-  const cash   = (LOCAL.cash||0)+cPool;
+  const bankCash= LOCAL.bankCash||0;
+  const cash   = bankCash+cPool;
   const sl     = LOCAL.stockLoan||0;
   const nav    = pTotal+lTotal+cash-sl;
   const pRet   = pCost>0 ? (pTotal-pCost)/pCost*100 : 0;
-  return {pTotal,pCost,pRet,pUnreal:pTotal-pCost,lTotal,lPnl:lTotal-lCost,cash,sl,nav};
+  return {pTotal,pCost,pRet,pUnreal:pTotal-pCost,lTotal,lPnl:lTotal-lCost,bankCash,cPool,cash,sl,nav};
 }
 
 function computeRebal(enriched, nav){
@@ -450,7 +557,7 @@ function initLocal(){
       name:h.name,tick:h.tick||'',shares:h.shares,
       perSh:h.perSh,cur:h.cur||'TWD',pledgeAmt:h.pledgeAmt||0,note:h.note||''
     })),
-    cash:D.summary?.available_cash||0,
+    bankCash:0,
     stockLoan:D.summary?.stock_loan||0,
   };
   savePf();
@@ -479,10 +586,10 @@ function importPf(e){
 ══════════════════════════════════════ */
 function setupCashEditable(){
   const ce=G('cash-input'), le=G('loan-input');
-  ce.textContent = f(localStorage.getItem('availCash')!==null ? +localStorage.getItem('availCash') : LOCAL.cash||0);
+  ce.textContent = f(localStorage.getItem('bankCash')!==null ? +localStorage.getItem('bankCash') : LOCAL.bankCash||0);
   le.textContent = f(localStorage.getItem('stockLoan')!==null ? +localStorage.getItem('stockLoan') : LOCAL.stockLoan||0);
   ['input','blur'].forEach(ev=>{
-    ce.addEventListener(ev,()=>{ LOCAL.cash=parseMoney(ce); localStorage.setItem('availCash',LOCAL.cash); savePf(); renderSummaryTab(); });
+    ce.addEventListener(ev,()=>{ LOCAL.bankCash=parseMoney(ce); localStorage.setItem('bankCash',LOCAL.bankCash); savePf(); renderSummaryTab(); });
     le.addEventListener(ev,()=>{ LOCAL.stockLoan=parseMoney(le); localStorage.setItem('stockLoan',LOCAL.stockLoan); savePf(); renderSummaryTab(); });
   });
 }
@@ -517,41 +624,45 @@ function renderSummaryTab(){
 }
 
 function renderSummaryContent(sum, rebal){
-  const s = D.summary||{};
-  G('s-port').textContent   = f(sum.pTotal);
-  G('s-unreal').textContent = (sum.pUnreal>=0?'+':'')+f(sum.pUnreal);
-  G('s-unreal').className   = 'kpi-val '+clr(sum.pUnreal);
-  G('s-nav').textContent    = f(sum.nav);
-  G('s-fx').textContent     = (D.exchange_rate||31.5).toFixed(2);
-  G('s-loanpnl').textContent= (sum.lPnl>=0?'+':'')+f(sum.lPnl);
-  G('s-loanpnl').className  = 'kpi-val '+clr(sum.lPnl);
-  G('s-ret').textContent    = (sum.pRet>=0?'+':'')+fp(sum.pRet);
-  G('s-ret').className      = 'kpi-val '+clr(sum.pRet);
+  // KPIs
+  G('s-port').textContent    = f(sum.pTotal);
+  G('s-unreal').textContent  = (sum.pUnreal>=0?'+':'')+f(sum.pUnreal);
+  G('s-unreal').className    = 'kpi-val '+clr(sum.pUnreal);
+  G('s-nav').textContent     = f(sum.nav);
+  G('s-fx').textContent      = (D.exchange_rate||31.5).toFixed(2);
+  G('s-cashlike').textContent= f(sum.cPool);
+  G('s-totalcash').textContent=f(sum.cash);
+  G('s-loanpnl').textContent = (sum.lPnl>=0?'+':'')+f(sum.lPnl);
+  G('s-loanpnl').className   = 'kpi-val '+clr(sum.lPnl);
+  G('s-ret').textContent     = (sum.pRet>=0?'+':'')+fp(sum.pRet);
+  G('s-ret').className       = 'kpi-val '+clr(sum.pRet);
 
-  // 系統燈號
-  const lvl=s.signal_level||'neutral', sig=s.signal||'持倉', ret=s.portfolio_return_pct||0;
-  G('sys-sig').className='sig-card '+lvl;
-  G('sys-sig-text').textContent=sig;
-  G('sys-sig-sub').textContent=`組合報酬 ${ret>=0?'+':''}${fp(ret)}`;
+  // 系統燈號（用 localStorage 門檻重新計算）
+  const sRet = D.summary?.portfolio_return_pct||0;
+  const sSig = computeSignal(sRet, THRESHOLDS.sys);
+  G('sys-sig').className='sig-card '+sSig.level;
+  G('sys-sig-text').textContent=sSig.label;
+  G('sys-sig-sub').textContent=`組合報酬 ${sRet>=0?'+':''}${fp(sRet)}`;
+  renderThrBar('sys-thr-bar','sys');
 
-  // 正2燈號
-  const p2lvl=s.pos2_signal_level||'neutral', p2sig=s.pos2_signal||'持倉', p2ret=s.pos2_return_pct||0;
-  G('pos2-sig').className='sig-card '+p2lvl;
-  G('pos2-sig-text').textContent=p2sig;
+  // 正2燈號（用 localStorage 門檻重新計算）
+  const p2ret = D.summary?.pos2_return_pct||0;
+  const p2Sig = computeSignal(p2ret, THRESHOLDS.pos2);
+  G('pos2-sig').className='sig-card '+p2Sig.level;
+  G('pos2-sig-text').textContent=p2Sig.label;
   G('pos2-sig-sub').textContent=`00631L 報酬 ${p2ret>=0?'+':''}${fp(p2ret)}`;
+  renderThrBar('pos2-thr-bar','pos2');
 
-  // 門檻說明
-  const thr=s.thresholds||{high:30,midH:15,midL:-10,low:-20};
-  G('thr-bar').innerHTML=`
-    <span class="thr-chip thr-high">減倉 ≥+${thr.high}%</span>
-    <span class="thr-chip thr-midH">收割 ≥+${thr.midH}%</span>
-    <span class="thr-chip thr-neu">持倉</span>
-    <span class="thr-chip thr-midL">加碼 ≤${thr.midL}%</span>
-    <span class="thr-chip thr-low">跌深 ≤${thr.low}%</span>`;
-
-  // 再平衡表
+  // 再平衡表（優先 D.targets；fallback cat_breakdown）
   const tbody=G('rb-body');
   tbody.innerHTML='';
+  if(!rebal.length && (D.summary?.cat_breakdown||[]).length){
+    rebal = (D.summary.cat_breakdown).map(r=>({
+      cat:r.cat,val:r.value,cost:r.cost,catRet:r.return_pct,
+      actual_pct:r.actual_pct,target_pct:r.target_pct,diff_pct:r.diff_pct,
+      target_amount:r.target_amount,diff_amount:r.diff_amount,strat:r.strat||''
+    }));
+  }
   rebal.forEach(row=>{
     const d=row.diff_pct, da=row.diff_amount;
     const fill=Math.min(Math.abs(row.actual_pct/Math.max(row.target_pct,1))*100,150);
@@ -573,6 +684,95 @@ function renderSummaryContent(sum, rebal){
         <td style="min-width:60px"><div class="prog-bg"><div class="prog-fill" style="width:${fill}%;background:${barC}"></div></div></td>
       </tr>`;
   });
+
+  renderTwiiMarket();
+}
+
+/* ══════════════════════════════════════
+   台股進場觸發狀況
+══════════════════════════════════════ */
+function renderTwiiMarket(){
+  const el = G('market-section');
+  if(!el) return;
+  const mkt = D.twii_market;
+  if(!mkt){
+    el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:12px;text-align:center">大盤資料更新中，下次 Actions 執行後顯示</div>';
+    return;
+  }
+  const {close,close_date,ath,ath_date,drop_pct,triggers=[]} = mkt;
+  const minT = triggers.length?Math.min(...triggers.map(t=>t.trigger)):close*0.7;
+  const maxV = Math.max(ath||close, close);
+  const gPos = maxV>minT ? Math.max(2,Math.min(95,(close-minT)/(maxV-minT)*100)) : 95;
+  const dropColor = drop_pct<0?'var(--red)':'var(--green)';
+  const dropArrow = drop_pct<0?'▼':'▲';
+
+  const untrg = triggers.filter(t=>!t.triggered);
+  const trg   = triggers.filter(t=>t.triggered);
+  let sbTitle, sbSub='';
+  if(untrg.length){
+    sbTitle='目前無觸發條件，尚不需進場';
+    sbSub=`距最近觸發點（${untrg[0].name.slice(0,4)}）尚差 ${Math.round(untrg[0].gap).toLocaleString()} 點`;
+  } else if(trg.length){
+    sbTitle=`⚡ ${trg.length} 項條件已觸發，請確認進場計畫`;
+  } else sbTitle='無法取得大盤資料';
+
+  const statusBg = trg.length?'rgba(31,216,122,.08)':'rgba(245,166,35,.08)';
+  const statusBd = trg.length?'rgba(31,216,122,.2)':'rgba(245,166,35,.2)';
+
+  const TR_C=['#7fbbdd','#5aaad4','#3cc87a','#ffc22f','#f58b05','#e84040'];
+  const maxGap = triggers.length?Math.max(...triggers.map(t=>t.gap)):1;
+
+  let trigHtml='';
+  triggers.forEach((t,i)=>{
+    const c = t.triggered?'#3cc87a':TR_C[Math.min(i,5)];
+    const w = Math.max(2,Math.min(95,(1-t.gap/maxGap)*100));
+    trigHtml+=`<div class="tr-item">
+      <div class="tr-bar" style="background:${c}"></div>
+      <div class="tr-body">
+        <div class="tr-name">${t.triggered?'✅ ':''} ${t.name}</div>
+        <div class="tr-meta">觸發 ${Math.round(t.trigger).toLocaleString()}<span class="tr-pill">差 ${Math.round(t.gap).toLocaleString()} 點</span></div>
+        <div class="tr-prog"><div class="tr-fill" style="width:${w}%;background:${c}"></div></div>
+      </div>
+      <div class="tr-amount">$${Math.round(t.amount).toLocaleString()}</div>
+    </div>`;
+  });
+
+  // Gauge markers: show MA60 & MA240 if available
+  let mkHtml='';
+  const pts=[];
+  if(mkt.ma240) pts.push({v:mkt.ma240,l:'年線'});
+  if(mkt.ma60)  pts.push({v:mkt.ma60, l:'季線'});
+  pts.forEach(p=>{
+    const ppos=maxV>minT?Math.max(2,Math.min(93,(p.v-minT)/(maxV-minT)*100)):50;
+    mkHtml+=`<div class="gauge-lbl" style="left:${ppos}%">${p.l}<br>${Math.round(p.v).toLocaleString()}</div>`;
+  });
+
+  const shortDate = d => (d||'').split('/').slice(1).join('/');
+
+  el.innerHTML=`<div class="card-dark" style="padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+      <div>
+        <div style="font-size:11px;color:var(--muted)">大盤收盤</div>
+        <div style="font-size:28px;font-weight:900">${Math.round(close).toLocaleString()}</div>
+        <div style="font-size:11px;color:var(--muted)">${close_date}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:var(--muted)">歷史最高 ${shortDate(ath_date)}</div>
+        <div style="font-size:22px;font-weight:800">${Math.round(ath).toLocaleString()}</div>
+        <div style="font-size:11px;font-weight:700;color:${dropColor}">${dropArrow} 距高點 ${drop_pct.toFixed(2)}%</div>
+      </div>
+    </div>
+    <div class="gauge-wrap">
+      <div class="gauge-track"></div>
+      <div class="gauge-pin" style="left:${gPos}%">🍊</div>
+      ${mkHtml}
+    </div>
+    <div style="background:${statusBg};border:1px solid ${statusBd};border-radius:10px;padding:10px 14px;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:700">${sbTitle}</div>
+      ${sbSub?`<div style="font-size:11px;color:var(--muted);margin-top:3px">${sbSub}</div>`:''}
+    </div>
+    ${trigHtml}
+  </div>`;
 }
 
 /* ══════════════════════════════════════
@@ -581,7 +781,7 @@ function renderSummaryContent(sum, rebal){
 function renderPortfolioTab(enriched, loanEnr, sum){
   renderPortfolioSection(enriched, sum);
   renderLoanSection(loanEnr);
-  renderUsExp(enriched, loanEnr);
+  renderUsExp();
 }
 
 function renderPortfolioSection(enriched, sum){
@@ -701,48 +901,28 @@ function renderLoanSection(loanEnr){
     </div>`;
 }
 
-function renderUsExp(enriched, loanEnr){
+function renderUsExp(){
   const el=G('us-exposure');
-  const usd=D.exchange_rate||31.5;
-  const etfW=D.etf_weights || {};
-  const direct={}, etf={};
-
-  const addD=(d,sym,v)=>{ d[sym]=(d[sym]||0)+v; };
-
-  [...enriched,...loanEnr].forEach(h=>{
-    if(!h.tick) return;
-    const eid=h.tick.replace('.TW','');
-    if(h.tick.endsWith('.TW') && etfW[eid]){
-      const uv=h.value_twd/usd;
-      Object.entries(etfW[eid]).forEach(([s,w])=>addD(etf,s,uv*w));
-    } else if(!h.tick.endsWith('.TW') && h.cur==='USD' && etfW[eid]){
-      const uv=h.shares*h.price;
-      Object.entries(etfW[eid]).forEach(([s,w])=>addD(etf,s,uv*w));
-    } else if(!h.tick.endsWith('.TW') && h.cur==='USD'){
-      addD(direct,h.tick,h.shares*h.price);
-    }
-  });
-
-  const allSyms=new Set([...Object.keys(direct),...Object.keys(etf)]);
-  const rows=[...allSyms].map(sym=>({sym,d:direct[sym]||0,e:etf[sym]||0}))
-    .sort((a,b)=>(b.d+b.e)-(a.d+a.e));
-  const totalUsd=rows.reduce((a,r)=>a+r.d+r.e,0);
-
+  const exp=(D.us_exposure||[]).slice(0,15);
+  if(!exp.length){
+    el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px">ETF 內含曝險資料更新中（需觸發一次 GitHub Actions）</div>';
+    return;
+  }
+  const totalUsd=exp.reduce((a,r)=>a+(r.value_usd||0),0);
   let html='';
-  rows.slice(0,15).forEach(r=>{
-    const tot=r.d+r.e, pct=totalUsd>0?tot/totalUsd*100:0;
+  exp.forEach(r=>{
+    const pct=totalUsd>0?r.value_usd/totalUsd*100:0;
     html+=`<tr>
       <td>${r.sym}</td>
-      <td>${r.d>0?'$'+Math.round(r.d).toLocaleString():'<span style="color:var(--muted)">—</span>'}</td>
-      <td>${r.e>0?'$'+Math.round(r.e).toLocaleString():'<span style="color:var(--muted)">—</span>'}</td>
-      <td style="color:var(--text)">$${Math.round(tot).toLocaleString()}</td>
+      <td>${(r.direct_usd||0)>0?'$'+Math.round(r.direct_usd).toLocaleString():'<span style="color:var(--muted)">—</span>'}</td>
+      <td>${(r.etf_usd||0)>0?'$'+Math.round(r.etf_usd).toLocaleString():'<span style="color:var(--muted)">—</span>'}</td>
+      <td style="color:var(--text)">$${Math.round(r.value_usd).toLocaleString()}</td>
       <td style="color:var(--muted)">${pct.toFixed(1)}%</td>
     </tr>`;
   });
-
   el.innerHTML=`<div class="card-dark" style="padding:10px"><div class="scroll-x">
     <table class="exp-table">
-      <thead><tr><th>代號</th><th>直接持有</th><th>ETF 內含</th><th>合計</th><th>佔比</th></tr></thead>
+      <thead><tr><th>代號</th><th>直接持有 (USD)</th><th>ETF 內含 (USD)</th><th>合計 (USD)</th><th>佔比</th></tr></thead>
       <tbody>${html}</tbody>
     </table></div></div>`;
 }
@@ -921,7 +1101,6 @@ function renderLogs(){
     const ok=typeof v==='string'&&v.startsWith('ok');
     srcEl.innerHTML+=`<div class="card-dark" style="padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="flex:1;font-size:13px;font-weight:600">${k}</div><span class="${ok?'b-ok':'b-err'}">${v}</span></div>`;
   });
-  G('log-raw').textContent=JSON.stringify(D.summary||{},null,2);
 }
 
 /* ══════════════════════════════════════
@@ -944,6 +1123,7 @@ async function loadData(){
       :'—';
 
     initLocal();
+    loadThresholds();
     setupCashEditable();
     renderAll();
 
