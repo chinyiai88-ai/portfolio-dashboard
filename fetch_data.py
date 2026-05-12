@@ -274,7 +274,7 @@ def main():
     nav        = port_total + loan_total + avail_cash - stock_loan
     port_ret   = (port_total - port_cost) / port_cost * 100 if port_cost > 0 else 0
 
-    # 操作建議
+    # 系統操作建議（整體組合）
     if port_ret >= thresholds["high"]:
         signal, signal_level = "減倉", "high"
     elif port_ret >= thresholds["midH"]:
@@ -285,6 +285,19 @@ def main():
         signal, signal_level = "加碼", "midL"
     else:
         signal, signal_level = "跌深", "low"
+
+    # 正2導航燈號（00631L 個別報酬率）
+    pos2_ret, pos2_signal, pos2_level = 0.0, "持倉", "neutral"
+    pos2 = next((h for h in portfolio_items if h.get("tick") == "00631L.TW"), None)
+    if pos2:
+        c2 = pos2.get("perSh", 0)
+        p2 = pos2.get("price", 0)
+        pos2_ret = (p2 - c2) / c2 * 100 if c2 > 0 else 0
+        if pos2_ret >= thresholds["high"]:   pos2_signal, pos2_level = "減倉", "high"
+        elif pos2_ret >= thresholds["midH"]: pos2_signal, pos2_level = "收割", "midH"
+        elif pos2_ret >= thresholds["midL"]: pos2_signal, pos2_level = "持倉", "neutral"
+        elif pos2_ret >= thresholds["low"]:  pos2_signal, pos2_level = "加碼", "midL"
+        else:                                pos2_signal, pos2_level = "跌深", "low"
 
     # 分類 breakdown
     cat_breakdown = []
@@ -364,6 +377,9 @@ def main():
             "stock_loan":           round(stock_loan, 0),
             "signal":               signal,
             "signal_level":         signal_level,
+            "pos2_signal":          pos2_signal,
+            "pos2_signal_level":    pos2_level,
+            "pos2_return_pct":      round(pos2_ret, 2),
             "thresholds":           thresholds,
             "cat_breakdown":        cat_breakdown,
         },
@@ -378,6 +394,11 @@ def main():
             "ytd_yield_pct":    round(ytd_yield, 2),
         },
         "us_exposure": us_exp_list,
+        "targets": {
+            cat: {"pct": float(tgt["pct"]), "strat": tgt.get("strat", "")}
+            for cat, tgt in targets.items()
+        },
+        "cash_like_cats": list(cfg.get("cash_like_cats", [])),
         "logs": logs,
     }
 

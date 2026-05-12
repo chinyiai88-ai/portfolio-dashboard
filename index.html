@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>發財888888 資產儀表板</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
@@ -11,809 +11,955 @@
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <style>
-    :root {
-      --bg:      #0a0c12;
-      --card:    #13161e;
-      --card2:   #1c2030;
-      --border:  #252a38;
-      --text:    #dde4f0;
-      --muted:   #6b7592;
-      --blue:    #4f6ef7;
-      --green:   #1fd87a;
-      --red:     #f25c54;
-      --yellow:  #f5a623;
-      --teal:    #00d4b4;
-      --purple:  #9b72f5;
+    :root{
+      --bg:#0a0c12; --card:#13161e; --border:#252a38;
+      --text:#dde4f0; --muted:#6b7592;
+      --blue:#4f6ef7; --green:#1fd87a; --red:#f25c54;
+      --yellow:#f5a623; --teal:#00d4b4; --purple:#9b72f5;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, 'Segoe UI', 'PingFang TC', sans-serif;
-      font-size: 14px;
-      padding-bottom: 72px;
-      padding-top: 56px;
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI','PingFang TC',sans-serif;font-size:13px;padding-bottom:72px;padding-top:56px}
 
-    /* ── Header ── */
-    #app-header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: var(--card);
-      border-bottom: 1px solid var(--border);
-      height: 56px;
-      display: flex; align-items: center; padding: 0 16px; gap: 10px;
-    }
-    #app-header h1 { font-size: 15px; font-weight: 700; letter-spacing: .3px; }
-    #update-time   { font-size: 11px; color: var(--muted); margin-left: auto; }
-    #dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
-    #dot.ok   { background: var(--green); box-shadow: 0 0 6px var(--green); }
-    #dot.err  { background: var(--red); }
-    #dot.spin { background: var(--yellow); animation: pulse 1s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    /* Header */
+    #app-header{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--card);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;padding:0 16px;gap:10px}
+    #app-header h1{font-size:15px;font-weight:800;letter-spacing:.3px}
+    #update-time{font-size:11px;color:var(--muted);margin-left:auto}
+    #dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex-shrink:0}
+    #dot.ok{background:var(--green);box-shadow:0 0 6px var(--green)}
+    #dot.err{background:var(--red)}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-    /* ── Bottom Nav ── */
-    #bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
-      background: var(--card);
-      border-top: 1px solid var(--border);
-      height: 60px;
-      display: flex;
-      padding-bottom: env(safe-area-inset-bottom);
-    }
-    .nav-btn {
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 2px; border: none; background: none;
-      color: var(--muted); cursor: pointer; transition: color .15s;
-      font-size: 10px;
-    }
-    .nav-btn i { font-size: 20px; }
-    .nav-btn.active { color: var(--blue); }
+    /* Bottom Nav */
+    #bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:1000;background:var(--card);border-top:1px solid var(--border);height:60px;display:flex;padding-bottom:env(safe-area-inset-bottom)}
+    .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;border:none;background:none;color:var(--muted);cursor:pointer;transition:color .15s;font-size:10px}
+    .nav-btn i{font-size:20px}
+    .nav-btn.active{color:var(--blue)}
 
-    /* ── Cards ── */
-    .card-dark {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-    }
-    .card-label { font-size: 11px; color: var(--muted); margin-bottom: 5px; letter-spacing: .3px; }
-    .card-value { font-size: 24px; font-weight: 800; letter-spacing: -.5px; }
-    .card-sub   { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    /* Cards & KPI */
+    .card-dark{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+    .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+    .kpi-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+    .kpi-label{font-size:10px;color:var(--muted);margin-bottom:3px;letter-spacing:.3px}
+    .kpi-note{font-size:9px;color:var(--muted);margin-top:2px;opacity:.75}
+    .kpi-val{font-size:15px;font-weight:700}
+    .editable{border-bottom:1px dashed var(--blue);cursor:text;outline:none;min-width:50px;display:inline-block}
 
-    /* ── KPI grid ── */
-    .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-    .kpi-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-    .kpi-box {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 10px 12px;
-    }
-    .kpi-label { font-size: 10px; color: var(--muted); margin-bottom: 3px; }
-    .kpi-val   { font-size: 15px; font-weight: 700; }
-    .editable  {
-      border-bottom: 1px dashed var(--blue);
-      cursor: text; outline: none; min-width: 60px;
-      display: inline-block;
-    }
+    /* Section Title */
+    .sec-title{font-size:14px;font-weight:800;color:var(--text);letter-spacing:.5px;margin:16px 0 8px;text-shadow:0 0 12px rgba(79,110,247,.5)}
 
-    /* ── Signal card ── */
-    .signal-card {
-      border-radius: 14px; padding: 16px; margin-bottom: 10px;
-      text-align: center; margin-top: 2px;
-    }
-    .signal-card.high    { background: rgba(242,92,84,.1);  border: 1px solid rgba(242,92,84,.35); }
-    .signal-card.midH    { background: rgba(245,166,35,.1); border: 1px solid rgba(245,166,35,.35); }
-    .signal-card.neutral { background: rgba(79,110,247,.1); border: 1px solid rgba(79,110,247,.35); }
-    .signal-card.midL    { background: rgba(0,212,180,.1);  border: 1px solid rgba(0,212,180,.35); }
-    .signal-card.low     { background: rgba(31,216,122,.1); border: 1px solid rgba(31,216,122,.35); }
-    .signal-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; letter-spacing: .5px; text-transform: uppercase; }
-    .signal-text  { font-size: 32px; font-weight: 900; letter-spacing: 4px; }
-    .signal-card.high    .signal-text { color: var(--red); }
-    .signal-card.midH    .signal-text { color: var(--yellow); }
-    .signal-card.neutral .signal-text { color: var(--blue); }
-    .signal-card.midL    .signal-text { color: var(--teal); }
-    .signal-card.low     .signal-text { color: var(--green); }
-    .signal-sub { font-size: 11px; color: var(--muted); margin-top: 6px; }
+    /* Signal */
+    .sig-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px;margin-bottom:10px}
+    .sig-card{border-radius:14px;padding:12px;text-align:center}
+    .sig-card.high   {background:rgba(242,92,84,.1); border:1px solid rgba(242,92,84,.35)}
+    .sig-card.midH   {background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.35)}
+    .sig-card.neutral{background:rgba(79,110,247,.1);border:1px solid rgba(79,110,247,.35)}
+    .sig-card.midL   {background:rgba(0,212,180,.1); border:1px solid rgba(0,212,180,.35)}
+    .sig-card.low    {background:rgba(31,216,122,.1);border:1px solid rgba(31,216,122,.35)}
+    .sig-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+    .sig-text{font-size:26px;font-weight:900;letter-spacing:3px}
+    .sig-card.high   .sig-text{color:var(--red)}
+    .sig-card.midH   .sig-text{color:var(--yellow)}
+    .sig-card.neutral .sig-text{color:var(--blue)}
+    .sig-card.midL   .sig-text{color:var(--teal)}
+    .sig-card.low    .sig-text{color:var(--green)}
+    .sig-sub{font-size:10px;color:var(--muted);margin-top:4px}
 
-    /* ── Debt ratio bar ── */
-    .debt-track {
-      position: relative; height: 10px;
-      background: var(--border); border-radius: 5px;
-      overflow: hidden; margin: 8px 0 4px;
-    }
-    .debt-healthy {
-      position: absolute; left: 30%; width: 40%; height: 100%;
-      background: rgba(31,216,122,.15);
-    }
-    .debt-fill {
-      position: absolute; left: 0; top: 0; height: 100%;
-      border-radius: 5px; transition: width .4s;
-    }
-    .debt-ticks {
-      display: flex; justify-content: space-between;
-      font-size: 10px; color: var(--muted);
-    }
+    /* Threshold legend */
+    .thr-bar{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+    .thr-chip{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;white-space:nowrap}
+    .thr-high{background:rgba(242,92,84,.15);color:var(--red)}
+    .thr-midH{background:rgba(245,166,35,.15);color:var(--yellow)}
+    .thr-neu {background:rgba(79,110,247,.15);color:var(--blue)}
+    .thr-midL{background:rgba(0,212,180,.15);color:var(--teal)}
+    .thr-low {background:rgba(31,216,122,.15);color:var(--green)}
 
-    /* ── Colours ── */
-    .pos  { color: var(--green); }
-    .neg  { color: var(--red); }
-    .neu  { color: var(--muted); }
-    .yel  { color: var(--yellow); }
+    /* Colours */
+    .pos{color:var(--green)} .neg{color:var(--red)} .neu{color:var(--muted)}
 
-    /* ── Rebalance table ── */
-    .scroll-x { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    .rb-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 560px; }
-    .rb-table th {
-      color: var(--muted); font-weight: 500; padding: 6px 6px;
-      border-bottom: 1px solid var(--border); white-space: nowrap;
-    }
-    .rb-table td { padding: 7px 6px; border-bottom: 1px solid rgba(255,255,255,.03); vertical-align: middle; }
-    .prog-bg   { background: var(--border); border-radius: 3px; height: 4px; margin-top: 4px; }
-    .prog-fill { height: 4px; border-radius: 3px; }
+    /* Rebalance table */
+    .scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .rb-table{width:100%;border-collapse:collapse;font-size:11px;min-width:560px}
+    .rb-table th{color:var(--muted);font-weight:600;padding:6px 6px;border-bottom:1px solid var(--border);white-space:nowrap;font-size:11px}
+    .rb-table td{padding:7px 6px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+    .prog-bg{background:var(--border);border-radius:3px;height:4px;margin-top:4px}
+    .prog-fill{height:4px;border-radius:3px}
+    .badge-s{display:inline-block;border-radius:5px;padding:2px 7px;font-size:10px;font-weight:700;white-space:nowrap}
+    .s-sell{background:rgba(242,92,84,.15);color:var(--red)}
+    .s-trim{background:rgba(245,166,35,.15);color:var(--yellow)}
+    .s-hold{background:rgba(255,255,255,.06);color:var(--muted)}
+    .s-add {background:rgba(0,212,180,.15);color:var(--teal)}
+    .s-buy {background:rgba(31,216,122,.15);color:var(--green)}
 
-    /* ── Suggest badge ── */
-    .badge-s {
-      display: inline-block; border-radius: 5px;
-      padding: 2px 7px; font-size: 11px; font-weight: 600; white-space: nowrap;
-    }
-    .s-sell { background: rgba(242,92,84,.15);  color: var(--red); }
-    .s-trim { background: rgba(245,166,35,.15); color: var(--yellow); }
-    .s-hold { background: rgba(255,255,255,.06); color: var(--muted); }
-    .s-add  { background: rgba(0,212,180,.15);  color: var(--teal); }
-    .s-buy  { background: rgba(31,216,122,.15); color: var(--green); }
+    /* Portfolio table */
+    .cat-block{margin-bottom:6px}
+    .cat-hdr{display:flex;align-items:center;gap:8px;padding:10px 4px 6px;font-size:13px;font-weight:800;text-shadow:0 0 10px rgba(255,255,255,.15)}
+    .cat-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+    .cat-stats{margin-left:auto;font-size:11px;font-weight:600;color:var(--text)}
+    .port-table{width:100%;border-collapse:collapse;font-size:11px;min-width:820px}
+    .port-table th{color:var(--muted);font-weight:600;padding:5px 6px;border-bottom:1px solid var(--border);white-space:nowrap;text-align:right}
+    .port-table th:first-child{text-align:left}
+    .port-table td{padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.03);text-align:right;vertical-align:middle}
+    .port-table td:first-child{text-align:left}
+    .port-row td[contenteditable="true"]{cursor:text;outline:none}
+    .port-row td[contenteditable="true"]:focus{background:rgba(79,110,247,.1);border-radius:4px}
+    .ret-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;flex-shrink:0;vertical-align:middle}
+    .del-btn{background:rgba(242,92,84,.12);color:var(--red);border:none;border-radius:6px;padding:2px 7px;font-size:11px;cursor:pointer;font-weight:700}
+    .del-btn:hover{background:rgba(242,92,84,.25)}
 
-    /* ── Portfolio rows ── */
-    .cat-hdr {
-      font-size: 10px; font-weight: 700; color: var(--muted);
-      text-transform: uppercase; letter-spacing: .8px;
-      padding: 12px 0 4px; display: flex; justify-content: space-between; align-items: center;
-    }
-    .cat-hdr-right { font-size: 12px; font-weight: 600; color: var(--text); }
-    .s-row { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.03); }
-    .s-row-top { display: flex; align-items: center; gap: 8px; }
-    .s-name { flex: 1; font-size: 13px; font-weight: 600; }
-    .s-val  { font-size: 13px; font-weight: 700; min-width: 72px; text-align: right; }
-    .s-ret  { font-size: 12px; min-width: 52px; text-align: right; }
-    .s-row-btm {
-      display: flex; flex-wrap: wrap; gap: 4px 10px;
-      margin-top: 3px; font-size: 10px; color: var(--muted);
-    }
-    .tag {
-      background: rgba(255,255,255,.06); border-radius: 4px;
-      padding: 1px 6px; font-size: 10px;
-    }
-    .tag-blue { color: var(--blue); }
-    .tag-yel  { color: var(--yellow); }
+    /* Add row */
+    .add-row-btn{display:flex;align-items:center;gap:6px;background:rgba(79,110,247,.1);border:1px dashed rgba(79,110,247,.4);border-radius:10px;padding:8px 14px;color:var(--blue);font-size:12px;font-weight:600;cursor:pointer;width:100%;margin-top:6px;margin-bottom:4px}
+    .add-row-btn:hover{background:rgba(79,110,247,.18)}
 
-    /* ── US Exposure table ── */
-    .exp-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 320px; }
-    .exp-table th {
-      color: var(--muted); font-weight: 500; padding: 5px 6px;
-      border-bottom: 1px solid var(--border); text-align: right;
-    }
-    .exp-table th:first-child { text-align: left; }
-    .exp-table td { padding: 5px 6px; border-bottom: 1px solid rgba(255,255,255,.03); text-align: right; }
-    .exp-table td:first-child { text-align: left; font-weight: 700; color: var(--text); }
+    /* Add form */
+    .add-form{background:rgba(79,110,247,.08);border:1px solid rgba(79,110,247,.25);border-radius:12px;padding:14px;margin-bottom:10px}
+    .add-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+    .add-form label{font-size:10px;color:var(--muted);display:block;margin-bottom:3px}
+    .add-form input,.add-form select{width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text);font-size:12px;outline:none}
+    .add-form input:focus,.add-form select:focus{border-color:var(--blue)}
+    .add-form-btns{display:flex;gap:8px}
+    .btn-confirm{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;flex:1}
+    .btn-cancel{background:rgba(255,255,255,.06);color:var(--muted);border:none;border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer}
 
-    /* ── Dividend card ── */
-    .div-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 12px 14px; margin-bottom: 8px;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .div-stock { font-size: 13px; font-weight: 600; }
-    .div-date  { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .div-days  { display: inline-block; background: rgba(79,110,247,.15); color: var(--blue); border-radius: 4px; padding: 1px 6px; font-size: 10px; margin-left: 4px; }
-    .div-amt   { margin-left: auto; text-align: right; }
-    .div-amt-val  { font-size: 15px; font-weight: 700; color: var(--teal); }
-    .div-per-sh   { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    /* Dividend */
+    .div-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+    .div-stock{font-size:13px;font-weight:700}
+    .div-date{font-size:11px;color:var(--muted);margin-top:2px}
+    .div-days{display:inline-block;background:rgba(79,110,247,.15);color:var(--blue);border-radius:4px;padding:1px 6px;font-size:10px;margin-left:4px}
+    .div-amt-val{font-size:15px;font-weight:800;color:var(--teal)}
+    .div-per-sh{font-size:11px;color:var(--muted);margin-top:1px}
+    .acc-hdr{display:flex;align-items:center;padding:8px 0;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04)}
+    .acc-hdr:hover{background:rgba(255,255,255,.02);border-radius:8px}
+    .acc-name{font-size:13px;font-weight:700;flex:1}
+    .acc-total{font-size:13px;font-weight:700;color:var(--teal)}
+    .acc-arrow{font-size:12px;color:var(--muted);margin-left:8px;transition:transform .2s}
+    .acc-body{display:none;padding:6px 0 4px}
+    .acc-body.open{display:block}
+    .acc-row{display:flex;font-size:11px;color:var(--muted);padding:3px 8px;gap:12px}
+    .ytd-table{width:100%;border-collapse:collapse;font-size:11px}
+    .ytd-table th{color:var(--muted);font-weight:600;padding:5px 4px;border-bottom:1px solid var(--border)}
+    .ytd-table td{padding:5px 4px;border-bottom:1px solid rgba(255,255,255,.03)}
 
-    /* ── YTD table ── */
-    .ytd-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    .ytd-table th { color: var(--muted); font-weight: 500; padding: 5px 4px; border-bottom: 1px solid var(--border); }
-    .ytd-table td { padding: 5px 4px; border-bottom: 1px solid rgba(255,255,255,.03); }
+    /* US exposure */
+    .exp-table{width:100%;border-collapse:collapse;font-size:11px;min-width:340px}
+    .exp-table th{color:var(--muted);font-weight:600;padding:5px 6px;border-bottom:1px solid var(--border);text-align:right}
+    .exp-table th:first-child{text-align:left}
+    .exp-table td{padding:5px 6px;border-bottom:1px solid rgba(255,255,255,.03);text-align:right}
+    .exp-table td:first-child{text-align:left;font-weight:700;color:var(--text)}
 
-    /* ── Log badges ── */
-    .b-ok   { background: rgba(31,216,122,.12); color: var(--green); border-radius: 6px; padding: 2px 8px; font-size: 11px; }
-    .b-err  { background: rgba(242,92,84,.12);  color: var(--red);   border-radius: 6px; padding: 2px 8px; font-size: 11px; }
-    .b-info { background: rgba(79,110,247,.12); color: var(--blue);  border-radius: 6px; padding: 2px 8px; font-size: 11px; }
+    /* Tab */
+    .tab-pane{padding:0 14px 12px}
 
-    /* ── Tab & section ── */
-    .tab-pane { padding: 0 14px 12px; }
-    .sec-title {
-      font-size: 11px; font-weight: 700; color: var(--muted);
-      text-transform: uppercase; letter-spacing: .9px;
-      margin: 16px 0 8px;
-    }
+    /* Loading */
+    #loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:9999;font-size:13px;color:var(--muted)}
+    .spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
-    /* ── Loading ── */
-    #loading {
-      position: fixed; inset: 0; background: var(--bg);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 14px; z-index: 9999; font-size: 13px; color: var(--muted);
-    }
-    .spinner {
-      width: 32px; height: 32px; border: 3px solid var(--border);
-      border-top-color: var(--blue); border-radius: 50%;
-      animation: spin .8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* Log badges */
+    .b-ok{background:rgba(31,216,122,.12);color:var(--green);border-radius:6px;padding:2px 8px;font-size:11px}
+    .b-err{background:rgba(242,92,84,.12);color:var(--red);border-radius:6px;padding:2px 8px;font-size:11px}
   </style>
 </head>
 <body>
 
 <div id="loading">
-  <div style="font-size:36px;">💰</div>
+  <div style="font-size:36px">💰</div>
   <div class="spinner"></div>
   <div>載入資料中…</div>
 </div>
 
-<div id="app-header" style="display:none;">
+<div id="app-header" style="display:none">
   <div id="dot"></div>
   <h1>發財888888</h1>
   <div id="update-time">—</div>
 </div>
 
-<div id="app" style="display:none;">
-  <div class="tab-content">
+<div id="app" style="display:none">
+ <div class="tab-content">
 
-    <!-- ════ Tab A：總覽 ════ -->
-    <div class="tab-pane fade show active" id="tab-summary">
+  <!-- ════ Tab A：總覽 ════ -->
+  <div class="tab-pane fade show active" id="tab-summary">
 
-      <!-- 操作建議燈號 -->
-      <div id="signal-card" class="signal-card neutral">
-        <div class="signal-label">🚦 操作建議</div>
-        <div class="signal-text" id="signal-text">持倉</div>
-        <div class="signal-sub" id="signal-sub">—</div>
+    <!-- 兩個燈號 -->
+    <div class="sig-grid">
+      <div class="sig-card neutral" id="sys-sig">
+        <div class="sig-label">🚦 系統操作建議</div>
+        <div class="sig-text" id="sys-sig-text">持倉</div>
+        <div class="sig-sub" id="sys-sig-sub">組合報酬 —</div>
       </div>
-
-      <!-- NAV 主卡 -->
-      <div class="card-dark">
-        <div class="card-label">💎 金融資產淨值（NAV）</div>
-        <div class="card-value" id="s-nav">—</div>
-        <div class="card-sub">
-          組合報酬 <span id="s-ret" class="neu">—</span>
-          &nbsp;｜&nbsp; USD/TWD <span id="s-fx">—</span>
-        </div>
+      <div class="sig-card neutral" id="pos2-sig">
+        <div class="sig-label">📊 正2 導航</div>
+        <div class="sig-text" id="pos2-sig-text">持倉</div>
+        <div class="sig-sub" id="pos2-sig-sub">00631L 報酬 —</div>
       </div>
+    </div>
 
-      <!-- KPI 4格 -->
-      <div class="kpi-grid">
-        <div class="kpi-box">
-          <div class="kpi-label">📊 組合總值</div>
-          <div class="kpi-val" id="s-port">—</div>
-        </div>
-        <div class="kpi-box">
-          <div class="kpi-label">🏦 借款部位現值</div>
-          <div class="kpi-val" id="s-loan">—</div>
-        </div>
-        <div class="kpi-box">
-          <div class="kpi-label">💵 可用現金 <span style="font-size:9px;color:var(--blue);">✎</span></div>
-          <div class="kpi-val">
-            <span class="editable" id="cash-input" contenteditable="true" inputmode="numeric">0</span>
-          </div>
-        </div>
-        <div class="kpi-box">
-          <div class="kpi-label">📉 股票貸款 <span style="font-size:9px;color:var(--blue);">✎</span></div>
-          <div class="kpi-val">
-            <span class="editable" id="loan-input" contenteditable="true" inputmode="numeric">0</span>
-          </div>
-        </div>
+    <!-- 門檻說明 -->
+    <div class="thr-bar" id="thr-bar"></div>
+
+    <!-- 基礎數據 -->
+    <div class="sec-title">📊 基礎數據</div>
+    <div class="kpi-grid">
+      <div class="kpi-box">
+        <div class="kpi-label">💼 投資組合總值</div>
+        <div class="kpi-val" id="s-port">—</div>
+        <div class="kpi-note">不含類現金 / 不含借款部位</div>
       </div>
+      <div class="kpi-box">
+        <div class="kpi-label">📈 未實現損益</div>
+        <div class="kpi-val" id="s-unreal">—</div>
+        <div class="kpi-note">投組現值 − 投組成本</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">💵 可用現金 <span style="font-size:9px;color:var(--blue)">✎</span></div>
+        <div class="kpi-val"><span class="editable" id="cash-input" contenteditable="true" inputmode="numeric">0</span></div>
+        <div class="kpi-note">現金 + 類現金 ETF</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">📉 股票貸款 <span style="font-size:9px;color:var(--blue)">✎</span></div>
+        <div class="kpi-val"><span class="editable" id="loan-input" contenteditable="true" inputmode="numeric">0</span></div>
+        <div class="kpi-note">質押借款總額</div>
+      </div>
+    </div>
 
-      <!-- 借款獲利 -->
-      <div class="kpi-box" style="margin-bottom:10px;">
-        <div class="kpi-label">📈 借款部位未實現損益</div>
+    <div class="kpi-grid">
+      <div class="kpi-box" style="grid-column:1/-1">
+        <div class="kpi-label">💎 金融資產淨值（NAV）</div>
+        <div class="kpi-val" style="font-size:22px;font-weight:900" id="s-nav">—</div>
+        <div class="kpi-note">組合 + 借款損益 + 現金 − 貸款 ｜ USD/TWD <span id="s-fx">—</span></div>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-box">
+        <div class="kpi-label">🏦 借款部位獲利</div>
         <div class="kpi-val" id="s-loanpnl">—</div>
+        <div class="kpi-note">借款現值 − 質押貸款額</div>
       </div>
-
-      <!-- 房貸 / 房產 + 負債率 -->
-      <div class="card-dark">
-        <div class="kpi-grid" style="margin-bottom:12px;">
-          <div class="kpi-box">
-            <div class="kpi-label">🏠 房貸餘額 <span style="font-size:9px;color:var(--blue);">✎</span></div>
-            <div class="kpi-val">
-              <span class="editable" id="mortgage-input" contenteditable="true" inputmode="numeric">0</span>
-            </div>
-          </div>
-          <div class="kpi-box">
-            <div class="kpi-label">🏘️ 房產估值 <span style="font-size:9px;color:var(--blue);">✎</span></div>
-            <div class="kpi-val">
-              <span class="editable" id="house-input" contenteditable="true" inputmode="numeric">0</span>
-            </div>
-          </div>
-        </div>
-        <div class="kpi-label" style="margin-bottom:2px;">⚖️ 負債率（健康區間 30–70%）</div>
-        <div class="debt-track">
-          <div class="debt-healthy"></div>
-          <div class="debt-fill" id="debt-fill" style="width:0%;background:var(--muted);"></div>
-        </div>
-        <div class="debt-ticks">
-          <span>0%</span><span style="margin-left:30%;">30%</span>
-          <span style="margin-left:auto;margin-right:30%;">70%</span><span>100%</span>
-        </div>
-        <div style="text-align:center;font-size:20px;font-weight:800;margin-top:6px;" id="debt-val">—</div>
-      </div>
-
-      <!-- 再平衡導航 -->
-      <div class="sec-title">⚖️ 再平衡導航</div>
-      <div class="card-dark" style="padding:10px;">
-        <div class="scroll-x">
-          <table class="rb-table">
-            <thead>
-              <tr>
-                <th>分類</th>
-                <th>策略</th>
-                <th style="text-align:right;">應有%</th>
-                <th style="text-align:right;">現值%</th>
-                <th style="text-align:right;">現值</th>
-                <th style="text-align:right;">目標金額</th>
-                <th style="text-align:right;">差額</th>
-                <th style="text-align:center;">建議</th>
-              </tr>
-            </thead>
-            <tbody id="rb-body"></tbody>
-          </table>
-        </div>
+      <div class="kpi-box">
+        <div class="kpi-label">📉 組合報酬率</div>
+        <div class="kpi-val" id="s-ret">—</div>
+        <div class="kpi-note">整體投組含成本基準</div>
       </div>
     </div>
 
-    <!-- ════ Tab B：投組 ════ -->
-    <div class="tab-pane fade" id="tab-portfolio">
-      <div id="portfolio-list"></div>
-
-      <div class="sec-title">🏦 借款部位</div>
-      <div id="loan-list"></div>
-
-      <div class="sec-title">🇺🇸 美股曝險（直接持股 + ETF 內含）</div>
-      <div id="us-exposure"></div>
-    </div>
-
-    <!-- ════ Tab C：股利 ════ -->
-    <div class="tab-pane fade" id="tab-dividends">
-
-      <div class="kpi-grid-3" style="margin-top:2px;">
-        <div class="kpi-box">
-          <div class="kpi-label">📅 未來 30 天</div>
-          <div class="kpi-val pos" id="div-30d">—</div>
-        </div>
-        <div class="kpi-box">
-          <div class="kpi-label">💰 今年已領</div>
-          <div class="kpi-val pos" id="div-ytd-kpi">—</div>
-        </div>
-        <div class="kpi-box">
-          <div class="kpi-label">📈 年殖利率</div>
-          <div class="kpi-val pos" id="div-yield">—</div>
-        </div>
-      </div>
-
-      <div class="sec-title">📅 近期除息預告</div>
-      <div id="div-upcoming"></div>
-
-      <div class="sec-title">📊 今年累計股利（YTD）</div>
-      <div class="card-dark" style="padding:10px;">
-        <table class="ytd-table">
-          <thead><tr>
-            <th class="text-start">股票</th>
-            <th style="text-align:right;">除息日</th>
-            <th style="text-align:right;">金額</th>
-            <th style="text-align:center;">入帳</th>
-          </tr></thead>
-          <tbody id="div-ytd-body"></tbody>
-          <tfoot id="div-ytd-foot"></tfoot>
+    <!-- 再平衡導航 -->
+    <div class="sec-title">⚖️ 再平衡導航</div>
+    <div class="card-dark" style="padding:10px">
+      <div class="scroll-x">
+        <table class="rb-table">
+          <thead>
+            <tr>
+              <th>分類</th><th>策略備註</th>
+              <th style="text-align:right">應有%</th>
+              <th style="text-align:right">目前%</th>
+              <th style="text-align:right">現值</th>
+              <th style="text-align:right">目標金額</th>
+              <th style="text-align:right">差額</th>
+              <th style="text-align:center">操作建議</th>
+              <th>進度</th>
+            </tr>
+          </thead>
+          <tbody id="rb-body"></tbody>
         </table>
       </div>
-
-      <div class="kpi-box" style="margin-top:10px;">
-        <div class="kpi-label">🎯 全年股利預估（依 YTD 推算）</div>
-        <div class="kpi-val pos" id="div-annual">—</div>
-      </div>
     </div>
-
-    <!-- ════ Tab D：系統 ════ -->
-    <div class="tab-pane fade" id="tab-logs">
-      <div class="card-dark" style="margin-top:2px;">
-        <div class="card-label">🕐 最後成功更新</div>
-        <div id="log-updated" style="font-size:15px;font-weight:700;">—</div>
-        <div class="card-sub" id="log-updated-ago">—</div>
-      </div>
-
-      <div class="sec-title">📡 數據來源狀態</div>
-      <div id="log-sources"></div>
-
-      <div class="sec-title">ℹ️ API 配額說明</div>
-      <div class="card-dark" style="font-size:12px;line-height:1.8;color:var(--muted);">
-        <div>🐍 <b style="color:var(--text);">yfinance</b>：免費，無次數限制</div>
-        <div>📊 <b style="color:var(--text);">FinMind</b>：600 次 / 小時（免費方案）</div>
-        <div>🔑 <b style="color:var(--text);">API Keys</b>：存於 GitHub Secrets，不對外公開</div>
-        <div>🔄 <b style="color:var(--text);">更新頻率</b>：每小時整點自動執行</div>
-      </div>
-
-      <div class="sec-title">📝 原始數據摘要</div>
-      <div class="card-dark" id="log-raw" style="font-size:11px;color:var(--muted);white-space:pre-wrap;word-break:break-all;"></div>
-    </div>
-
   </div>
+
+  <!-- ════ Tab B：投組 ════ -->
+  <div class="tab-pane fade" id="tab-portfolio">
+    <div class="sec-title">📋 投資組合</div>
+    <div id="portfolio-section"></div>
+
+    <div class="sec-title">🏦 借款部位</div>
+    <div id="loan-section"></div>
+    <button class="add-row-btn" onclick="showAddForm('loan')"><i class="bi bi-plus-circle"></i> 新增借款部位</button>
+    <div id="add-loan-form" style="display:none"></div>
+
+    <div class="sec-title">🇺🇸 美股曝險</div>
+    <div id="us-exposure"></div>
+  </div>
+
+  <!-- ════ Tab C：股利 ════ -->
+  <div class="tab-pane fade" id="tab-dividends">
+    <div class="kpi-grid" style="grid-template-columns:1fr 1fr 1fr;margin-top:2px">
+      <div class="kpi-box"><div class="kpi-label">📅 未來30天</div><div class="kpi-val pos" id="div-30d">—</div></div>
+      <div class="kpi-box"><div class="kpi-label">💰 今年已領</div><div class="kpi-val pos" id="div-ytd-kpi">—</div></div>
+      <div class="kpi-box"><div class="kpi-label">📈 年殖利率</div><div class="kpi-val pos" id="div-yield">—</div></div>
+    </div>
+
+    <div class="sec-title">📅 近期除息預告</div>
+    <div id="div-upcoming"></div>
+
+    <div class="sec-title">📊 今年累計股利（點擊展開各期）</div>
+    <div id="div-ytd-acc"></div>
+
+    <div class="kpi-box" style="margin-top:10px">
+      <div class="kpi-label">🎯 全年股利預估（依 YTD 推算）</div>
+      <div class="kpi-val pos" id="div-annual">—</div>
+    </div>
+  </div>
+
+  <!-- ════ Tab D：系統 ════ -->
+  <div class="tab-pane fade" id="tab-logs">
+    <div class="card-dark" style="margin-top:2px">
+      <div class="kpi-label">🕐 最後成功更新</div>
+      <div id="log-updated" style="font-size:15px;font-weight:700">—</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px" id="log-updated-ago">—</div>
+    </div>
+
+    <div class="sec-title">📡 數據來源狀態</div>
+    <div id="log-sources"></div>
+
+    <div class="sec-title">💾 投組資料管理</div>
+    <div class="card-dark" style="font-size:12px;line-height:2;color:var(--muted)">
+      <div>• 持股的新增 / 編輯 / 刪除存在<b style="color:var(--text)">這台裝置的瀏覽器</b></div>
+      <div>• 換裝置時先在舊裝置「匯出」，再到新裝置「匯入」</div>
+      <div>• 報價每小時由 GitHub Actions 自動更新，持股結構由你管理</div>
+      <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
+        <button onclick="exportPf()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer">📥 匯出 portfolio.json</button>
+        <button onclick="document.getElementById('import-input').click()" style="background:rgba(255,255,255,.07);color:var(--text);border:none;border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer">📤 匯入</button>
+        <button onclick="if(confirm('確定重設為 GitHub 上的版本？')){localStorage.removeItem('pf_data');location.reload()}" style="background:rgba(242,92,84,.12);color:var(--red);border:none;border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer">🔄 重設</button>
+        <input type="file" id="import-input" accept=".json" style="display:none" onchange="importPf(event)"/>
+      </div>
+    </div>
+
+    <div class="sec-title">📝 原始數據摘要</div>
+    <div class="card-dark" id="log-raw" style="font-size:10px;color:var(--muted);white-space:pre-wrap;word-break:break-all"></div>
+  </div>
+
+ </div>
 </div>
 
-<nav id="bottom-nav" style="display:none;">
-  <button class="nav-btn active" id="btn-summary"   onclick="switchTab('summary')">
-    <i class="bi bi-pie-chart-fill"></i>總覽
-  </button>
-  <button class="nav-btn" id="btn-portfolio" onclick="switchTab('portfolio')">
-    <i class="bi bi-bar-chart-fill"></i>投組
-  </button>
-  <button class="nav-btn" id="btn-dividends" onclick="switchTab('dividends')">
-    <i class="bi bi-cash-coin"></i>股利
-  </button>
-  <button class="nav-btn" id="btn-logs"      onclick="switchTab('logs')">
-    <i class="bi bi-activity"></i>系統
-  </button>
+<nav id="bottom-nav" style="display:none">
+  <button class="nav-btn active" id="btn-summary"   onclick="switchTab('summary')"><i class="bi bi-pie-chart-fill"></i>總覽</button>
+  <button class="nav-btn"        id="btn-portfolio" onclick="switchTab('portfolio')"><i class="bi bi-bar-chart-fill"></i>投組</button>
+  <button class="nav-btn"        id="btn-dividends" onclick="switchTab('dividends')"><i class="bi bi-cash-coin"></i>股利</button>
+  <button class="nav-btn"        id="btn-logs"      onclick="switchTab('logs')"><i class="bi bi-activity"></i>系統</button>
 </nav>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+/* ══════════════════════════════════════
+   工具函式
+══════════════════════════════════════ */
 const f   = n => (isNaN(n)||!isFinite(n)) ? '—' : Math.round(n).toLocaleString('zh-TW');
 const fp  = (n,d=1) => (isNaN(n)||!isFinite(n)) ? '—' : n.toFixed(d)+'%';
-const clr = n => n > 0 ? 'pos' : n < 0 ? 'neg' : 'neu';
+const clr = n => n>0?'pos':n<0?'neg':'neu';
 const G   = id => document.getElementById(id);
 
-function relTime(iso) {
-  if (!iso) return '';
-  const m = (Date.now() - new Date(iso)) / 60000;
-  if (m < 2)    return '剛剛更新';
-  if (m < 60)   return `${Math.round(m)} 分鐘前`;
-  if (m < 1440) return `${Math.round(m/60)} 小時前`;
+function parseMoney(el){ return parseFloat((el.textContent||'').replace(/,/g,''))||0; }
+
+function retColor(r){
+  if(r>=25)  return 'var(--red)';
+  if(r>=10)  return 'var(--blue)';
+  if(r<=-25) return 'var(--green)';
+  if(r<=-10) return 'var(--yellow)';
+  return 'var(--muted)';
+}
+
+const CAT_COLORS = {
+  '台灣大盤ETF':'#4f6ef7','成長-美股ETF':'#9b72f5','成長-國外基金':'#00d4b4',
+  '成長-美股個股':'#f5a623','波段-個股':'#f25c54','存股-ETF':'#1fd87a',
+  '存股-個股':'#00c896','債券':'#8892a4','債券-類現金':'#6b7592'
+};
+const catColor = cat => CAT_COLORS[cat]||'#8892a4';
+
+function relTime(iso){
+  if(!iso) return '';
+  const m=(Date.now()-new Date(iso))/60000;
+  if(m<2) return '剛剛更新';
+  if(m<60) return `${Math.round(m)} 分鐘前`;
+  if(m<1440) return `${Math.round(m/60)} 小時前`;
   return `${Math.round(m/1440)} 天前`;
 }
 
 const TABS = ['summary','portfolio','dividends','logs'];
-function switchTab(name) {
-  TABS.forEach(t => {
-    G('tab-'+t).classList.toggle('show',   t===name);
-    G('tab-'+t).classList.toggle('active', t===name);
-    G('btn-'+t).classList.toggle('active', t===name);
+function switchTab(name){
+  TABS.forEach(t=>{
+    G('tab-'+t).classList.toggle('show',t===name);
+    G('tab-'+t).classList.toggle('active',t===name);
+    G('btn-'+t).classList.toggle('active',t===name);
   });
-  localStorage.setItem('activeTab', name);
+  localStorage.setItem('activeTab',name);
 }
 
-let D = {};
+/* ══════════════════════════════════════
+   State
+══════════════════════════════════════ */
+let D    = {};   // data.json
+let LOCAL = {};  // 本地持股結構
 
-function parseMoney(el) {
-  return parseFloat(el.textContent.replace(/,/g,'')) || 0;
+function buildPriceMap(){
+  const pm={};
+  (D.portfolio||[]).forEach(h=>{if(h.tick) pm[h.tick]=h.price;});
+  (D.loan     ||[]).forEach(h=>{if(h.tick) pm[h.tick]=h.price;});
+  return pm;
 }
 
-function setupEditables() {
-  const fields = [
-    ['cash-input',     'availCash',  D.summary?.available_cash || 0],
-    ['loan-input',     'stockLoan',  D.summary?.stock_loan || 0],
-    ['mortgage-input', 'mortgage',   0],
-    ['house-input',    'houseValue', 0],
-  ];
-  fields.forEach(([id, key, def]) => {
-    const el = G(id);
-    const saved = localStorage.getItem(key);
-    el.textContent = f(saved !== null ? +saved : def);
-    ['input','blur'].forEach(ev =>
-      el.addEventListener(ev, () => {
-        localStorage.setItem(key, parseMoney(el));
-        recalcAll();
-      })
-    );
+function enrichItem(item, pm, usdTwd){
+  const price = (item.tick && pm[item.tick]) ?? item.manualPrice ?? 0;
+  const sh    = +item.shares||0, ps=+item.perSh||0;
+  const cost  = sh*ps;
+  const vTwd  = item.cur==='USD' ? sh*price*(usdTwd||31.5) : sh*price;
+  const pnl   = vTwd-cost;
+  const ret   = cost>0 ? pnl/cost*100 : 0;
+  return {...item, price, cost, value_twd:vTwd, unrealized_pnl:pnl, return_pct:ret};
+}
+
+function computeSummary(enriched, loanEnr){
+  const cashLike = new Set(D.cash_like_cats||[]);
+  const pTotal = enriched.filter(h=>!cashLike.has(h.cat)).reduce((a,h)=>a+h.value_twd,0);
+  const pCost  = enriched.filter(h=>!cashLike.has(h.cat)).reduce((a,h)=>a+h.cost,0);
+  const cPool  = enriched.filter(h=> cashLike.has(h.cat)).reduce((a,h)=>a+h.value_twd,0);
+  const lTotal = loanEnr.reduce((a,h)=>a+h.value_twd,0);
+  const lCost  = loanEnr.reduce((a,h)=>a+h.cost,0);
+  const cash   = (LOCAL.cash||0)+cPool;
+  const sl     = LOCAL.stockLoan||0;
+  const nav    = pTotal+lTotal+cash-sl;
+  const pRet   = pCost>0 ? (pTotal-pCost)/pCost*100 : 0;
+  return {pTotal,pCost,pRet,pUnreal:pTotal-pCost,lTotal,lPnl:lTotal-lCost,cash,sl,nav};
+}
+
+function computeRebal(enriched, nav){
+  const targets = D.targets||{};
+  return Object.entries(targets).map(([cat,tgt])=>{
+    const items = enriched.filter(h=>h.cat===cat);
+    const val   = items.reduce((a,h)=>a+h.value_twd,0);
+    const cost  = items.reduce((a,h)=>a+h.cost,0);
+    const tgtP  = tgt.pct*100;
+    const actP  = nav>0 ? val/nav*100 : 0;
+    const tgtA  = nav*tgt.pct;
+    return {cat,val,cost,catRet:cost>0?(val-cost)/cost*100:0,
+            actual_pct:actP,target_pct:tgtP,diff_pct:actP-tgtP,
+            target_amount:tgtA,diff_amount:val-tgtA,strat:tgt.strat||''};
   });
 }
 
-function recalcAll() {
-  if (!D.summary) return;
-  const cash  = parseMoney(G('cash-input'));
-  const loan  = parseMoney(G('loan-input'));
-  const mort  = parseMoney(G('mortgage-input'));
-  const house = parseMoney(G('house-input'));
-
-  const nav = (D.summary.portfolio_total||0) + (D.summary.loan_total||0) + cash - loan;
-  G('s-nav').textContent = f(nav);
-
-  // 負債率 = 總負債 / 毛資產（含房產）
-  const grossAssets = nav + loan + house;
-  const totalDebt   = loan + mort;
-  const ratio       = grossAssets > 0 ? totalDebt / grossAssets * 100 : 0;
-  const inZone      = ratio >= 30 && ratio <= 70;
-  const color       = totalDebt === 0 ? 'var(--muted)' : inZone ? 'var(--green)' : 'var(--yellow)';
-
-  G('debt-fill').style.width      = Math.min(ratio, 100) + '%';
-  G('debt-fill').style.background = color;
-  G('debt-val').textContent       = totalDebt === 0 ? '—' : fp(ratio);
-  G('debt-val').style.color       = color;
+/* ══════════════════════════════════════
+   localStorage
+══════════════════════════════════════ */
+function initLocal(){
+  const raw = localStorage.getItem('pf_data');
+  if(raw){ try{ LOCAL=JSON.parse(raw); return; }catch(e){} }
+  LOCAL={
+    portfolio:(D.portfolio||[]).map(h=>({
+      cat:h.cat,name:h.name,tick:h.tick||'',
+      shares:h.shares,perSh:h.perSh,cur:h.cur||'TWD',note:h.note||''
+    })),
+    loan:(D.loan||[]).map(h=>({
+      name:h.name,tick:h.tick||'',shares:h.shares,
+      perSh:h.perSh,cur:h.cur||'TWD',pledgeAmt:h.pledgeAmt||0,note:h.note||''
+    })),
+    cash:D.summary?.available_cash||0,
+    stockLoan:D.summary?.stock_loan||0,
+  };
+  savePf();
 }
 
-// ── Tab A ──
-function renderSummary(s, fx) {
-  G('s-port').textContent = f(s.portfolio_total);
-  G('s-loan').textContent = f(s.loan_total);
-  G('s-fx').textContent   = (fx||31.5).toFixed(2);
+function savePf(){ localStorage.setItem('pf_data',JSON.stringify(LOCAL)); }
 
-  const ret = s.portfolio_return_pct || 0;
-  G('s-ret').textContent = (ret>=0?'+':'') + fp(ret);
-  G('s-ret').className   = clr(ret);
+function exportPf(){
+  const blob=new Blob([JSON.stringify(LOCAL,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='portfolio_backup.json';
+  a.click();
+}
 
-  const pnl = s.loan_pnl || 0;
-  G('s-loanpnl').textContent = (pnl>=0?'+':'') + f(pnl);
-  G('s-loanpnl').className   = 'kpi-val ' + clr(pnl);
+function importPf(e){
+  const file=e.target.files[0];
+  if(!file) return;
+  const r=new FileReader();
+  r.onload=ev=>{ try{ LOCAL=JSON.parse(ev.target.result); savePf(); renderAll(); alert('匯入成功！'); }catch(x){ alert('格式錯誤'); } };
+  r.readAsText(file);
+}
 
-  // 燈號
-  const sig = s.signal || '持倉';
-  const lvl = s.signal_level || 'neutral';
-  const thr = s.thresholds || {high:30, midH:15, midL:-10, low:-20};
-  G('signal-card').className = 'signal-card ' + lvl;
-  G('signal-text').textContent = sig;
-  G('signal-sub').textContent  =
-    `組合報酬 ${ret>=0?'+':''}${fp(ret)}　｜　收割線 +${thr.midH}% / 加碼線 ${thr.midL}%`;
+/* ══════════════════════════════════════
+   Editable cash / stockLoan
+══════════════════════════════════════ */
+function setupCashEditable(){
+  const ce=G('cash-input'), le=G('loan-input');
+  ce.textContent = f(localStorage.getItem('availCash')!==null ? +localStorage.getItem('availCash') : LOCAL.cash||0);
+  le.textContent = f(localStorage.getItem('stockLoan')!==null ? +localStorage.getItem('stockLoan') : LOCAL.stockLoan||0);
+  ['input','blur'].forEach(ev=>{
+    ce.addEventListener(ev,()=>{ LOCAL.cash=parseMoney(ce); localStorage.setItem('availCash',LOCAL.cash); savePf(); renderSummaryTab(); });
+    le.addEventListener(ev,()=>{ LOCAL.stockLoan=parseMoney(le); localStorage.setItem('stockLoan',LOCAL.stockLoan); savePf(); renderSummaryTab(); });
+  });
+}
+
+/* ══════════════════════════════════════
+   Render ALL
+══════════════════════════════════════ */
+function renderAll(){
+  const usd = D.exchange_rate||31.5;
+  const pm  = buildPriceMap();
+  const enriched = (LOCAL.portfolio||[]).map(h=>enrichItem(h,pm,usd));
+  const loanEnr  = (LOCAL.loan||[]).map(h=>enrichItem(h,pm,usd));
+  const sum      = computeSummary(enriched,loanEnr);
+  const rebal    = computeRebal(enriched,sum.nav);
+  renderSummaryContent(sum,rebal);
+  renderPortfolioTab(enriched,loanEnr,sum);
+  renderDividends();
+  renderLogs();
+}
+
+/* ══════════════════════════════════════
+   Tab A：總覽
+══════════════════════════════════════ */
+function renderSummaryTab(){
+  const usd = D.exchange_rate||31.5;
+  const pm  = buildPriceMap();
+  const enriched = (LOCAL.portfolio||[]).map(h=>enrichItem(h,pm,usd));
+  const loanEnr  = (LOCAL.loan||[]).map(h=>enrichItem(h,pm,usd));
+  const sum      = computeSummary(enriched,loanEnr);
+  const rebal    = computeRebal(enriched,sum.nav);
+  renderSummaryContent(sum,rebal);
+}
+
+function renderSummaryContent(sum, rebal){
+  const s = D.summary||{};
+  G('s-port').textContent   = f(sum.pTotal);
+  G('s-unreal').textContent = (sum.pUnreal>=0?'+':'')+f(sum.pUnreal);
+  G('s-unreal').className   = 'kpi-val '+clr(sum.pUnreal);
+  G('s-nav').textContent    = f(sum.nav);
+  G('s-fx').textContent     = (D.exchange_rate||31.5).toFixed(2);
+  G('s-loanpnl').textContent= (sum.lPnl>=0?'+':'')+f(sum.lPnl);
+  G('s-loanpnl').className  = 'kpi-val '+clr(sum.lPnl);
+  G('s-ret').textContent    = (sum.pRet>=0?'+':'')+fp(sum.pRet);
+  G('s-ret').className      = 'kpi-val '+clr(sum.pRet);
+
+  // 系統燈號
+  const lvl=s.signal_level||'neutral', sig=s.signal||'持倉', ret=s.portfolio_return_pct||0;
+  G('sys-sig').className='sig-card '+lvl;
+  G('sys-sig-text').textContent=sig;
+  G('sys-sig-sub').textContent=`組合報酬 ${ret>=0?'+':''}${fp(ret)}`;
+
+  // 正2燈號
+  const p2lvl=s.pos2_signal_level||'neutral', p2sig=s.pos2_signal||'持倉', p2ret=s.pos2_return_pct||0;
+  G('pos2-sig').className='sig-card '+p2lvl;
+  G('pos2-sig-text').textContent=p2sig;
+  G('pos2-sig-sub').textContent=`00631L 報酬 ${p2ret>=0?'+':''}${fp(p2ret)}`;
+
+  // 門檻說明
+  const thr=s.thresholds||{high:30,midH:15,midL:-10,low:-20};
+  G('thr-bar').innerHTML=`
+    <span class="thr-chip thr-high">減倉 ≥+${thr.high}%</span>
+    <span class="thr-chip thr-midH">收割 ≥+${thr.midH}%</span>
+    <span class="thr-chip thr-neu">持倉</span>
+    <span class="thr-chip thr-midL">加碼 ≤${thr.midL}%</span>
+    <span class="thr-chip thr-low">跌深 ≤${thr.low}%</span>`;
 
   // 再平衡表
-  const tbody = G('rb-body');
-  tbody.innerHTML = '';
-  (s.cat_breakdown||[]).forEach(row => {
-    const diff    = row.diff_pct || 0;
-    const diffAmt = row.diff_amount || 0;
-    const fill    = Math.min(Math.abs(row.actual_pct / Math.max(row.target_pct,1))*100, 150);
-    const barColor = diff > 5 ? 'var(--red)' : diff < -5 ? 'var(--green)' : 'var(--blue)';
-
-    let sc, st;
-    if      (diff >  5) { sc='s-sell'; st='減倉'; }
-    else if (diff >  2) { sc='s-trim'; st='輕減'; }
-    else if (diff < -5) { sc='s-buy';  st='加碼'; }
-    else if (diff < -2) { sc='s-add';  st='輕加'; }
-    else                { sc='s-hold'; st='持倉'; }
-
-    tbody.innerHTML += `
+  const tbody=G('rb-body');
+  tbody.innerHTML='';
+  rebal.forEach(row=>{
+    const d=row.diff_pct, da=row.diff_amount;
+    const fill=Math.min(Math.abs(row.actual_pct/Math.max(row.target_pct,1))*100,150);
+    const barC=d>5?'var(--red)':d<-5?'var(--green)':'var(--blue)';
+    let sc,st;
+    if(d>5){sc='s-sell';st='減倉';}else if(d>2){sc='s-trim';st='輕減';}
+    else if(d<-5){sc='s-buy';st='加碼';}else if(d<-2){sc='s-add';st='輕加';}
+    else{sc='s-hold';st='持倉';}
+    tbody.innerHTML+=`
       <tr>
-        <td>
-          <div style="font-weight:700;font-size:12px;">${row.cat}</div>
-          <div class="prog-bg"><div class="prog-fill" style="width:${fill}%;background:${barColor};"></div></div>
-        </td>
-        <td style="font-size:10px;color:var(--muted);max-width:88px;line-height:1.4;">${row.strat||''}</td>
-        <td style="text-align:right;color:var(--muted);">${row.target_pct.toFixed(0)}%</td>
-        <td style="text-align:right;" class="${clr(diff)}">${fp(row.actual_pct)}</td>
-        <td style="text-align:right;">${f(row.value)}</td>
-        <td style="text-align:right;color:var(--muted);">${f(row.target_amount)}</td>
-        <td style="text-align:right;" class="${clr(diffAmt)}">${diffAmt>=0?'+':''}${f(diffAmt)}</td>
-        <td style="text-align:center;"><span class="badge-s ${sc}">${st}</span></td>
+        <td style="font-weight:700">${row.cat}</td>
+        <td style="font-size:10px;color:var(--muted);max-width:80px;line-height:1.4">${row.strat}</td>
+        <td style="text-align:right;color:var(--muted)">${row.target_pct.toFixed(0)}%</td>
+        <td style="text-align:right" class="${clr(d)}">${fp(row.actual_pct)}</td>
+        <td style="text-align:right">${f(row.val)}</td>
+        <td style="text-align:right;color:var(--muted)">${f(row.target_amount)}</td>
+        <td style="text-align:right" class="${clr(da)}">${da>=0?'+':''}${f(da)}</td>
+        <td style="text-align:center"><span class="badge-s ${sc}">${st}</span></td>
+        <td style="min-width:60px"><div class="prog-bg"><div class="prog-fill" style="width:${fill}%;background:${barC}"></div></div></td>
       </tr>`;
   });
 }
 
-// ── Tab B ──
-function renderPortfolio(portfolio, loan, usExp) {
-  const totalPort = portfolio.reduce((a,h)=>a+h.value_twd, 0);
-  const container = G('portfolio-list');
-  container.innerHTML = '';
+/* ══════════════════════════════════════
+   Tab B：投組
+══════════════════════════════════════ */
+function renderPortfolioTab(enriched, loanEnr, sum){
+  renderPortfolioSection(enriched, sum);
+  renderLoanSection(loanEnr);
+  renderUsExp(enriched, loanEnr);
+}
 
-  const groups = {}, catOrder = [];
-  portfolio.forEach(h => {
-    if (!groups[h.cat]) { groups[h.cat]=[]; catOrder.push(h.cat); }
+function renderPortfolioSection(enriched, sum){
+  const totalPort = enriched.reduce((a,h)=>a+h.value_twd,0);
+  const container = G('portfolio-section');
+  container.innerHTML='';
+
+  // Group by category
+  const cats=[]; const groups={};
+  enriched.forEach(h=>{
+    if(!groups[h.cat]){groups[h.cat]=[];cats.push(h.cat);}
     groups[h.cat].push(h);
   });
+  const catOrder=[...new Set(cats)];
 
-  [...new Set(catOrder)].forEach(cat => {
-    const items   = groups[cat];
-    const catVal  = items.reduce((a,h)=>a+h.value_twd, 0);
-    const catCost = items.reduce((a,h)=>a+h.cost, 0);
-    const catRet  = catCost > 0 ? (catVal-catCost)/catCost*100 : 0;
+  catOrder.forEach(cat=>{
+    const items=[...groups[cat]].sort((a,b)=>b.return_pct-a.return_pct);
+    const catVal = items.reduce((a,h)=>a+h.value_twd,0);
+    const catCost= items.reduce((a,h)=>a+h.cost,0);
+    const catRet = catCost>0?(catVal-catCost)/catCost*100:0;
+    const cc = catColor(cat);
 
-    let html = `
-      <div class="cat-hdr">
-        <span>${cat}</span>
-        <span class="cat-hdr-right">
-          ${f(catVal)}
-          <span class="${clr(catRet)}" style="margin-left:5px;">${catRet>=0?'+':''}${fp(catRet)}</span>
-        </span>
-      </div>`;
-
-    items.forEach(h => {
-      const ret   = h.return_pct || 0;
-      const isFx  = h.cur === 'USD';
-      const pct   = totalPort > 0 ? h.value_twd/totalPort*100 : 0;
-      const pFmt  = isFx
-        ? `$${(h.price||0).toFixed(2)}`
-        : (h.price||0).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2});
-      const cFmt  = isFx
-        ? `$${(h.perSh||0).toFixed(2)}`
-        : (h.perSh||0).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2});
-      const tick  = h.tick ? h.tick.replace('.TW','') : '';
-
-      html += `
-        <div class="s-row">
-          <div class="s-row-top">
-            <div class="s-name">${h.name}</div>
-            <div class="s-val">${f(h.value_twd)}</div>
-            <div class="s-ret ${clr(ret)}">${ret>=0?'+':''}${fp(ret)}</div>
-          </div>
-          <div class="s-row-btm">
-            ${tick ? `<span class="tag">${tick}</span>` : ''}
-            <span>×${h.shares.toLocaleString()} 股</span>
-            <span>現價 ${pFmt}</span>
-            <span>成本 ${cFmt}/股</span>
-            <span>佔 <span class="neu">${fp(pct)}</span></span>
-            ${h.note ? `<span class="tag tag-blue">${h.note}</span>` : ''}
-          </div>
-        </div>`;
+    let rows='';
+    items.forEach((h,_)=>{
+      const idx = LOCAL.portfolio.findIndex(p=>p.name===h.name&&p.tick===h.tick);
+      const pct = totalPort>0?h.value_twd/totalPort*100:0;
+      const isFx=h.cur==='USD';
+      const priceStr=isFx?`$${(h.price||0).toFixed(2)}`:(h.price||0).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2});
+      rows+=`
+        <tr class="port-row" data-idx="${idx}" data-cat="${cat}" data-cur="${h.cur||'TWD'}">
+          <td contenteditable="true" data-field="name" onblur="onFieldEdit(this,${idx},'portfolio')" style="min-width:100px">
+            <span class="ret-dot" style="background:${retColor(h.return_pct)}"></span>${h.name}
+          </td>
+          <td contenteditable="true" data-field="tick" onblur="onFieldEdit(this,${idx},'portfolio')" style="font-size:10px;color:var(--muted)">${h.tick||''}</td>
+          <td contenteditable="true" data-field="shares" onblur="onNumEdit(this,${idx},'portfolio','shares')" style="text-align:right">${(h.shares||0).toLocaleString()}</td>
+          <td contenteditable="true" data-field="perSh" onblur="onNumEdit(this,${idx},'portfolio','perSh')" style="text-align:right">${(h.perSh||0).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+          <td data-field="cost" style="text-align:right;color:var(--muted)">${f(h.cost)}</td>
+          <td data-field="price" style="text-align:right;color:var(--muted);font-size:10px">${priceStr}</td>
+          <td data-field="valueTwd" style="text-align:right;font-weight:700">${f(h.value_twd)}</td>
+          <td data-field="pnl" style="text-align:right" class="${clr(h.unrealized_pnl)}">${h.unrealized_pnl>=0?'+':''}${f(h.unrealized_pnl)}</td>
+          <td data-field="ret" style="text-align:right;font-weight:700" class="${clr(h.return_pct)}">${h.return_pct>=0?'+':''}${fp(h.return_pct)}</td>
+          <td data-field="pct" style="text-align:right;color:var(--muted)">${fp(pct)}</td>
+          <td contenteditable="true" data-field="note" onblur="onFieldEdit(this,${idx},'portfolio')" style="font-size:10px;color:var(--blue);min-width:60px">${h.note||''}</td>
+          <td><button class="del-btn" onclick="deleteItem(${idx},'portfolio')">✕</button></td>
+        </tr>`;
     });
 
-    container.innerHTML += `<div style="margin-bottom:4px;">${html}</div>`;
-  });
-
-  // 借款部位
-  const loanEl = G('loan-list');
-  loanEl.innerHTML = '';
-  if (!loan?.length) {
-    loanEl.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:4px 0;">無借款部位</div>';
-  }
-  loan?.forEach(h => {
-    const pnl    = h.unrealized_pnl || 0;
-    const pledge = h.pledgeAmt || 0;
-    const maint  = pledge > 0 ? h.value_twd / pledge * 100 : null;
-    const tick   = h.tick ? h.tick.replace('.TW','') : '';
-    loanEl.innerHTML += `
-      <div class="s-row">
-        <div class="s-row-top">
-          <div class="s-name">${h.name}</div>
-          <div class="s-val">${f(h.value_twd)}</div>
-          <div class="s-ret ${clr(pnl)}">${pnl>=0?'+':''}${f(pnl)}</div>
-        </div>
-        <div class="s-row-btm">
-          ${tick ? `<span class="tag">${tick}</span>` : ''}
-          <span>×${h.shares.toLocaleString()} 股</span>
-          <span>質押 ${f(pledge)}</span>
-          ${maint!==null ? `<span class="${maint>=130?'pos':'neg'}">維持率 ${maint.toFixed(0)}%</span>` : ''}
-          ${h.note ? `<span class="tag tag-yel">${h.note}</span>` : ''}
-        </div>
-      </div>`;
-  });
-
-  // 美股曝險
-  const expEl = G('us-exposure');
-  expEl.innerHTML = '';
-  if (!usExp?.length) { expEl.innerHTML = '<div style="color:var(--muted);font-size:12px;">無資料</div>'; return; }
-  const totalUsd = usExp.reduce((a,e)=>a+e.value_usd, 0);
-  let rows = '';
-  usExp.slice(0,15).forEach(e => {
-    const pct = totalUsd > 0 ? e.value_usd/totalUsd*100 : 0;
-    rows += `
-      <tr>
-        <td>${e.sym}</td>
-        <td>${e.direct_usd>0 ? '$'+Math.round(e.direct_usd).toLocaleString() : '<span style="color:var(--muted);">—</span>'}</td>
-        <td>${e.etf_usd>0   ? '$'+Math.round(e.etf_usd).toLocaleString()    : '<span style="color:var(--muted);">—</span>'}</td>
-        <td style="color:var(--text);">$${Math.round(e.value_usd).toLocaleString()}</td>
-        <td style="color:var(--muted);">${pct.toFixed(1)}%</td>
-      </tr>`;
-  });
-  expEl.innerHTML = `
-    <div class="card-dark" style="padding:10px;">
+    const block=document.createElement('div');
+    block.className='cat-block';
+    block.innerHTML=`
+      <div class="cat-hdr">
+        <span class="cat-dot" style="background:${cc}"></span>
+        <span style="color:${cc};text-shadow:0 0 10px ${cc}80">${cat}</span>
+        <span class="cat-stats">${f(catVal)} <span class="${clr(catRet)}">${catRet>=0?'+':''}${fp(catRet)}</span></span>
+      </div>
       <div class="scroll-x">
-        <table class="exp-table">
+        <table class="port-table">
           <thead><tr>
-            <th>代號</th><th>直接持有</th><th>ETF 內含</th><th>合計</th><th>佔比</th>
+            <th>名稱</th><th>代碼</th><th>持股</th><th>每股成本</th><th>成本</th>
+            <th>今日現值</th><th>現值總額</th><th>未損益</th><th>報酬率</th><th>占比</th><th>備註</th><th></th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
+      </div>`;
+    container.appendChild(block);
+
+    // 新增持股按鈕
+    const addBtn=document.createElement('button');
+    addBtn.className='add-row-btn';
+    addBtn.innerHTML=`<i class="bi bi-plus-circle"></i> 新增持股到「${cat}」`;
+    addBtn.onclick=()=>showAddForm('portfolio',cat);
+    container.appendChild(addBtn);
+
+    const addFormEl=document.createElement('div');
+    addFormEl.id=`add-form-${cat.replace(/\W/g,'_')}`;
+    addFormEl.style.display='none';
+    container.appendChild(addFormEl);
+  });
+}
+
+function renderLoanSection(loanEnr){
+  const el=G('loan-section');
+  el.innerHTML='';
+  if(!loanEnr.length){
+    el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:4px 0">無借款部位</div>';
+    return;
+  }
+  let rows='';
+  loanEnr.forEach((h,i)=>{
+    const maint=h.pledgeAmt>0?h.value_twd/h.pledgeAmt*100:null;
+    const priceStr=(h.price||0).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2});
+    rows+=`
+      <tr class="port-row" data-idx="${i}" data-cat="loan" data-cur="${h.cur||'TWD'}">
+        <td contenteditable="true" data-field="name" onblur="onFieldEdit(this,${i},'loan')">${h.name}</td>
+        <td contenteditable="true" data-field="tick" onblur="onFieldEdit(this,${i},'loan')" style="font-size:10px;color:var(--muted)">${h.tick||''}</td>
+        <td contenteditable="true" data-field="shares" onblur="onNumEdit(this,${i},'loan','shares')" style="text-align:right">${(h.shares||0).toLocaleString()}</td>
+        <td contenteditable="true" data-field="perSh" onblur="onNumEdit(this,${i},'loan','perSh')" style="text-align:right">${(h.perSh||0).toFixed(2)}</td>
+        <td data-field="cost" style="text-align:right;color:var(--muted)">${f(h.cost)}</td>
+        <td style="text-align:right;color:var(--muted);font-size:10px">${priceStr}</td>
+        <td data-field="valueTwd" style="text-align:right;font-weight:700">${f(h.value_twd)}</td>
+        <td data-field="pnl" class="${clr(h.unrealized_pnl)}" style="text-align:right">${h.unrealized_pnl>=0?'+':''}${f(h.unrealized_pnl)}</td>
+        <td contenteditable="true" data-field="pledgeAmt" onblur="onNumEdit(this,${i},'loan','pledgeAmt')" style="text-align:right">${f(h.pledgeAmt||0)}</td>
+        <td style="text-align:right" class="${maint!==null?(maint>=130?'pos':'neg'):'neu'}">${maint!==null?maint.toFixed(0)+'%':'—'}</td>
+        <td contenteditable="true" data-field="note" onblur="onFieldEdit(this,${i},'loan')" style="font-size:10px;color:var(--yellow)">${h.note||''}</td>
+        <td><button class="del-btn" onclick="deleteItem(${i},'loan')">✕</button></td>
+      </tr>`;
+  });
+  el.innerHTML=`
+    <div class="scroll-x">
+      <table class="port-table">
+        <thead><tr>
+          <th>名稱</th><th>代碼</th><th>持股</th><th>每股成本</th><th>成本</th>
+          <th>今日現值</th><th>現值總額</th><th>未損益</th><th>質押金額</th><th>維持率</th><th>備註</th><th></th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>`;
+}
+
+function renderUsExp(enriched, loanEnr){
+  const el=G('us-exposure');
+  const usd=D.exchange_rate||31.5;
+  const etfW=D.etf_weights || {};
+  const direct={}, etf={};
+
+  const addD=(d,sym,v)=>{ d[sym]=(d[sym]||0)+v; };
+
+  [...enriched,...loanEnr].forEach(h=>{
+    if(!h.tick) return;
+    const eid=h.tick.replace('.TW','');
+    if(h.tick.endsWith('.TW') && etfW[eid]){
+      const uv=h.value_twd/usd;
+      Object.entries(etfW[eid]).forEach(([s,w])=>addD(etf,s,uv*w));
+    } else if(!h.tick.endsWith('.TW') && h.cur==='USD' && etfW[eid]){
+      const uv=h.shares*h.price;
+      Object.entries(etfW[eid]).forEach(([s,w])=>addD(etf,s,uv*w));
+    } else if(!h.tick.endsWith('.TW') && h.cur==='USD'){
+      addD(direct,h.tick,h.shares*h.price);
+    }
+  });
+
+  const allSyms=new Set([...Object.keys(direct),...Object.keys(etf)]);
+  const rows=[...allSyms].map(sym=>({sym,d:direct[sym]||0,e:etf[sym]||0}))
+    .sort((a,b)=>(b.d+b.e)-(a.d+a.e));
+  const totalUsd=rows.reduce((a,r)=>a+r.d+r.e,0);
+
+  let html='';
+  rows.slice(0,15).forEach(r=>{
+    const tot=r.d+r.e, pct=totalUsd>0?tot/totalUsd*100:0;
+    html+=`<tr>
+      <td>${r.sym}</td>
+      <td>${r.d>0?'$'+Math.round(r.d).toLocaleString():'<span style="color:var(--muted)">—</span>'}</td>
+      <td>${r.e>0?'$'+Math.round(r.e).toLocaleString():'<span style="color:var(--muted)">—</span>'}</td>
+      <td style="color:var(--text)">$${Math.round(tot).toLocaleString()}</td>
+      <td style="color:var(--muted)">${pct.toFixed(1)}%</td>
+    </tr>`;
+  });
+
+  el.innerHTML=`<div class="card-dark" style="padding:10px"><div class="scroll-x">
+    <table class="exp-table">
+      <thead><tr><th>代號</th><th>直接持有</th><th>ETF 內含</th><th>合計</th><th>佔比</th></tr></thead>
+      <tbody>${html}</tbody>
+    </table></div></div>`;
+}
+
+/* ══════════════════════════════════════
+   編輯 / 新增 / 刪除
+══════════════════════════════════════ */
+function onFieldEdit(cell,idx,type){
+  const field=cell.dataset.field;
+  if(type==='portfolio') LOCAL.portfolio[idx][field]=cell.textContent.trim();
+  else LOCAL.loan[idx][field]=cell.textContent.trim();
+  savePf();
+}
+
+function onNumEdit(cell,idx,type,field){
+  const val=parseFloat(cell.textContent.replace(/,/g,''))||0;
+  if(type==='portfolio') LOCAL.portfolio[idx][field]=val;
+  else LOCAL.loan[idx][field]=val;
+  savePf();
+  // 更新同一列的計算欄位
+  const usd=D.exchange_rate||31.5;
+  const pm=buildPriceMap();
+  const item=type==='portfolio'?LOCAL.portfolio[idx]:LOCAL.loan[idx];
+  const enr=enrichItem(item,pm,usd);
+  const row=cell.closest('tr');
+  if(!row) return;
+  const setCell=(f,v)=>{ const td=row.querySelector(`[data-field="${f}"]`); if(td){td.textContent=v;td.className=td.className.replace(/pos|neg|neu/g,'');td.classList.add(v.startsWith('-')?'neg':v.startsWith('+')?'pos':'neu');} };
+  row.querySelector('[data-field="cost"]').textContent=f(enr.cost);
+  row.querySelector('[data-field="valueTwd"]').textContent=f(enr.value_twd);
+  const pnlEl=row.querySelector('[data-field="pnl"]');
+  if(pnlEl){pnlEl.textContent=(enr.unrealized_pnl>=0?'+':'')+f(enr.unrealized_pnl);pnlEl.className=clr(enr.unrealized_pnl);}
+  const retEl=row.querySelector('[data-field="ret"]');
+  if(retEl){retEl.textContent=(enr.return_pct>=0?'+':'')+fp(enr.return_pct);retEl.className='font-weight:700 '+clr(enr.return_pct);}
+  const dot=row.querySelector('.ret-dot');
+  if(dot) dot.style.background=retColor(enr.return_pct);
+  if(type==='portfolio') renderSummaryTab();
+}
+
+function deleteItem(idx,type){
+  if(!confirm('確定刪除這筆持股？')) return;
+  if(type==='portfolio') LOCAL.portfolio.splice(idx,1);
+  else LOCAL.loan.splice(idx,1);
+  savePf(); renderAll();
+}
+
+/* ══════════════════════════════════════
+   新增持股 Form
+══════════════════════════════════════ */
+const CAT_LIST=['台灣大盤ETF','成長-美股ETF','成長-國外基金','成長-美股個股','波段-個股','存股-ETF','存股-個股','債券','債券-類現金'];
+
+function showAddForm(type, cat){
+  const formId = type==='loan' ? 'add-loan-form' : `add-form-${(cat||'').replace(/\W/g,'_')}`;
+  const el = G(formId);
+  if(!el) return;
+  if(el.style.display!=='none'){ el.style.display='none'; return; }
+  const catOpts = type==='portfolio'
+    ? CAT_LIST.map(c=>`<option value="${c}" ${c===cat?'selected':''}>${c}</option>`).join('')
+    : '';
+  el.style.display='block';
+  el.innerHTML=`
+    <div class="add-form" style="margin-top:4px">
+      <div class="add-form-grid">
+        ${type==='portfolio'?`<div><label>分類</label><select id="nf-cat">${catOpts}</select></div>`:''}
+        <div><label>名稱</label><input id="nf-name" placeholder="例：00631L 元大台灣正2"/></div>
+        <div><label>代碼（台股加 .TW）</label><input id="nf-tick" placeholder="例：00631L.TW 或 NVDA"/></div>
+        <div><label>持股數</label><input id="nf-shares" type="number" placeholder="0"/></div>
+        <div><label>每股成本</label><input id="nf-persh" type="number" placeholder="0"/></div>
+        <div><label>幣別</label><select id="nf-cur"><option value="TWD" selected>TWD</option><option value="USD">USD</option></select></div>
+        ${type==='loan'?`<div><label>質押金額</label><input id="nf-pledge" type="number" placeholder="0"/></div>`:''}
+        <div><label>備註</label><input id="nf-note" placeholder="（選填）"/></div>
+      </div>
+      <div class="add-form-btns">
+        <button class="btn-confirm" onclick="submitAdd('${type}','${cat||''}')">確認新增</button>
+        <button class="btn-cancel" onclick="G('${formId}').style.display='none'">取消</button>
       </div>
     </div>`;
 }
 
-// ── Tab C ──
-function renderDividends(div) {
-  G('div-30d').textContent    = div?.next30d_estimate > 0 ? '+'+f(div.next30d_estimate) : '—';
-  G('div-ytd-kpi').textContent = div?.ytd_total > 0 ? '+'+f(div.ytd_total) : '—';
-  G('div-yield').textContent  = div?.ytd_yield_pct > 0 ? fp(div.ytd_yield_pct) : '—';
-
-  const today = new Date().toISOString().slice(0,10);
-  const upEl  = G('div-upcoming');
-  upEl.innerHTML = '';
-  if (!div?.upcoming?.length) {
-    upEl.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:6px 0;">近期無除息資料</div>';
+function submitAdd(type, defaultCat){
+  const name   = (G('nf-name')||{}).value?.trim();
+  const tick   = (G('nf-tick')||{}).value?.trim()||'';
+  const shares = parseFloat((G('nf-shares')||{}).value)||0;
+  const perSh  = parseFloat((G('nf-persh')||{}).value)||0;
+  const cur    = (G('nf-cur')||{}).value||'TWD';
+  const note   = (G('nf-note')||{}).value?.trim()||'';
+  if(!name){ alert('請填寫名稱'); return; }
+  if(type==='portfolio'){
+    const cat=(G('nf-cat')||{}).value||defaultCat;
+    LOCAL.portfolio.push({cat,name,tick,shares,perSh,cur,note});
   } else {
-    div.upcoming.forEach(d => {
-      const amt  = d.amount || (d.perShare * d.shares);
-      const days = d.exDate ? Math.round((new Date(d.exDate)-new Date(today))/86400000) : null;
-      const daysTag = days !== null
-        ? `<span class="div-days">${days===0?'今日':days+' 天後'}</span>`
-        : '';
-      upEl.innerHTML += `
-        <div class="div-card">
-          <div style="flex:1;">
-            <div class="div-stock">${d.stock}</div>
-            <div class="div-date">除息 ${d.exDate}${daysTag}${d.payDate?' → 入帳 '+d.payDate:''}</div>
-          </div>
-          <div class="div-amt">
-            <div class="div-amt-val">+${f(amt)}</div>
-            <div class="div-per-sh">每股 ${d.perShare}</div>
-          </div>
-        </div>`;
-    });
+    const pledge=parseFloat((G('nf-pledge')||{}).value)||0;
+    LOCAL.loan.push({name,tick,shares,perSh,cur,pledgeAmt:pledge,note});
   }
-
-  const tbody = G('div-ytd-body');
-  tbody.innerHTML = '';
-  let total = 0;
-  div?.ytd?.forEach(d => {
-    const amt = d.amount || (d.perShare * d.shares);
-    total += amt;
-    tbody.innerHTML += `
-      <tr>
-        <td>${d.stock}</td>
-        <td style="text-align:right;">${d.date||d.exDate||''}</td>
-        <td style="text-align:right;" class="pos">+${f(amt)}</td>
-        <td style="text-align:center;">${d.received?'✅':'⏳'}</td>
-      </tr>`;
-  });
-  G('div-ytd-foot').innerHTML = `
-    <tr style="border-top:1px solid var(--border);">
-      <td colspan="2" style="font-weight:700;">合計</td>
-      <td style="text-align:right;font-weight:800;" class="pos">+${f(total)}</td>
-      <td></td>
-    </tr>`;
-
-  G('div-annual').textContent = (div?.annual_estimate||0) > 0 ? '+'+f(div.annual_estimate) : '—';
+  savePf(); renderAll();
 }
 
-// ── Tab D ──
-function renderLogs(data) {
-  G('log-updated').textContent    = data.updated_at ? new Date(data.updated_at).toLocaleString('zh-TW') : '—';
-  G('log-updated-ago').textContent = relTime(data.updated_at);
+/* ══════════════════════════════════════
+   Tab C：股利
+══════════════════════════════════════ */
+function renderDividends(){
+  const div=D.dividends||{};
+  G('div-30d').textContent     = div.next30d_estimate>0?'+'+f(div.next30d_estimate):'—';
+  G('div-ytd-kpi').textContent = div.ytd_total>0?'+'+f(div.ytd_total):'—';
+  G('div-yield').textContent   = div.ytd_yield_pct>0?fp(div.ytd_yield_pct):'—';
+  G('div-annual').textContent  = (div.annual_estimate||0)>0?'+'+f(div.annual_estimate):'—';
 
-  const srcEl = G('log-sources');
-  srcEl.innerHTML = '';
-  Object.entries(data.logs||{}).forEach(([k,v]) => {
-    const ok = typeof v === 'string' && v.startsWith('ok');
-    srcEl.innerHTML += `
-      <div class="card-dark" style="padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-        <div style="flex:1;font-size:13px;font-weight:600;">${k}</div>
-        <span class="${ok?'b-ok':'b-err'}">${v}</span>
+  const today=new Date().toISOString().slice(0,10);
+  const upEl=G('div-upcoming');
+  upEl.innerHTML='';
+  (div.upcoming||[]).forEach(d=>{
+    const amt=d.amount||(d.perShare*d.shares);
+    const days=d.exDate?Math.round((new Date(d.exDate)-new Date(today))/86400000):null;
+    const daysTag=days!==null?`<span class="div-days">${days===0?'今日':days+' 天後'}</span>`:'';
+    upEl.innerHTML+=`
+      <div class="div-card">
+        <div style="flex:1">
+          <div class="div-stock">${d.stock}</div>
+          <div class="div-date">除息 ${d.exDate}${daysTag}${d.payDate?' → 入帳 '+d.payDate:''}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="div-amt-val">+${f(amt)}</div>
+          <div class="div-per-sh">每股 ${d.perShare}</div>
+        </div>
       </div>`;
   });
 
-  G('log-raw').textContent = JSON.stringify(data.summary||{}, null, 2);
+  // Accordion：依股票分組
+  const accEl=G('div-ytd-acc');
+  accEl.innerHTML='';
+  const groups={};
+  (div.ytd||[]).forEach(d=>{
+    const amt=d.amount||(d.perShare*d.shares);
+    if(!groups[d.stock]) groups[d.stock]={total:0,items:[]};
+    groups[d.stock].total+=amt;
+    groups[d.stock].items.push({...d,amt});
+  });
+
+  Object.entries(groups).forEach(([stock,data],i)=>{
+    const items=data.items.map(d=>`
+      <div class="acc-row">
+        <span style="flex:1">${d.date||d.exDate||'—'}</span>
+        <span>${d.note||''}</span>
+        <span class="pos" style="margin-left:auto">+${f(d.amt)}</span>
+        <span style="margin-left:8px">${d.received?'✅':'⏳'}</span>
+      </div>`).join('');
+    const divEl=document.createElement('div');
+    divEl.className='card-dark';
+    divEl.style.padding='8px 12px';
+    divEl.style.marginBottom='6px';
+    divEl.innerHTML=`
+      <div class="acc-hdr" onclick="toggleAcc(${i})">
+        <span class="acc-name">${stock}</span>
+        <span class="acc-total">+${f(data.total)}</span>
+        <span class="acc-arrow" id="acc-arrow-${i}">▼</span>
+      </div>
+      <div class="acc-body" id="acc-body-${i}">${items}</div>`;
+    accEl.appendChild(divEl);
+  });
 }
 
-// ── 載入 data.json ──
-async function loadData() {
-  try {
-    const r = await fetch(`./data.json?t=${Date.now()}`);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    D = await r.json();
+function toggleAcc(i){
+  const body=G(`acc-body-${i}`), arrow=G(`acc-arrow-${i}`);
+  const open=body.classList.toggle('open');
+  if(arrow) arrow.style.transform=open?'rotate(180deg)':'';
+}
 
-    G('loading').style.display    = 'none';
-    G('app-header').style.display = 'flex';
-    G('app').style.display        = 'block';
-    G('bottom-nav').style.display = 'flex';
-    G('dot').className = 'ok';
+/* ══════════════════════════════════════
+   Tab D：系統
+══════════════════════════════════════ */
+function renderLogs(){
+  G('log-updated').textContent   = D.updated_at?new Date(D.updated_at).toLocaleString('zh-TW'):'—';
+  G('log-updated-ago').textContent = relTime(D.updated_at);
+  const srcEl=G('log-sources');
+  srcEl.innerHTML='';
+  Object.entries(D.logs||{}).forEach(([k,v])=>{
+    const ok=typeof v==='string'&&v.startsWith('ok');
+    srcEl.innerHTML+=`<div class="card-dark" style="padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:6px"><div style="flex:1;font-size:13px;font-weight:600">${k}</div><span class="${ok?'b-ok':'b-err'}">${v}</span></div>`;
+  });
+  G('log-raw').textContent=JSON.stringify(D.summary||{},null,2);
+}
 
-    G('update-time').textContent = D.updated_at
-      ? new Date(D.updated_at).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}) + ' 更新'
-      : '—';
+/* ══════════════════════════════════════
+   Main load
+══════════════════════════════════════ */
+async function loadData(){
+  try{
+    const r=await fetch(`./data.json?t=${Date.now()}`);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    D=await r.json();
 
-    setupEditables();
-    renderSummary(D.summary||{}, D.exchange_rate);
-    renderPortfolio(D.portfolio||[], D.loan||[], D.us_exposure||[]);
-    renderDividends(D.dividends||{});
-    renderLogs(D);
-    recalcAll();
+    G('loading').style.display   ='none';
+    G('app-header').style.display='flex';
+    G('app').style.display       ='block';
+    G('bottom-nav').style.display='flex';
+    G('dot').className='ok';
 
-    const saved = localStorage.getItem('activeTab');
-    if (saved && TABS.includes(saved)) switchTab(saved);
+    G('update-time').textContent=D.updated_at
+      ?new Date(D.updated_at).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})+' 更新'
+      :'—';
 
-  } catch(e) {
-    G('loading').innerHTML = `
-      <div style="font-size:36px;">⚠️</div>
-      <div style="color:var(--red);font-weight:700;">無法載入 data.json</div>
-      <div style="font-size:11px;color:var(--muted);max-width:260px;text-align:center;">${e.message}</div>
-      <button onclick="location.reload()" style="margin-top:14px;padding:8px 22px;border-radius:10px;background:var(--blue);color:#fff;border:none;cursor:pointer;font-size:14px;">重試</button>`;
+    initLocal();
+    setupCashEditable();
+    renderAll();
+
+    const saved=localStorage.getItem('activeTab');
+    if(saved&&TABS.includes(saved)) switchTab(saved);
+
+  }catch(e){
+    G('loading').innerHTML=`
+      <div style="font-size:36px">⚠️</div>
+      <div style="color:var(--red);font-weight:700">無法載入 data.json</div>
+      <div style="font-size:11px;color:var(--muted);max-width:260px;text-align:center">${e.message}</div>
+      <button onclick="location.reload()" style="margin-top:14px;padding:8px 22px;border-radius:10px;background:var(--blue);color:#fff;border:none;cursor:pointer;font-size:14px">重試</button>`;
   }
 }
 
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 loadData();
 </script>
 </body>
