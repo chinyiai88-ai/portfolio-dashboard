@@ -1,20 +1,20 @@
 {
-  "updated_at": "2026-05-13T08:16:46.019415+08:00",
-  "exchange_rate": 31.512,
+  "updated_at": "2026-05-13T17:59:52.194683+08:00",
+  "exchange_rate": 31.51,
   "summary": {
-    "nav": 8758922.0,
-    "portfolio_total": 8508922.0,
+    "nav": 8697924.0,
+    "portfolio_total": 8446924.0,
     "portfolio_cost": 5223579.0,
-    "portfolio_return_pct": 62.89,
-    "loan_total": 250000.0,
-    "loan_pnl": 8000.0,
+    "portfolio_return_pct": 61.71,
+    "loan_total": 251000.0,
+    "loan_pnl": 9000.0,
     "available_cash": 0,
     "stock_loan": 0,
-    "signal": "減倉",
+    "signal": "\u6e1b\u5009",
     "signal_level": "high",
-    "pos2_signal": "減倉",
+    "pos2_signal": "\u6e1b\u5009",
     "pos2_signal_level": "high",
-    "pos2_return_pct": 244.15,
+    "pos2_return_pct": 235.62,
     "thresholds": {
       "high": 30,
       "midH": 15,
@@ -23,262 +23,262 @@
     },
     "cat_breakdown": [
       {
-        "cat": "å°ç£å¤§ç¤ETF",
+        "cat": "\u00e5\u008f\u00b0\u00e7\u0081\u00a3\u00e5\u00a4\u00a7\u00e7\u009b\u00a4ETF",
         "value": 0,
         "cost": 0,
         "return_pct": 0,
         "actual_pct": 0.0,
         "target_pct": 31.0,
         "diff_pct": -31.0,
-        "target_amount": 2715266.0,
-        "diff_amount": -2715266.0,
-        "strat": "æ­£2:20% ï¼ 00981A:10%"
+        "target_amount": 2696357.0,
+        "diff_amount": -2696357.0,
+        "strat": "\u00e6\u00ad\u00a32:20% \u00ef\u00bc\u008b 00981A:10%"
       },
       {
-        "cat": "æé·-ç¾è¡ETF",
+        "cat": "\u00e6\u0088\u0090\u00e9\u0095\u00b7-\u00e7\u00be\u008e\u00e8\u0082\u00a1ETF",
         "value": 0,
         "cost": 0,
         "return_pct": 0,
         "actual_pct": 0.0,
         "target_pct": 20.0,
         "diff_pct": -20.0,
-        "target_amount": 1751784.0,
-        "diff_amount": -1751784.0,
-        "strat": "00924ãTOPT"
+        "target_amount": 1739585.0,
+        "diff_amount": -1739585.0,
+        "strat": "00924\u00e3\u0080\u0081TOPT"
       },
       {
-        "cat": "æé·-åå¤åºé",
+        "cat": "\u00e6\u0088\u0090\u00e9\u0095\u00b7-\u00e5\u009c\u008b\u00e5\u00a4\u0096\u00e5\u009f\u00ba\u00e9\u0087\u0091",
         "value": 0,
         "cost": 0,
         "return_pct": 0,
         "actual_pct": 0.0,
         "target_pct": 5.0,
         "diff_pct": -5.0,
-        "target_amount": 437946.0,
-        "diff_amount": -437946.0,
-        "strat": "å°åº¦åºé ï¼ ä¸­åç§æ"
+        "target_amount": 434896.0,
+        "diff_amount": -434896.0,
+        "strat": "\u00e5\u008d\u00b0\u00e5\u00ba\u00a6\u00e5\u009f\u00ba\u00e9\u0087\u0091 \u00ef\u00bc\u008b \u00e4\u00b8\u00ad\u00e5\u009c\u008b\u00e7\u00a7\u0091\u00e6\u008a\u0080"
       },
       {
-        "cat": "æé·-ç¾è¡åè¡",
+        "cat": "\u00e6\u0088\u0090\u00e9\u0095\u00b7-\u00e7\u00be\u008e\u00e8\u0082\u00a1\u00e5\u0080\u008b\u00e8\u0082\u00a1",
         "value": 0,
         "cost": 0,
         "return_pct": 0,
         "actual_pct": 0.0,
         "target_pct": 10.0,
         "diff_pct": -10.0,
-        "target_amount": 875892.0,
-        "diff_amount": -875892.0,
+        "target_amount": 869792.0,
+        "diff_amount": -869792.0,
         "strat": "Nvidia 40% / Tesla 30% / Google 30%"
       },
       {
-        "cat": "æ³¢æ®µ-åè¡",
+        "cat": "\u00e6\u00b3\u00a2\u00e6\u00ae\u00b5-\u00e5\u0080\u008b\u00e8\u0082\u00a1",
         "value": 0,
         "cost": 0,
         "return_pct": 0,
         "actual_pct": 0.0,
         "target_pct": 6.0,
         "diff_pct": -6.0,
-        "target_amount": 525535.0,
-        "diff_amount": -525535.0,
-        "strat": "åå¿«è³£æï¼è½åµå¸åæ³"
+        "target_amount": 521875.0,
+        "diff_amount": -521875.0,
+        "strat": "\u00e5\u0084\u0098\u00e5\u00bf\u00ab\u00e8\u00b3\u00a3\u00e6\u008e\u0089\u00ef\u00bc\u008c\u00e8\u00bd\u0089\u00e5\u0082\u00b5\u00e5\u0088\u00b8\u00e5\u0081\u009c\u00e6\u00b3\u008a"
       },
       {
-        "cat": "å­è¡-ETF",
+        "cat": "\u00e5\u00ad\u0098\u00e8\u0082\u00a1-ETF",
         "value": 0,
         "cost": 0,
         "return_pct": 0,
         "actual_pct": 0.0,
         "target_pct": 5.0,
         "diff_pct": -5.0,
-        "target_amount": 437946.0,
-        "diff_amount": -437946.0,
-        "strat": "00919ï¼å¡«æ¯å¾è½æ­£2"
+        "target_amount": 434896.0,
+        "diff_amount": -434896.0,
+        "strat": "00919\u00ef\u00bc\u008c\u00e5\u00a1\u00ab\u00e6\u0081\u00af\u00e5\u00be\u008c\u00e8\u00bd\u0089\u00e6\u00ad\u00a32"
       },
       {
-        "cat": "å­è¡-åè¡",
+        "cat": "\u00e5\u00ad\u0098\u00e8\u0082\u00a1-\u00e5\u0080\u008b\u00e8\u0082\u00a1",
         "value": 0,
         "cost": 0,
         "return_pct": 0,
         "actual_pct": 0.0,
         "target_pct": 8.0,
         "diff_pct": -8.0,
-        "target_amount": 700714.0,
-        "diff_amount": -700714.0,
-        "strat": "ä¸­ä¿¡é ï¼ å°ç©é»"
+        "target_amount": 695834.0,
+        "diff_amount": -695834.0,
+        "strat": "\u00e4\u00b8\u00ad\u00e4\u00bf\u00a1\u00e9\u0087\u0091 \u00ef\u00bc\u008b \u00e5\u008f\u00b0\u00e7\u00a9\u008d\u00e9\u009b\u00bb"
       },
       {
-        "cat": "åµå¸",
+        "cat": "\u00e5\u0082\u00b5\u00e5\u0088\u00b8",
         "value": 0,
         "cost": 0,
         "return_pct": 0,
         "actual_pct": 0.0,
         "target_pct": 5.0,
         "diff_pct": -5.0,
-        "target_amount": 437946.0,
-        "diff_amount": -437946.0,
-        "strat": "æéï¼ç®æ¨å­å°288è¬"
+        "target_amount": 434896.0,
+        "diff_amount": -434896.0,
+        "strat": "\u00e6\u009c\u0088\u00e9\u0085\u008d\u00ef\u00bc\u008c\u00e7\u009b\u00ae\u00e6\u00a8\u0099\u00e5\u00ad\u0098\u00e5\u0088\u00b0288\u00e8\u0090\u00ac"
       }
     ]
   },
   "portfolio": [
     {
-      "cat": "台灣大盤ETF",
-      "name": "00631L 元大台灣正2",
+      "cat": "\u53f0\u7063\u5927\u76e4ETF",
+      "name": "00631L \u5143\u5927\u53f0\u7063\u6b632",
       "tick": "00631L.TW",
       "shares": 77000,
       "perSh": 9.49,
       "cost": 730730,
-      "price": 32.66,
+      "price": 31.85,
       "cur": "TWD",
-      "note": "上限20%",
-      "value_twd": 2514819.99,
-      "return_pct": 244.15
+      "note": "\u4e0a\u965020%",
+      "value_twd": 2452450.03,
+      "return_pct": 235.62
     },
     {
-      "cat": "台灣大盤ETF",
-      "name": "00981A 統一台股增長ETF",
+      "cat": "\u53f0\u7063\u5927\u76e4ETF",
+      "name": "00981A \u7d71\u4e00\u53f0\u80a1\u589e\u9577ETF",
       "tick": "00981A.TW",
       "shares": 21000,
       "perSh": 18.465,
       "cost": 387765,
-      "price": 29.97,
+      "price": 29.28,
       "cur": "TWD",
-      "note": "上限10%",
-      "value_twd": 629369.99,
-      "return_pct": 62.31
+      "note": "\u4e0a\u965010%",
+      "value_twd": 614880.01,
+      "return_pct": 58.57
     },
     {
-      "cat": "台灣大盤ETF",
-      "name": "00850 元大台灣ESG",
+      "cat": "\u53f0\u7063\u5927\u76e4ETF",
+      "name": "00850 \u5143\u5927\u53f0\u7063ESG",
       "tick": "00850.TW",
       "shares": 1000,
       "perSh": 15,
       "cost": 15000,
-      "price": 83.2,
+      "price": 81.95,
       "cur": "TWD",
       "note": "",
-      "value_twd": 83200.0,
-      "return_pct": 454.67
+      "value_twd": 81950.0,
+      "return_pct": 446.33
     },
     {
-      "cat": "台灣大盤ETF",
-      "name": "野村高科技基金",
+      "cat": "\u53f0\u7063\u5927\u76e4ETF",
+      "name": "\u91ce\u6751\u9ad8\u79d1\u6280\u57fa\u91d1",
       "tick": "",
       "shares": 314,
       "perSh": 92.3,
       "cur": "TWD",
-      "note": "每月28付3000",
+      "note": "\u6bcf\u670828\u4ed83000",
       "cost": 28982.2,
       "price": 92.3,
       "value_twd": 28982.2,
       "return_pct": 0.0
     },
     {
-      "cat": "成長-美股ETF",
-      "name": "00893 國泰電動車",
+      "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
+      "name": "00893 \u570b\u6cf0\u96fb\u52d5\u8eca",
       "tick": "00893.TW",
       "shares": 3000,
       "perSh": 12.48,
       "cost": 37440,
-      "price": 45.05,
+      "price": 45.2,
       "cur": "TWD",
-      "note": "零成本",
-      "value_twd": 135150.0,
-      "return_pct": 260.98
+      "note": "\u96f6\u6210\u672c",
+      "value_twd": 135600.0,
+      "return_pct": 262.18
     },
     {
-      "cat": "成長-美股ETF",
-      "name": "00924 復華S&P500",
+      "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
+      "name": "00924 \u5fa9\u83efS&P500",
       "tick": "00924.TW",
       "shares": 6747,
       "perSh": 27.4,
       "cost": 184867.8,
-      "price": 31.83,
+      "price": 32.02,
       "cur": "TWD",
-      "note": "每月定額17000",
-      "value_twd": 214757.01,
-      "return_pct": 16.17
+      "note": "\u6bcf\u6708\u5b9a\u984d17000",
+      "value_twd": 216038.94,
+      "return_pct": 16.86
     },
     {
-      "cat": "成長-美股ETF",
-      "name": "00830 國泰費城半導體",
+      "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
+      "name": "00830 \u570b\u6cf0\u8cbb\u57ce\u534a\u5c0e\u9ad4",
       "tick": "00830.TW",
       "shares": 6000,
       "perSh": 38.84,
       "cost": 233040,
-      "price": 82.3,
+      "price": 83.45,
       "cur": "TWD",
       "note": "",
-      "value_twd": 493800.02,
-      "return_pct": 111.89
+      "value_twd": 500699.98,
+      "return_pct": 114.86
     },
     {
-      "cat": "成長-美股ETF",
-      "name": "TOPT iShares美國20大",
+      "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
+      "name": "TOPT iShares\u7f8e\u570b20\u5927",
       "tick": "TOPT",
       "shares": 242,
       "perSh": 26.84,
       "cost": 204000.51,
       "price": 33.6,
       "cur": "USD",
-      "note": "上限10%",
-      "value_twd": 256230.36,
-      "return_pct": 25.6
+      "note": "\u4e0a\u965010%",
+      "value_twd": 256214.1,
+      "return_pct": 25.59
     },
     {
-      "cat": "成長-美股ETF",
-      "name": "00990A 元大全球AI主動式",
+      "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
+      "name": "00990A \u5143\u5927\u5168\u7403AI\u4e3b\u52d5\u5f0f",
       "tick": "00990A.TW",
       "shares": 15000,
       "perSh": 10.4,
       "cost": 156000,
-      "price": 18.14,
+      "price": 18.06,
       "cur": "TWD",
       "note": "",
-      "value_twd": 272099.99,
-      "return_pct": 74.42
+      "value_twd": 270899.99,
+      "return_pct": 73.65
     },
     {
-      "cat": "成長-美股ETF",
-      "name": "00910 第一金太空衛星",
+      "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
+      "name": "00910 \u7b2c\u4e00\u91d1\u592a\u7a7a\u885b\u661f",
       "tick": "00910.TW",
       "shares": 1000,
       "perSh": 55.25,
       "cost": 55250,
-      "price": 71.5,
+      "price": 73.3,
       "cur": "TWD",
       "note": "",
-      "value_twd": 71500.0,
-      "return_pct": 29.41
+      "value_twd": 73300.0,
+      "return_pct": 32.67
     },
     {
-      "cat": "成長-國外基金",
-      "name": "群益印度基金",
+      "cat": "\u6210\u9577-\u570b\u5916\u57fa\u91d1",
+      "name": "\u7fa4\u76ca\u5370\u5ea6\u57fa\u91d1",
       "tick": "",
       "shares": 7395.3,
       "perSh": 33.13,
       "cur": "TWD",
-      "note": "每月3號",
+      "note": "\u6bcf\u67083\u865f",
       "cost": 245006.28900000002,
       "price": 33.13,
       "value_twd": 245006.29,
       "return_pct": 0.0
     },
     {
-      "cat": "成長-國外基金",
-      "name": "00887 永豐中國科技50大",
+      "cat": "\u6210\u9577-\u570b\u5916\u57fa\u91d1",
+      "name": "00887 \u6c38\u8c50\u4e2d\u570b\u79d1\u628050\u5927",
       "tick": "00887.TW",
       "shares": 15000,
       "perSh": 12.5,
       "cost": 187500,
-      "price": 16.19,
+      "price": 16.59,
       "cur": "TWD",
-      "note": "無配息",
-      "value_twd": 242850.0,
-      "return_pct": 29.52
+      "note": "\u7121\u914d\u606f",
+      "value_twd": 248850.0,
+      "return_pct": 32.72
     },
     {
-      "cat": "成長-美股個股",
+      "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
       "name": "Uipath PATH",
       "tick": "PATH",
       "shares": 50,
@@ -287,12 +287,12 @@
       "price": 10.01,
       "cur": "USD",
       "note": "",
-      "value_twd": 15771.76,
+      "value_twd": 15770.76,
       "return_pct": -58.0
     },
     {
-      "cat": "成長-美股個股",
-      "name": "蘋果 AAPL",
+      "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
+      "name": "\u860b\u679c AAPL",
       "tick": "AAPL",
       "shares": 2,
       "perSh": 171.43,
@@ -300,11 +300,11 @@
       "price": 294.8,
       "cur": "USD",
       "note": "",
-      "value_twd": 18579.47,
-      "return_pct": 72.54
+      "value_twd": 18578.3,
+      "return_pct": 72.53
     },
     {
-      "cat": "成長-美股個股",
+      "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
       "name": "Nvidia NVDA",
       "tick": "NVDA",
       "shares": 30,
@@ -312,13 +312,13 @@
       "cost": 174578.27,
       "price": 220.78,
       "cur": "USD",
-      "note": "富邦16 元大14",
-      "value_twd": 208716.57,
+      "note": "\u5bcc\u90a616 \u5143\u592714",
+      "value_twd": 208703.33,
       "return_pct": 19.55
     },
     {
-      "cat": "成長-美股個股",
-      "name": "禮來 LLY",
+      "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
+      "name": "\u79ae\u4f86 LLY",
       "tick": "LLY",
       "shares": 5,
       "perSh": 930.93,
@@ -326,24 +326,24 @@
       "price": 989.87,
       "cur": "USD",
       "note": "",
-      "value_twd": 155963.91,
-      "return_pct": 6.69
+      "value_twd": 155954.02,
+      "return_pct": 6.68
     },
     {
-      "cat": "成長-美股個股",
-      "name": "特斯拉 TSLA",
+      "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
+      "name": "\u7279\u65af\u62c9 TSLA",
       "tick": "TSLA",
       "shares": 19,
       "perSh": 400.172,
       "cost": 238799.64,
       "price": 433.45,
       "cur": "USD",
-      "note": "富邦11 元大8",
-      "value_twd": 259518.65,
-      "return_pct": 8.68
+      "note": "\u5bcc\u90a611 \u5143\u59278",
+      "value_twd": 259502.19,
+      "return_pct": 8.67
     },
     {
-      "cat": "成長-美股個股",
+      "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
       "name": "Google GOOGL",
       "tick": "GOOGL",
       "shares": 17,
@@ -352,11 +352,11 @@
       "price": 387.35,
       "cur": "USD",
       "note": "",
-      "value_twd": 207504.94,
-      "return_pct": 35.56
+      "value_twd": 207491.78,
+      "return_pct": 35.55
     },
     {
-      "cat": "成長-美股個股",
+      "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
       "name": "PANW",
       "tick": "PANW",
       "shares": 7,
@@ -365,25 +365,25 @@
       "price": 215.6,
       "cur": "USD",
       "note": "",
-      "value_twd": 47557.91,
-      "return_pct": 28.63
+      "value_twd": 47554.89,
+      "return_pct": 28.62
     },
     {
-      "cat": "成長-美股個股",
-      "name": "STCE 虛擬幣",
+      "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
+      "name": "STCE \u865b\u64ec\u5e63",
       "tick": "",
       "shares": 10,
       "perSh": 68.53,
       "cur": "USD",
-      "note": "手動",
+      "note": "\u624b\u52d5",
       "cost": 685.3,
       "price": 68.53,
-      "value_twd": 21595.17,
-      "return_pct": 3051.2
+      "value_twd": 21593.8,
+      "return_pct": 3051.0
     },
     {
-      "cat": "波段-個股",
-      "name": "生達 1620",
+      "cat": "\u6ce2\u6bb5-\u500b\u80a1",
+      "name": "\u751f\u9054 1620",
       "tick": "1620.TW",
       "shares": 2000,
       "perSh": 55.9,
@@ -395,156 +395,207 @@
       "return_pct": 9.3
     },
     {
-      "cat": "波段-個股",
-      "name": "鈊象 3293",
+      "cat": "\u6ce2\u6bb5-\u500b\u80a1",
+      "name": "\u920a\u8c61 3293",
       "tick": "3293.TW",
       "shares": 100,
       "perSh": 886,
       "cost": 88600,
-      "price": 738.0,
+      "price": 724.0,
       "cur": "TWD",
       "note": "",
-      "value_twd": 73800.0,
-      "return_pct": -16.7
+      "value_twd": 72400.0,
+      "return_pct": -18.28
     },
     {
-      "cat": "波段-個股",
-      "name": "大亞 1609",
+      "cat": "\u6ce2\u6bb5-\u500b\u80a1",
+      "name": "\u5927\u4e9e 1609",
       "tick": "1609.TW",
       "shares": 192,
       "perSh": 1,
       "cost": 192,
-      "price": 35.3,
+      "price": 34.55,
       "cur": "TWD",
       "note": "",
-      "value_twd": 6777.6,
-      "return_pct": 3430.0
+      "value_twd": 6633.6,
+      "return_pct": 3355.0
     },
     {
-      "cat": "波段-個股",
-      "name": "奇鋐 3017",
+      "cat": "\u6ce2\u6bb5-\u500b\u80a1",
+      "name": "\u5947\u92d0 3017",
       "tick": "3017.TW",
       "shares": 100,
       "perSh": 769,
       "cost": 76900,
-      "price": 2520.0,
+      "price": 2585.0,
       "cur": "TWD",
       "note": "",
-      "value_twd": 252000.0,
-      "return_pct": 227.7
+      "value_twd": 258500.0,
+      "return_pct": 236.15
     },
     {
-      "cat": "波段-個股",
-      "name": "緯穎 6669",
+      "cat": "\u6ce2\u6bb5-\u500b\u80a1",
+      "name": "\u7def\u7a4e 6669",
       "tick": "6669.TW",
       "shares": 10,
       "perSh": 4610,
       "cost": 46100,
-      "price": 5790.0,
+      "price": 5580.0,
       "cur": "TWD",
       "note": "",
-      "value_twd": 57900.0,
-      "return_pct": 25.6
+      "value_twd": 55800.0,
+      "return_pct": 21.04
     },
     {
-      "cat": "存股-ETF",
-      "name": "00919 群益台灣精選高息",
+      "cat": "\u5b58\u80a1-ETF",
+      "name": "00919 \u7fa4\u76ca\u53f0\u7063\u7cbe\u9078\u9ad8\u606f",
       "tick": "00919.TW",
       "shares": 20000,
       "perSh": 20.2,
       "cost": 404000,
-      "price": 25.75,
+      "price": 25.55,
       "cur": "TWD",
-      "note": "中信15000/國泰5000",
-      "value_twd": 515000.0,
-      "return_pct": 27.48
+      "note": "\u4e2d\u4fe115000/\u570b\u6cf05000",
+      "value_twd": 510999.98,
+      "return_pct": 26.49
     },
     {
-      "cat": "存股-個股",
-      "name": "台積電 2330",
+      "cat": "\u5b58\u80a1-\u500b\u80a1",
+      "name": "\u53f0\u7a4d\u96fb 2330",
       "tick": "2330.TW",
       "shares": 100,
       "perSh": 1795,
       "cost": 179500,
-      "price": 2255.0,
+      "price": 2220.0,
       "cur": "TWD",
       "note": "",
-      "value_twd": 225500.0,
-      "return_pct": 25.63
+      "value_twd": 222000.0,
+      "return_pct": 23.68
     },
     {
-      "cat": "存股-個股",
-      "name": "中信金 2891",
+      "cat": "\u5b58\u80a1-\u500b\u80a1",
+      "name": "\u4e2d\u4fe1\u91d1 2891",
       "tick": "2891.TW",
       "shares": 4000,
       "perSh": 28.64,
       "cost": 114560,
-      "price": 53.5,
+      "price": 54.9,
       "cur": "TWD",
       "note": "",
-      "value_twd": 214000.0,
-      "return_pct": 86.8
+      "value_twd": 219600.01,
+      "return_pct": 91.69
     },
     {
-      "cat": "債券",
-      "name": "00937B 群益ESG投等債20+",
+      "cat": "\u50b5\u5238",
+      "name": "00937B \u7fa4\u76caESG\u6295\u7b49\u50b520+",
       "tick": "00937B.TW",
       "shares": 23000,
       "perSh": 15.07,
       "cost": 346610,
       "price": 14.77,
       "cur": "TWD",
-      "note": "月配 20萬預備金",
+      "note": "\u6708\u914d 20\u842c\u9810\u5099\u91d1",
       "value_twd": 339710.0,
       "return_pct": -1.99
     },
     {
-      "cat": "債券-類現金",
-      "name": "00772B 中信公司債",
+      "cat": "\u50b5\u5238-\u985e\u73fe\u91d1",
+      "name": "00772B \u4e2d\u4fe1\u516c\u53f8\u50b5",
       "tick": "00772B.TW",
       "shares": 9000,
       "perSh": 34.4,
       "cost": 309600,
       "price": 33.57,
       "cur": "TWD",
-      "note": "月配",
+      "note": "\u6708\u914d",
       "value_twd": 302130.0,
       "return_pct": -2.41
     },
     {
-      "cat": "債券-類現金",
-      "name": "00719B 元大美債1-3",
+      "cat": "\u50b5\u5238-\u985e\u73fe\u91d1",
+      "name": "00719B \u5143\u5927\u7f8e\u50b51-3",
       "tick": "00719B.TW",
       "shares": 9000,
       "perSh": 31.28,
       "cost": 281520,
       "price": 30.77,
       "cur": "TWD",
-      "note": "貸款預備池",
+      "note": "\u8cb8\u6b3e\u9810\u5099\u6c60",
       "value_twd": 276930.0,
       "return_pct": -1.63
     }
   ],
   "loan": [
     {
-      "name": "鴻海 2317",
+      "name": "\u9d3b\u6d77 2317",
       "tick": "2317.TW",
       "shares": 1000,
       "perSh": 242,
       "cost": 242000,
-      "price": 250.0,
+      "price": 251.0,
       "cur": "TWD",
       "pledgeAmt": 400000,
-      "note": "維持率≥140%",
-      "value_twd": 250000.0,
-      "unrealized_pnl": 8000.0
+      "note": "\u7dad\u6301\u7387\u2265140%",
+      "value_twd": 251000.0,
+      "unrealized_pnl": 9000.0
     }
   ],
   "dividends": {
-    "upcoming": [],
+    "upcoming": [
+      {
+        "stock": "00937B \u00e7\u00be\u00a4\u00e7\u009b\u008aESG\u00e6\u008a\u0095\u00e7\u00ad\u0089\u00e5\u0082\u00b520+",
+        "perShare": 0.023,
+        "exDate": "2026-05-15",
+        "payDate": "2026-05-22",
+        "shares": 23000,
+        "note": "5\u00e6\u009c\u0088\u00e6\u009c\u0088\u00e9\u0085\u008d"
+      },
+      {
+        "stock": "00772B \u00e4\u00b8\u00ad\u00e4\u00bf\u00a1\u00e5\u0085\u00ac\u00e5\u008f\u00b8\u00e5\u0082\u00b5",
+        "perShare": 0.028,
+        "exDate": "2026-05-22",
+        "payDate": "2026-05-29",
+        "shares": 9000,
+        "note": "5\u00e6\u009c\u0088\u00e6\u009c\u0088\u00e9\u0085\u008d"
+      },
+      {
+        "stock": "00719B \u00e5\u0085\u0083\u00e5\u00a4\u00a7\u00e7\u00be\u008e\u00e5\u0082\u00b51-3",
+        "perShare": 0.021,
+        "exDate": "2026-05-27",
+        "payDate": "2026-06-03",
+        "shares": 9000,
+        "note": "5\u00e6\u009c\u0088\u00e6\u009c\u0088\u00e9\u0085\u008d"
+      },
+      {
+        "stock": "00919 \u00e7\u00be\u00a4\u00e7\u009b\u008a\u00e5\u008f\u00b0\u00e7\u0081\u00a3\u00e7\u00b2\u00be\u00e9\u0081\u00b8\u00e9\u00ab\u0098\u00e6\u0081\u00af",
+        "perShare": 0.12,
+        "exDate": "2026-06-13",
+        "payDate": "2026-06-23",
+        "shares": 20000,
+        "note": "6\u00e6\u009c\u0088\u00e6\u009c\u0088\u00e9\u0085\u008d"
+      }
+    ],
     "ytd": [
       {
-        "stock": "00830 國泰費城半導體",
+        "stock": "00937B \u00e7\u00be\u00a4\u00e7\u009b\u008aESG\u00e6\u008a\u0095\u00e7\u00ad\u0089\u00e5\u0082\u00b520+",
+        "shares": 23000,
+        "perShare": 0.022,
+        "date": "2026-01-15",
+        "note": "1\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00919 \u00e7\u00be\u00a4\u00e7\u009b\u008a\u00e5\u008f\u00b0\u00e7\u0081\u00a3\u00e7\u00b2\u00be\u00e9\u0081\u00b8\u00e9\u00ab\u0098\u00e6\u0081\u00af",
+        "shares": 20000,
+        "perShare": 0.12,
+        "date": "2026-01-16",
+        "note": "1\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00830 \u570b\u6cf0\u8cbb\u57ce\u534a\u5c0e\u9ad4",
         "stock_id": "00830",
         "shares": 6000,
         "perShare": 9.0,
@@ -556,7 +607,61 @@
         "est": false
       },
       {
-        "stock": "00850 元大台灣ESG",
+        "stock": "00772B \u00e4\u00b8\u00ad\u00e4\u00bf\u00a1\u00e5\u0085\u00ac\u00e5\u008f\u00b8\u00e5\u0082\u00b5",
+        "shares": 9000,
+        "perShare": 0.028,
+        "date": "2026-01-22",
+        "note": "1\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00719B \u00e5\u0085\u0083\u00e5\u00a4\u00a7\u00e7\u00be\u008e\u00e5\u0082\u00b51-3",
+        "shares": 9000,
+        "perShare": 0.021,
+        "date": "2026-01-24",
+        "note": "1\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00919 \u00e7\u00be\u00a4\u00e7\u009b\u008a\u00e5\u008f\u00b0\u00e7\u0081\u00a3\u00e7\u00b2\u00be\u00e9\u0081\u00b8\u00e9\u00ab\u0098\u00e6\u0081\u00af",
+        "shares": 20000,
+        "perShare": 0.12,
+        "date": "2026-02-13",
+        "note": "2\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00937B \u00e7\u00be\u00a4\u00e7\u009b\u008aESG\u00e6\u008a\u0095\u00e7\u00ad\u0089\u00e5\u0082\u00b520+",
+        "shares": 23000,
+        "perShare": 0.023,
+        "date": "2026-02-14",
+        "note": "2\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00772B \u00e4\u00b8\u00ad\u00e4\u00bf\u00a1\u00e5\u0085\u00ac\u00e5\u008f\u00b8\u00e5\u0082\u00b5",
+        "shares": 9000,
+        "perShare": 0.028,
+        "date": "2026-02-20",
+        "note": "2\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00719B \u00e5\u0085\u0083\u00e5\u00a4\u00a7\u00e7\u00be\u008e\u00e5\u0082\u00b51-3",
+        "shares": 9000,
+        "perShare": 0.021,
+        "date": "2026-02-25",
+        "note": "2\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00850 \u5143\u5927\u53f0\u7063ESG",
         "stock_id": "00850",
         "shares": 1000,
         "perShare": 0.8,
@@ -568,7 +673,25 @@
         "est": false
       },
       {
-        "stock": "00981A 統一台股增長ETF",
+        "stock": "00919 \u00e7\u00be\u00a4\u00e7\u009b\u008a\u00e5\u008f\u00b0\u00e7\u0081\u00a3\u00e7\u00b2\u00be\u00e9\u0081\u00b8\u00e9\u00ab\u0098\u00e6\u0081\u00af",
+        "shares": 20000,
+        "perShare": 0.13,
+        "date": "2026-03-13",
+        "note": "3\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00937B \u00e7\u00be\u00a4\u00e7\u009b\u008aESG\u00e6\u008a\u0095\u00e7\u00ad\u0089\u00e5\u0082\u00b520+",
+        "shares": 23000,
+        "perShare": 0.023,
+        "date": "2026-03-13",
+        "note": "3\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00981A \u7d71\u4e00\u53f0\u80a1\u589e\u9577ETF",
         "stock_id": "00981A",
         "shares": 21000,
         "perShare": 0.41,
@@ -580,7 +703,7 @@
         "est": false
       },
       {
-        "stock": "00919 群益台灣精選高息",
+        "stock": "00919 \u7fa4\u76ca\u53f0\u7063\u7cbe\u9078\u9ad8\u606f",
         "stock_id": "00919",
         "shares": 20000,
         "perShare": 0.78,
@@ -592,152 +715,287 @@
         "est": false
       },
       {
-        "stock": "台積電 2330",
+        "stock": "\u53f0\u7a4d\u96fb 2330",
         "stock_id": "2330",
         "shares": 100,
         "perShare": 6.0,
         "exDate": "2026-03-17",
         "payDate": "2026-04-09",
-        "note": "114年第3季",
+        "note": "114\u5e74\u7b2c3\u5b63",
         "amount": 600.0,
         "received": true,
         "est": false
+      },
+      {
+        "stock": "00893 \u00e5\u009c\u008b\u00e6\u00b3\u00b0\u00e9\u009b\u00bb\u00e5\u008b\u0095\u00e8\u00bb\u008a",
+        "shares": 3000,
+        "perShare": 0.11,
+        "date": "2026-03-17",
+        "note": "Q1",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00830 \u00e5\u009c\u008b\u00e6\u00b3\u00b0\u00e8\u00b2\u00bb\u00e5\u009f\u008e\u00e5\u008d\u008a\u00e5\u00b0\u008e\u00e9\u00ab\u0094",
+        "shares": 6000,
+        "perShare": 0.16,
+        "date": "2026-03-18",
+        "note": "Q1",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00772B \u00e4\u00b8\u00ad\u00e4\u00bf\u00a1\u00e5\u0085\u00ac\u00e5\u008f\u00b8\u00e5\u0082\u00b5",
+        "shares": 9000,
+        "perShare": 0.028,
+        "date": "2026-03-20",
+        "note": "3\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00850 \u00e5\u0085\u0083\u00e5\u00a4\u00a7\u00e5\u008f\u00b0\u00e7\u0081\u00a3ESG",
+        "shares": 1000,
+        "perShare": 0.55,
+        "date": "2026-03-20",
+        "note": "Q1",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00910 \u00e7\u00ac\u00ac\u00e4\u00b8\u0080\u00e9\u0087\u0091\u00e5\u00a4\u00aa\u00e7\u00a9\u00ba\u00e8\u00a1\u009b\u00e6\u0098\u009f",
+        "shares": 1000,
+        "perShare": 0.08,
+        "date": "2026-03-20",
+        "note": "Q1",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "\u00e4\u00b8\u00ad\u00e4\u00bf\u00a1\u00e9\u0087\u0091 2891",
+        "shares": 4000,
+        "perShare": 1.45,
+        "date": "2026-03-20",
+        "note": "\u00e8\u0082\u00a1\u00e5\u0088\u00a9",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00719B \u00e5\u0085\u0083\u00e5\u00a4\u00a7\u00e7\u00be\u008e\u00e5\u0082\u00b51-3",
+        "shares": 9000,
+        "perShare": 0.021,
+        "date": "2026-03-25",
+        "note": "3\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "\u00e5\u008f\u00b0\u00e7\u00a9\u008d\u00e9\u009b\u00bb 2330",
+        "shares": 100,
+        "perShare": 3.5,
+        "date": "2026-03-25",
+        "note": "Q1",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "\u00e9\u00b4\u00bb\u00e6\u00b5\u00b7 2317",
+        "shares": 1000,
+        "perShare": 4.5,
+        "date": "2026-03-27",
+        "note": "\u00e8\u0082\u00a1\u00e5\u0088\u00a9",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00924 \u00e5\u00be\u00a9\u00e8\u008f\u00afS&P500",
+        "shares": 6747,
+        "perShare": 0.1,
+        "date": "2026-04-10",
+        "note": "Q1",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00937B \u00e7\u00be\u00a4\u00e7\u009b\u008aESG\u00e6\u008a\u0095\u00e7\u00ad\u0089\u00e5\u0082\u00b520+",
+        "shares": 23000,
+        "perShare": 0.023,
+        "date": "2026-04-15",
+        "note": "4\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00919 \u00e7\u00be\u00a4\u00e7\u009b\u008a\u00e5\u008f\u00b0\u00e7\u0081\u00a3\u00e7\u00b2\u00be\u00e9\u0081\u00b8\u00e9\u00ab\u0098\u00e6\u0081\u00af",
+        "shares": 20000,
+        "perShare": 0.12,
+        "date": "2026-04-16",
+        "note": "4\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00772B \u00e4\u00b8\u00ad\u00e4\u00bf\u00a1\u00e5\u0085\u00ac\u00e5\u008f\u00b8\u00e5\u0082\u00b5",
+        "shares": 9000,
+        "perShare": 0.028,
+        "date": "2026-04-22",
+        "note": "4\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00719B \u00e5\u0085\u0083\u00e5\u00a4\u00a7\u00e7\u00be\u008e\u00e5\u0082\u00b51-3",
+        "shares": 9000,
+        "perShare": 0.021,
+        "date": "2026-04-24",
+        "note": "4\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
+      },
+      {
+        "stock": "00919 \u00e7\u00be\u00a4\u00e7\u009b\u008a\u00e5\u008f\u00b0\u00e7\u0081\u00a3\u00e7\u00b2\u00be\u00e9\u0081\u00b8\u00e9\u00ab\u0098\u00e6\u0081\u00af",
+        "shares": 20000,
+        "perShare": 0.12,
+        "date": "2026-05-08",
+        "note": "5\u00e6\u009c\u0088",
+        "received": true,
+        "est": true
       }
     ],
-    "ytd_total": 79610.0,
-    "annual_estimate": 191064.0,
-    "next30d_estimate": 0,
-    "ytd_yield_pct": 0.91
+    "ytd_total": 108912.0,
+    "annual_estimate": 261388.0,
+    "next30d_estimate": 970.0,
+    "ytd_yield_pct": 1.25
   },
   "us_exposure": [
     {
       "sym": "NVDA",
-      "value_usd": 12060.13,
-      "value_twd": 380039.0,
+      "value_usd": 12091.96,
+      "value_twd": 381018.0,
       "direct_usd": 6623.4,
-      "etf_usd": 5436.73
+      "etf_usd": 5468.56
     },
     {
       "sym": "TSLA",
-      "value_usd": 9415.42,
-      "value_twd": 296699.0,
+      "value_usd": 9418.97,
+      "value_twd": 296792.0,
       "direct_usd": 8235.55,
-      "etf_usd": 1179.87
+      "etf_usd": 1183.42
     },
     {
       "sym": "GOOGL",
-      "value_usd": 8760.89,
-      "value_twd": 276073.0,
+      "value_usd": 8762.85,
+      "value_twd": 276117.0,
       "direct_usd": 6584.95,
-      "etf_usd": 2175.94
+      "etf_usd": 2177.9
     },
     {
       "sym": "LLY",
-      "value_usd": 5546.73,
-      "value_twd": 174788.0,
+      "value_usd": 5547.59,
+      "value_twd": 174805.0,
       "direct_usd": 4949.35,
-      "etf_usd": 597.38
+      "etf_usd": 598.24
     },
     {
       "sym": "AVGO",
-      "value_usd": 2528.11,
-      "value_twd": 79666.0,
+      "value_usd": 2546.5,
+      "value_twd": 80240.0,
       "direct_usd": 0.0,
-      "etf_usd": 2528.11
+      "etf_usd": 2546.5
     },
     {
       "sym": "MSFT",
-      "value_usd": 2142.98,
-      "value_twd": 67529.0,
+      "value_usd": 2144.65,
+      "value_twd": 67578.0,
       "direct_usd": 0.0,
-      "etf_usd": 2142.98
+      "etf_usd": 2144.65
     },
     {
       "sym": "AAPL",
-      "value_usd": 2141.6,
-      "value_twd": 67486.0,
+      "value_usd": 2144.04,
+      "value_twd": 67559.0,
       "direct_usd": 589.6,
-      "etf_usd": 1552.0
+      "etf_usd": 1554.44
     },
     {
       "sym": "AMD",
-      "value_usd": 2006.17,
-      "value_twd": 63218.0,
+      "value_usd": 2025.49,
+      "value_twd": 63823.0,
       "direct_usd": 0.0,
-      "etf_usd": 2006.17
+      "etf_usd": 2025.49
     },
     {
       "sym": "PANW",
       "value_usd": 1509.2,
-      "value_twd": 47558.0,
+      "value_twd": 47555.0,
       "direct_usd": 1509.2,
       "etf_usd": 0.0
     },
     {
       "sym": "META",
-      "value_usd": 1367.05,
-      "value_twd": 43078.0,
+      "value_usd": 1366.18,
+      "value_twd": 43048.0,
       "direct_usd": 0.0,
-      "etf_usd": 1367.05
+      "etf_usd": 1366.18
     },
     {
       "sym": "TSM",
-      "value_usd": 1136.42,
-      "value_twd": 35811.0,
+      "value_usd": 1142.98,
+      "value_twd": 36015.0,
       "direct_usd": 0.0,
-      "etf_usd": 1136.42
+      "etf_usd": 1142.98
     },
     {
       "sym": "AMZN",
-      "value_usd": 1032.32,
-      "value_twd": 32530.0,
+      "value_usd": 1032.87,
+      "value_twd": 32546.0,
       "direct_usd": 0.0,
-      "etf_usd": 1032.32
+      "etf_usd": 1032.87
     },
     {
       "sym": "PATH",
       "value_usd": 500.5,
-      "value_twd": 15772.0,
+      "value_twd": 15771.0,
       "direct_usd": 500.5,
       "etf_usd": 0.0
     }
   ],
   "targets": {
-    "å°ç£å¤§ç¤ETF": {
+    "\u00e5\u008f\u00b0\u00e7\u0081\u00a3\u00e5\u00a4\u00a7\u00e7\u009b\u00a4ETF": {
       "pct": 0.31,
-      "strat": "æ­£2:20% ï¼ 00981A:10%"
+      "strat": "\u00e6\u00ad\u00a32:20% \u00ef\u00bc\u008b 00981A:10%"
     },
-    "æé·-ç¾è¡ETF": {
+    "\u00e6\u0088\u0090\u00e9\u0095\u00b7-\u00e7\u00be\u008e\u00e8\u0082\u00a1ETF": {
       "pct": 0.2,
-      "strat": "00924ãTOPT"
+      "strat": "00924\u00e3\u0080\u0081TOPT"
     },
-    "æé·-åå¤åºé": {
+    "\u00e6\u0088\u0090\u00e9\u0095\u00b7-\u00e5\u009c\u008b\u00e5\u00a4\u0096\u00e5\u009f\u00ba\u00e9\u0087\u0091": {
       "pct": 0.05,
-      "strat": "å°åº¦åºé ï¼ ä¸­åç§æ"
+      "strat": "\u00e5\u008d\u00b0\u00e5\u00ba\u00a6\u00e5\u009f\u00ba\u00e9\u0087\u0091 \u00ef\u00bc\u008b \u00e4\u00b8\u00ad\u00e5\u009c\u008b\u00e7\u00a7\u0091\u00e6\u008a\u0080"
     },
-    "æé·-ç¾è¡åè¡": {
+    "\u00e6\u0088\u0090\u00e9\u0095\u00b7-\u00e7\u00be\u008e\u00e8\u0082\u00a1\u00e5\u0080\u008b\u00e8\u0082\u00a1": {
       "pct": 0.1,
       "strat": "Nvidia 40% / Tesla 30% / Google 30%"
     },
-    "æ³¢æ®µ-åè¡": {
+    "\u00e6\u00b3\u00a2\u00e6\u00ae\u00b5-\u00e5\u0080\u008b\u00e8\u0082\u00a1": {
       "pct": 0.06,
-      "strat": "åå¿«è³£æï¼è½åµå¸åæ³"
+      "strat": "\u00e5\u0084\u0098\u00e5\u00bf\u00ab\u00e8\u00b3\u00a3\u00e6\u008e\u0089\u00ef\u00bc\u008c\u00e8\u00bd\u0089\u00e5\u0082\u00b5\u00e5\u0088\u00b8\u00e5\u0081\u009c\u00e6\u00b3\u008a"
     },
-    "å­è¡-ETF": {
+    "\u00e5\u00ad\u0098\u00e8\u0082\u00a1-ETF": {
       "pct": 0.05,
-      "strat": "00919ï¼å¡«æ¯å¾è½æ­£2"
+      "strat": "00919\u00ef\u00bc\u008c\u00e5\u00a1\u00ab\u00e6\u0081\u00af\u00e5\u00be\u008c\u00e8\u00bd\u0089\u00e6\u00ad\u00a32"
     },
-    "å­è¡-åè¡": {
+    "\u00e5\u00ad\u0098\u00e8\u0082\u00a1-\u00e5\u0080\u008b\u00e8\u0082\u00a1": {
       "pct": 0.08,
-      "strat": "ä¸­ä¿¡é ï¼ å°ç©é»"
+      "strat": "\u00e4\u00b8\u00ad\u00e4\u00bf\u00a1\u00e9\u0087\u0091 \u00ef\u00bc\u008b \u00e5\u008f\u00b0\u00e7\u00a9\u008d\u00e9\u009b\u00bb"
     },
-    "åµå¸": {
+    "\u00e5\u0082\u00b5\u00e5\u0088\u00b8": {
       "pct": 0.05,
-      "strat": "æéï¼ç®æ¨å­å°288è¬"
+      "strat": "\u00e6\u009c\u0088\u00e9\u0085\u008d\u00ef\u00bc\u008c\u00e7\u009b\u00ae\u00e6\u00a8\u0099\u00e5\u00ad\u0098\u00e5\u0088\u00b0288\u00e8\u0090\u00ac"
     }
   },
   "cash_like_cats": [
-    "åµå¸-é¡ç¾é"
+    "\u00e5\u0082\u00b5\u00e5\u0088\u00b8-\u00e9\u00a1\u009e\u00e7\u008f\u00be\u00e9\u0087\u0091"
   ],
   "etf_weights": {
     "00893": {
@@ -787,55 +1045,55 @@
     }
   },
   "twii_market": {
-    "close": 41790.06,
-    "close_date": "2026/05/11",
+    "close": 41374.5,
+    "close_date": "2026/05/13",
     "ath": 41933.78,
     "ath_date": "2026/05/07",
-    "drop_pct": -0.34,
-    "ma20": 38840.52,
-    "ma60": 35210.52,
-    "ma240": 28106.47,
+    "drop_pct": -1.33,
+    "ma20": 39416.49,
+    "ma60": 35534.75,
+    "ma240": 28271.88,
     "triggers": [
       {
-        "name": "è·10%(å·²ç ´æç·)æå¥15%",
+        "name": "\u00e8\u00b7\u008c10%(\u00e5\u00b7\u00b2\u00e7\u00a0\u00b4\u00e6\u009c\u0088\u00e7\u00b7\u009a)\u00e6\u008a\u0095\u00e5\u0085\u00a515%",
         "trigger": 37740.4,
-        "amount": 262768.0,
-        "gap": 4050.0,
+        "amount": 260938.0,
+        "gap": 3634.0,
         "triggered": false
       },
       {
-        "name": "è·15%(å·²ç ´å­£ç·)æå¥20%",
+        "name": "\u00e8\u00b7\u008c15%(\u00e5\u00b7\u00b2\u00e7\u00a0\u00b4\u00e5\u00ad\u00a3\u00e7\u00b7\u009a)\u00e6\u008a\u0095\u00e5\u0085\u00a520%",
         "trigger": 35643.71,
-        "amount": 350357.0,
-        "gap": 6146.0,
+        "amount": 347917.0,
+        "gap": 5731.0,
         "triggered": false
       },
       {
-        "name": "ç ´å­£ç·æå¥25%",
-        "trigger": 35210.52,
-        "amount": 437946.0,
-        "gap": 6580.0,
+        "name": "\u00e7\u00a0\u00b4\u00e5\u00ad\u00a3\u00e7\u00b7\u009a\u00e6\u008a\u0095\u00e5\u0085\u00a525%",
+        "trigger": 35534.75,
+        "amount": 434896.0,
+        "gap": 5840.0,
         "triggered": false
       },
       {
-        "name": "ï¼ç´å¹´ç·ï¼ç ´19%æå¥10%",
+        "name": "\u00ef\u00bc\u0088\u00e7\u00b4\u0084\u00e5\u00b9\u00b4\u00e7\u00b7\u009a\u00ef\u00bc\u0089\u00e7\u00a0\u00b419%\u00e6\u008a\u0095\u00e5\u0085\u00a510%",
         "trigger": 33966.36,
-        "amount": 175178.0,
-        "gap": 7824.0,
+        "amount": 173958.0,
+        "gap": 7408.0,
         "triggered": false
       },
       {
-        "name": "ç ´20%æå¥10%",
+        "name": "\u00e7\u00a0\u00b420%\u00e6\u008a\u0095\u00e5\u0085\u00a510%",
         "trigger": 33547.02,
-        "amount": 175178.0,
-        "gap": 8243.0,
+        "amount": 173958.0,
+        "gap": 7827.0,
         "triggered": false
       },
       {
-        "name": "å¹´ç·ä¸ç ´20%æå¥10%",
+        "name": "\u00e5\u00b9\u00b4\u00e7\u00b7\u009a\u00e4\u00b8\u008b\u00e7\u00a0\u00b420%\u00e6\u008a\u0095\u00e5\u0085\u00a510%",
         "trigger": 33547.02,
-        "amount": 175178.0,
-        "gap": 8243.0,
+        "amount": 173958.0,
+        "gap": 7827.0,
         "triggered": false
       }
     ]
@@ -843,8 +1101,8 @@
   "logs": {
     "yfinance": "ok (24 prices)",
     "twse_backup": "ok (2 prices)",
-    "usd_twd": 31.512,
+    "usd_twd": 31.51,
     "finmind": "ok (upcoming:0, ytd:5)",
-    "twii": "ok (41,790 | ATH:41,934)"
+    "twii": "ok (41,374 | ATH:41,934)"
   }
 }
