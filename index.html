@@ -678,7 +678,12 @@ async function syncToGitHub(){
     if(!getResp.ok){ setSt(`❌ 取得檔案失敗（${getResp.status}）`, false); return; }
     const getJson = await getResp.json();
     const sha = getJson.sha;
-    const existing = JSON.parse(atob(getJson.content.replace(/\n/g, '')));
+    // 正確解碼：base64 → UTF-8 bytes → string（修正中文亂碼問題）
+    const b64raw = getJson.content.replace(/\n/g, '');
+    const binStr = atob(b64raw);
+    const utfBytes = new Uint8Array(binStr.length);
+    for(let i = 0; i < binStr.length; i++) utfBytes[i] = binStr.charCodeAt(i);
+    const existing = JSON.parse(new TextDecoder('utf-8').decode(utfBytes));
 
     setSt('合併資料中…', null);
 
