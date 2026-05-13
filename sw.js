@@ -2,7 +2,7 @@
 // 快取策略：index.html / manifest.json 用 cache-first（殼）
 //           data.json 永遠 network-first（確保看到最新資料）
 
-const CACHE_NAME = 'portfolio-v1';
+const CACHE_NAME = 'portfolio-v2';
 const SHELL = ['./index.html', './manifest.json', './sw.js'];
 
 self.addEventListener('install', e => {
