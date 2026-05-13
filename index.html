@@ -299,13 +299,13 @@
         <table class="rb-table">
           <thead>
             <tr>
+              <th style="text-align:center">操作建議</th>
               <th>分類</th><th>策略備註</th>
               <th style="text-align:right">應有%</th>
               <th style="text-align:right">目前%</th>
               <th style="text-align:right">現值</th>
               <th style="text-align:right">目標金額</th>
               <th style="text-align:right">差額</th>
-              <th style="text-align:center">操作建議</th>
               <th>進度</th>
             </tr>
           </thead>
@@ -357,6 +357,11 @@
       <div class="kpi-label">🎯 全年股利預估（依 YTD 推算）</div>
       <div class="kpi-val pos" id="div-annual">—</div>
     </div>
+
+    <div class="sec-title">✏️ 手動補充股利</div>
+    <div id="div-manual-list"></div>
+    <button class="add-row-btn" onclick="showDivForm()"><i class="bi bi-plus-circle"></i> 新增手動股利紀錄</button>
+    <div id="div-add-form" style="display:none"></div>
   </div>
 
   <!-- ════ Tab D：系統 ════ -->
@@ -516,7 +521,7 @@ function buildPriceMap(){
 }
 
 function enrichItem(item, pm, usdTwd){
-  const price = (item.tick && pm[item.tick]) ?? item.manualPrice ?? 0;
+  const price = (item.manualPrice > 0) ? item.manualPrice : ((item.tick && pm[item.tick]) || 0);
   const sh    = +item.shares||0, ps=+item.perSh||0;
   const fx    = usdTwd||31.5;
   // 優先使用儲存的成本（USD持股成本已是TWD），否則即時計算
@@ -587,6 +592,7 @@ function initLocal(){
           migrated=true;
         }
       });
+      if(!LOCAL.manualDividends){ LOCAL.manualDividends=[]; migrated=true; }
       if(migrated) savePf();
       return;
     }catch(e){}
@@ -604,6 +610,7 @@ function initLocal(){
     })),
     bankCash:0,
     stockLoan:D.summary?.stock_loan||0,
+    manualDividends:[],
   };
   savePf();
 }
@@ -851,6 +858,7 @@ function renderSummaryContent(sum, rebal){
     else{sc='s-hold';st='持倉';}
     tbody.innerHTML+=`
       <tr>
+        <td style="text-align:center"><span class="badge-s ${sc}">${st}</span></td>
         <td style="font-weight:700">${row.cat}</td>
         <td style="font-size:10px;color:var(--muted);max-width:80px;line-height:1.4">${row.strat}</td>
         <td style="text-align:right;color:var(--muted)">${row.target_pct.toFixed(0)}%</td>
@@ -858,7 +866,6 @@ function renderSummaryContent(sum, rebal){
         <td style="text-align:right">${f(row.val)}</td>
         <td style="text-align:right;color:var(--muted)">${f(row.target_amount)}</td>
         <td style="text-align:right" class="${clr(da)}">${da>=0?'+':''}${f(da)}</td>
-        <td style="text-align:center"><span class="badge-s ${sc}">${st}</span></td>
         <td style="min-width:60px"><div class="prog-bg"><div class="prog-fill" style="width:${fill}%;background:${barC}"></div></div></td>
       </tr>`;
   });
@@ -997,7 +1004,7 @@ function renderPortfolioSection(enriched, sum){
           <td contenteditable="true" data-field="shares" onblur="onNumEdit(this,${idx},'portfolio','shares')" style="text-align:right">${(h.shares||0).toLocaleString()}</td>
           <td contenteditable="true" data-field="perSh" onblur="onNumEdit(this,${idx},'portfolio','perSh')" style="text-align:right">${(h.perSh||0).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
           <td data-field="cost" style="text-align:right;color:var(--muted)">${f(h.cost)}</td>
-          <td data-field="price" style="text-align:right;color:var(--muted);font-size:10px">${priceStr}</td>
+          <td contenteditable="true" data-field="price" onblur="onPriceEdit(this,${idx},'portfolio')" title="${h.manualPrice>0?'手動覆蓋，輸入 0 可還原自動報價':'點擊可手動輸入今日股價'}" style="text-align:right;font-size:10px;cursor:text;color:${h.manualPrice>0?'var(--yellow)':'var(--muted)'}">${priceStr}</td>
           <td data-field="valueTwd" style="text-align:right;font-weight:700">${f(h.value_twd)}</td>
           <td data-field="pnl" style="text-align:right" class="${clr(h.unrealized_pnl)}">${h.unrealized_pnl>=0?'+':''}${f(h.unrealized_pnl)}</td>
           <td data-field="ret" style="text-align:right;font-weight:700" class="${clr(h.return_pct)}">${h.return_pct>=0?'+':''}${fp(h.return_pct)}</td>
@@ -1164,6 +1171,32 @@ function onNumEdit(cell,idx,type,field){
   if(type==='portfolio') renderSummaryTab();
 }
 
+function onPriceEdit(cell,idx,type){
+  const isFx=cell.closest('tr').dataset.cur==='USD';
+  const raw=cell.textContent.replace(/[$,]/g,'');
+  const newPrice=parseFloat(raw)||0;
+  const list=type==='portfolio'?LOCAL.portfolio:LOCAL.loan;
+  list[idx].manualPrice=newPrice>0?newPrice:null;
+  cell.style.color=newPrice>0?'var(--yellow)':'var(--muted)';
+  savePf();
+  const usd=D.exchange_rate||31.5;
+  const pm=buildPriceMap();
+  const enr=enrichItem(list[idx],pm,usd);
+  const priceDisplay=isFx?`$${(enr.price||0).toFixed(2)}`:(enr.price||0).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2});
+  cell.textContent=priceDisplay;
+  const row=cell.closest('tr');
+  if(!row) return;
+  const vtd=row.querySelector('[data-field="valueTwd"]');
+  if(vtd) vtd.textContent=f(enr.value_twd);
+  const pnlEl=row.querySelector('[data-field="pnl"]');
+  if(pnlEl){pnlEl.textContent=(enr.unrealized_pnl>=0?'+':'')+f(enr.unrealized_pnl);pnlEl.className=clr(enr.unrealized_pnl);}
+  const retEl=row.querySelector('[data-field="ret"]');
+  if(retEl){retEl.textContent=(enr.return_pct>=0?'+':'')+fp(enr.return_pct);retEl.className='font-weight:700 '+clr(enr.return_pct);}
+  const dot=row.querySelector('.ret-dot');
+  if(dot) dot.style.background=retColor(enr.return_pct);
+  if(type==='portfolio') renderSummaryTab();
+}
+
 function deleteItem(idx,type){
   if(!confirm('確定刪除這筆持股？')) return;
   if(type==='portfolio') LOCAL.portfolio.splice(idx,1);
@@ -1237,19 +1270,31 @@ function renderDividends(){
   const today=new Date().toISOString().slice(0,10);
   const upEl=G('div-upcoming');
   upEl.innerHTML='';
-  (div.upcoming||[]).forEach(d=>{
-    const amt=d.amount||(d.perShare*d.shares);
+  // 合併 data.json 的即將除息 + 手動未來股利
+  const allUpcoming=[...(div.upcoming||[])];
+  (LOCAL.manualDividends||[]).filter(d=>d.exDate>=today).forEach(d=>allUpcoming.push({...d,isManual:true}));
+  allUpcoming.forEach(d=>{
+    // 從持倉抓最新張數（優先比對代碼，再比對名稱）
+    const localH=(LOCAL.portfolio||[]).find(p=>{
+      if(d.tick&&p.tick) return p.tick.replace('.TW','')===d.tick.replace('.TW','');
+      return p.name&&d.stock&&(p.name.includes(d.stock)||d.stock.includes(p.name));
+    });
+    const useShares=d.shares||0||(localH?localH.shares:0)||0;
+    const lots=useShares>=1000?Math.floor(useShares/1000):useShares;
+    const lotLabel=useShares>=1000?`${lots} 張`:(useShares>0?`${useShares} 股`:'—');
+    const amt=d.amount>0?d.amount:(d.perShare&&useShares?d.perShare*useShares:0);
     const days=d.exDate?Math.round((new Date(d.exDate)-new Date(today))/86400000):null;
     const daysTag=days!==null?`<span class="div-days">${days===0?'今日':days+' 天後'}</span>`:'';
+    const manualTag=d.isManual?`<span style="font-size:9px;color:var(--yellow);margin-left:4px">手動</span>`:'';
     upEl.innerHTML+=`
       <div class="div-card">
         <div style="flex:1">
-          <div class="div-stock">${d.stock}</div>
+          <div class="div-stock">${d.stock}${manualTag}</div>
           <div class="div-date">除息 ${d.exDate}${daysTag}${d.payDate?' → 入帳 '+d.payDate:''}</div>
         </div>
         <div style="text-align:right">
-          <div class="div-amt-val">+${f(amt)}</div>
-          <div class="div-per-sh">每股 ${d.perShare}</div>
+          <div class="div-amt-val">${amt>0?'+'+f(amt):'—'}</div>
+          <div class="div-per-sh">每股 ${d.perShare||0} × ${lotLabel}</div>
         </div>
       </div>`;
   });
@@ -1286,12 +1331,96 @@ function renderDividends(){
       <div class="acc-body" id="acc-body-${i}">${items}</div>`;
     accEl.appendChild(divEl);
   });
+  renderManualDivs();
 }
 
 function toggleAcc(i){
   const body=G(`acc-body-${i}`), arrow=G(`acc-arrow-${i}`);
   const open=body.classList.toggle('open');
   if(arrow) arrow.style.transform=open?'rotate(180deg)':'';
+}
+
+/* ══════════════════════════════════════
+   手動股利管理
+══════════════════════════════════════ */
+function showDivForm(){
+  const el=G('div-add-form');
+  if(!el) return;
+  if(el.style.display!=='none'){el.style.display='none';return;}
+  el.style.display='block';
+  el.innerHTML=`
+    <div class="add-form" style="margin-top:4px">
+      <div class="add-form-grid">
+        <div><label>股票名稱</label><input id="df-stock" placeholder="例：中華電 或 00878"/></div>
+        <div><label>除息日</label><input id="df-exdate" type="date"/></div>
+        <div><label>入帳日（選填）</label><input id="df-paydate" type="date"/></div>
+        <div><label>每股配息（元）</label><input id="df-pershare" type="number" step="0.001" placeholder="0"/></div>
+        <div><label>張數（1張=1000股，填0自動抓持倉）</label><input id="df-lots" type="number" placeholder="0"/></div>
+        <div><label>直接填總金額（選填，覆蓋計算）</label><input id="df-amount" type="number" placeholder="留空則自動計算"/></div>
+      </div>
+      <div class="add-form-btns">
+        <button class="btn-confirm" onclick="submitDivForm()">確認新增</button>
+        <button class="btn-cancel" onclick="G('div-add-form').style.display='none'">取消</button>
+      </div>
+    </div>`;
+}
+
+function submitDivForm(){
+  const stock=(G('df-stock')||{}).value?.trim();
+  const exDate=(G('df-exdate')||{}).value?.trim();
+  const payDate=(G('df-paydate')||{}).value?.trim()||'';
+  const perShare=parseFloat((G('df-pershare')||{}).value)||0;
+  const lots=parseFloat((G('df-lots')||{}).value)||0;
+  const manualAmt=parseFloat((G('df-amount')||{}).value)||0;
+  if(!stock){alert('請填寫股票名稱');return;}
+  if(!exDate){alert('請填寫除息日');return;}
+  const shares=lots>0?lots*1000:0;
+  if(!LOCAL.manualDividends) LOCAL.manualDividends=[];
+  LOCAL.manualDividends.push({stock,exDate,payDate,perShare,shares,lots,amount:manualAmt,isManual:true});
+  savePf();
+  G('div-add-form').style.display='none';
+  renderDividends();
+}
+
+function deleteDivEntry(idx){
+  if(!confirm('確定刪除這筆手動股利？'))return;
+  (LOCAL.manualDividends||[]).splice(idx,1);
+  savePf();
+  renderDividends();
+}
+
+function renderManualDivs(){
+  const el=G('div-manual-list');
+  if(!el) return;
+  const manuals=(LOCAL.manualDividends||[]);
+  if(!manuals.length){
+    el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:4px 0">尚無手動紀錄</div>';
+    return;
+  }
+  el.innerHTML='';
+  manuals.forEach((d,i)=>{
+    const localH=(LOCAL.portfolio||[]).find(p=>p.name&&d.stock&&(p.name.includes(d.stock)||d.stock.includes(p.name)));
+    const useShares=d.shares||0||(localH?localH.shares:0)||0;
+    const lots=d.lots||Math.floor(useShares/1000)||useShares;
+    const lotLabel=useShares>=1000?`${Math.floor(useShares/1000)} 張`:(useShares>0?`${useShares} 股`:'—');
+    const amt=d.amount>0?d.amount:(d.perShare&&useShares?d.perShare*useShares:0);
+    const today=new Date().toISOString().slice(0,10);
+    const isPast=d.exDate<today;
+    el.innerHTML+=`
+      <div class="div-card" style="${isPast?'opacity:.6':''}">
+        <div style="flex:1">
+          <div class="div-stock">${d.stock} <span style="font-size:9px;color:var(--yellow)">手動</span>${isPast?'<span style="font-size:9px;color:var(--muted);margin-left:4px">已過</span>':''}</div>
+          <div class="div-date">除息 ${d.exDate}${d.payDate?' → 入帳 '+d.payDate:''}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="text-align:right">
+            <div class="div-amt-val">${amt>0?'+'+f(amt):'—'}</div>
+            <div class="div-per-sh">每股 ${d.perShare||0} × ${lotLabel}</div>
+          </div>
+          <button class="del-btn" onclick="deleteDivEntry(${i})">✕</button>
+        </div>
+      </div>`;
+  });
 }
 
 /* ══════════════════════════════════════
