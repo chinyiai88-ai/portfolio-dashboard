@@ -37,7 +37,7 @@ def fetch_prices_yfinance(symbols: list[str]) -> dict[str, float]:
         return prices
     try:
         raw = yf.download(
-            tickers=symbols, period="5d", interval="1d",
+            tickers=symbols, period="1mo", interval="1d",
             progress=False, auto_adjust=True, threads=True,
         )
         close = raw["Close"] if "Close" in raw else raw
@@ -292,6 +292,25 @@ def main():
         except Exception as e:
             logs["twse_backup"] = f"error: {e}"
 
+    # 個別 fallback：針對仍然缺漏的 .TW ticker（如債券 ETF）逐一抓取
+    still_missing = [t for t in tw_ticks if t not in prices]
+    if still_missing:
+        recovered = []
+        for sym in still_missing:
+            try:
+                hist = yf.Ticker(sym).history(period="1mo")
+                if not hist.empty:
+                    series = hist["Close"].dropna()
+                    if not series.empty:
+                        val = float(series.iloc[-1])
+                        if val > 0:
+                            prices[sym] = val
+                            recovered.append(sym)
+            except Exception:
+                pass
+        if recovered:
+            logs["yf_individual"] = f"ok ({','.join(recovered)})"
+
     usd_twd = prices.get("USDTWD=X", 31.5)
     logs["usd_twd"] = round(usd_twd, 4)
 
@@ -396,6 +415,9 @@ def main():
             else:
                 stock_map[sid]["shares"] = max(stock_map[sid]["shares"], h["shares"])
 
+    static_upcoming = cfg.get("dividends_upcoming", [])
+    static_ytd      = cfg.get("dividends_ytd", [])
+
     div_upcoming, div_ytd = [], []
     if FINMIND_TOKEN:
         try:
@@ -403,12 +425,25 @@ def main():
             logs["finmind"] = f"ok (upcoming:{len(div_upcoming)}, ytd:{len(div_ytd)})"
         except Exception as e:
             logs["finmind"] = f"error: {e}"
-            div_upcoming = cfg.get("dividends_upcoming", [])
-            div_ytd      = cfg.get("dividends_ytd", [])
     else:
         logs["finmind"] = "no token — using portfolio.json cache"
-        div_upcoming = cfg.get("dividends_upcoming", [])
-        div_ytd      = cfg.get("dividends_ytd", [])
+
+    # 永遠合併靜態資料（補 FinMind 沒抓到的債券 ETF 股息）
+    def _div_key(d: dict) -> str:
+        return (d.get("stock", "") or d.get("stock_id", "")) + (d.get("exDate") or d.get("date", ""))
+
+    def _merge_divs(finmind_list: list, static_list: list) -> list:
+        seen = {_div_key(d) for d in finmind_list}
+        result = list(finmind_list)
+        for d in static_list:
+            if _div_key(d) not in seen:
+                result.append(d)
+        return result
+
+    div_upcoming = _merge_divs(div_upcoming, static_upcoming)
+    div_ytd      = _merge_divs(div_ytd, static_ytd)
+    div_upcoming.sort(key=lambda x: x.get("exDate", ""))
+    div_ytd.sort(key=lambda x: x.get("exDate") or x.get("date", ""))
 
     ytd_total       = sum(d.get("amount", d.get("perShare", 0) * d.get("shares", 0)) for d in div_ytd)
     annual_estimate = ytd_total * (12 / max(datetime.now(TZ_TW).month, 1))
@@ -478,7 +513,7 @@ def main():
     }
 
     with open("data.json", "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, indent=2)
+        json.dump(output, f, ensure_ascii=True, indent=2)
 
     print(f"[OK] data.json updated at {output['updated_at']}")
     print(f"     NAV={nav:,.0f}  prices={len(prices)}  errors={[k for k,v in logs.items() if 'error' in str(v)]}")

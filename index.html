@@ -241,31 +241,31 @@
       </div>
     </div>
 
-    <!-- Row 2: 投組總值 + 未損益 -->
+    <!-- Row 2: 投組總值 + 總現金餘額（含佔比） -->
     <div class="kpi-grid">
       <div class="kpi-box">
         <div class="kpi-label">💼 投資組合總值</div>
         <div class="kpi-val" id="s-port">—</div>
-        <div class="kpi-note">不含類現金 / 不含借款部位</div>
+        <div class="kpi-note" id="s-port-pct">不含類現金 / 不含借款部位</div>
       </div>
+      <div class="kpi-box">
+        <div class="kpi-label">💰 總現金餘額</div>
+        <div class="kpi-val pos" id="s-totalcash">—</div>
+        <div class="kpi-note" id="s-cash-pct">銀行現金＋類現金 ETF</div>
+      </div>
+    </div>
+
+    <!-- Row 3: 未損益 + 銀行現金 -->
+    <div class="kpi-grid">
       <div class="kpi-box">
         <div class="kpi-label">📈 未實現損益</div>
         <div class="kpi-val" id="s-unreal">—</div>
         <div class="kpi-note">投組現值 − 投組成本</div>
       </div>
-    </div>
-
-    <!-- Row 3: 銀行現金 | 總現金餘額 -->
-    <div class="kpi-grid">
       <div class="kpi-box">
         <div class="kpi-label">🏦 銀行現金 <span style="font-size:9px;color:var(--blue)">✎</span></div>
         <div class="kpi-val"><span class="editable" id="cash-input" contenteditable="true" inputmode="numeric">0</span></div>
         <div class="kpi-note">手動填入</div>
-      </div>
-      <div class="kpi-box">
-        <div class="kpi-label">💰 總現金餘額</div>
-        <div class="kpi-val pos" id="s-totalcash">—</div>
-        <div class="kpi-note">銀行現金＋類現金 ETF</div>
       </div>
     </div>
 
@@ -518,8 +518,10 @@ function buildPriceMap(){
 function enrichItem(item, pm, usdTwd){
   const price = (item.tick && pm[item.tick]) ?? item.manualPrice ?? 0;
   const sh    = +item.shares||0, ps=+item.perSh||0;
-  const cost  = sh*ps;
-  const vTwd  = item.cur==='USD' ? sh*price*(usdTwd||31.5) : sh*price;
+  const fx    = usdTwd||31.5;
+  // 優先使用儲存的成本（USD持股成本已是TWD），否則即時計算
+  const cost  = item.cost != null ? +item.cost : (item.cur==='USD' ? sh*ps*fx : sh*ps);
+  const vTwd  = item.cur==='USD' ? sh*price*fx : sh*price;
   const pnl   = vTwd-cost;
   const ret   = cost>0 ? pnl/cost*100 : 0;
   return {...item, price, cost, value_twd:vTwd, unrealized_pnl:pnl, return_pct:ret};
@@ -559,16 +561,46 @@ function computeRebal(enriched, nav){
    localStorage
 ══════════════════════════════════════ */
 function initLocal(){
+  const fx = D.exchange_rate||31.5;
+  const calcCost = h => h.cur==='USD' ? h.shares*h.perSh*fx : h.shares*h.perSh;
+
   const raw = localStorage.getItem('pf_data');
-  if(raw){ try{ LOCAL=JSON.parse(raw); return; }catch(e){} }
+  if(raw){
+    try{
+      LOCAL=JSON.parse(raw);
+      // Migration：舊版 LOCAL 沒有 cost，從 data.json 補值
+      let migrated=false;
+      const pfMap={}, lnMap={};
+      (D.portfolio||[]).forEach(h=>{ pfMap[h.tick||h.name]=h; });
+      (D.loan||[]).forEach(h=>{ lnMap[h.tick||h.name]=h; });
+      (LOCAL.portfolio||[]).forEach((h,i)=>{
+        if(h.cost==null){
+          const orig=pfMap[h.tick||h.name];
+          LOCAL.portfolio[i].cost = orig?.cost ?? calcCost(h);
+          migrated=true;
+        }
+      });
+      (LOCAL.loan||[]).forEach((h,i)=>{
+        if(h.cost==null){
+          const orig=lnMap[h.tick||h.name];
+          LOCAL.loan[i].cost = orig?.cost ?? calcCost(h);
+          migrated=true;
+        }
+      });
+      if(migrated) savePf();
+      return;
+    }catch(e){}
+  }
   LOCAL={
     portfolio:(D.portfolio||[]).map(h=>({
       cat:h.cat,name:h.name,tick:h.tick||'',
-      shares:h.shares,perSh:h.perSh,cur:h.cur||'TWD',note:h.note||''
+      shares:h.shares,perSh:h.perSh,cost:h.cost??calcCost(h),
+      cur:h.cur||'TWD',note:h.note||''
     })),
     loan:(D.loan||[]).map(h=>({
       name:h.name,tick:h.tick||'',shares:h.shares,
-      perSh:h.perSh,cur:h.cur||'TWD',pledgeAmt:h.pledgeAmt||0,note:h.note||''
+      perSh:h.perSh,cost:h.cost??calcCost(h),
+      cur:h.cur||'TWD',pledgeAmt:h.pledgeAmt||0,note:h.note||''
     })),
     bankCash:0,
     stockLoan:D.summary?.stock_loan||0,
@@ -766,6 +798,13 @@ function renderSummaryContent(sum, rebal){
   G('s-nav').textContent     = f(sum.nav);
   G('s-fx').textContent      = (D.exchange_rate||31.5).toFixed(2);
   G('s-totalcash').textContent=f(sum.cash);
+
+  // 投組 vs 現金佔比
+  const _ppc = sum.pTotal + sum.cash;
+  if(_ppc > 0){
+    G('s-port-pct').textContent = `占(投組+現金) ${(sum.pTotal/_ppc*100).toFixed(1)}%`;
+    G('s-cash-pct').textContent = `占(投組+現金) ${(sum.cash/_ppc*100).toFixed(1)}%`;
+  }
   G('s-loanpnl').textContent = (sum.lPnl>=0?'+':'')+f(sum.lPnl);
   G('s-loanpnl').className   = 'kpi-val '+clr(sum.lPnl);
   G('s-ret').textContent     = (sum.pRet>=0?'+':'')+fp(sum.pRet);
@@ -969,7 +1008,7 @@ function renderPortfolioSection(enriched, sum){
       <div class="cat-hdr">
         <span class="cat-dot" style="background:${cc}"></span>
         <span style="color:${cc};text-shadow:0 0 10px ${cc}80">${cat}</span>
-        <span class="cat-stats">${f(catVal)} <span class="${clr(catRet)}">${catRet>=0?'+':''}${fp(catRet)}</span></span>
+        <span class="cat-stats" style="font-size:10px">成本 ${f(catCost)}${items[0]&&items[0].cur==='USD'?' (TWD)':''} ｜ 現值 ${f(catVal)} <span class="${clr(catRet)}">${catRet>=0?'+':''}${fp(catRet)}</span></span>
       </div>
       <div class="scroll-x">
         <table class="port-table">
@@ -999,8 +1038,24 @@ function renderPortfolioSection(enriched, sum){
 function renderLoanSection(loanEnr){
   const el=G('loan-section');
   el.innerHTML='';
+  const stockLoan    = LOCAL.stockLoan || 0;
+  const loanCostSum  = loanEnr.reduce((a,h)=>a+h.cost,0);
+  const remaining    = stockLoan - loanCostSum;
+  const summaryHtml  = `
+    <div class="kpi-grid" style="margin-bottom:8px">
+      <div class="kpi-box">
+        <div class="kpi-label">📉 股票貸款金額</div>
+        <div class="kpi-val">${f(stockLoan)}</div>
+        <div class="kpi-note">從總覽頁手動填入</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">💰 剩餘貸款金額</div>
+        <div class="kpi-val ${clr(remaining)}">${remaining>=0?'+':''}${f(remaining)}</div>
+        <div class="kpi-note">貸款 − 借款部位成本</div>
+      </div>
+    </div>`;
   if(!loanEnr.length){
-    el.innerHTML='<div style="color:var(--muted);font-size:12px;padding:4px 0">無借款部位</div>';
+    el.innerHTML=summaryHtml+'<div style="color:var(--muted);font-size:12px;padding:4px 0">無借款部位</div>';
     return;
   }
   let rows='';
@@ -1023,7 +1078,7 @@ function renderLoanSection(loanEnr){
         <td><button class="del-btn" onclick="deleteItem(${i},'loan')">✕</button></td>
       </tr>`;
   });
-  el.innerHTML=`
+  el.innerHTML=summaryHtml+`
     <div class="scroll-x">
       <table class="port-table">
         <thead><tr>
@@ -1077,8 +1132,13 @@ function onFieldEdit(cell,idx,type){
 
 function onNumEdit(cell,idx,type,field){
   const val=parseFloat(cell.textContent.replace(/,/g,''))||0;
-  if(type==='portfolio') LOCAL.portfolio[idx][field]=val;
-  else LOCAL.loan[idx][field]=val;
+  const list=type==='portfolio'?LOCAL.portfolio:LOCAL.loan;
+  list[idx][field]=val;
+  // 編輯股數或每股成本時同步更新總成本
+  if(field==='shares'||field==='perSh'){
+    const h=list[idx], fx=D.exchange_rate||31.5;
+    list[idx].cost = h.cur==='USD' ? h.shares*h.perSh*fx : h.shares*h.perSh;
+  }
   savePf();
   // 更新同一列的計算欄位
   const usd=D.exchange_rate||31.5;
@@ -1147,12 +1207,14 @@ function submitAdd(type, defaultCat){
   const cur    = (G('nf-cur')||{}).value||'TWD';
   const note   = (G('nf-note')||{}).value?.trim()||'';
   if(!name){ alert('請填寫名稱'); return; }
+  const fx   = D.exchange_rate||31.5;
+  const cost = cur==='USD' ? shares*perSh*fx : shares*perSh;
   if(type==='portfolio'){
     const cat=(G('nf-cat')||{}).value||defaultCat;
-    LOCAL.portfolio.push({cat,name,tick,shares,perSh,cur,note});
+    LOCAL.portfolio.push({cat,name,tick,shares,perSh,cost,cur,note});
   } else {
     const pledge=parseFloat((G('nf-pledge')||{}).value)||0;
-    LOCAL.loan.push({name,tick,shares,perSh,cur,pledgeAmt:pledge,note});
+    LOCAL.loan.push({name,tick,shares,perSh,cost,cur,pledgeAmt:pledge,note});
   }
   savePf(); renderAll();
 }
