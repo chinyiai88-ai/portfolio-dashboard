@@ -720,8 +720,8 @@ async function syncToGitHub(){
     // Step 3: PUT updated file (handle UTF-8 correctly)
     const jsonStr = JSON.stringify(merged, null, 2);
     const bytes   = new TextEncoder().encode(jsonStr);
-    const binStr  = Array.from(bytes, b => String.fromCharCode(b)).join('');
-    const content = btoa(binStr);
+    const uploadBinStr = Array.from(bytes, b => String.fromCharCode(b)).join('');
+    const content = btoa(uploadBinStr);
 
     const putResp = await fetch(`${GH_API}/contents/portfolio.json`, {
       method: 'PUT',
