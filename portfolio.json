@@ -1,6 +1,6 @@
 {
-  "available_cash": 1323622,
-  "stock_loan": 1026000,
+  "available_cash": 1539002,
+  "stock_loan": 1020268,
   "thresholds": {
     "high": 30,
     "midH": 15,
@@ -347,14 +347,13 @@
     {
       "cat": "成長-美股個股",
       "name": "STCE 虛擬幣",
-      "tick": "",
+      "tick": "Stce",
       "shares": 10,
       "perSh": 68.53,
+      "cost": 685.3,
       "cur": "USD",
       "note": "手動",
-      "cost": 685.3,
-      "price": 68.53,
-      "manualPrice": 73.42
+      "price": 68.53
     },
     {
       "cat": "波段-個股",
@@ -476,18 +475,6 @@
       "price": 30.77,
       "cur": "TWD",
       "note": "貸款預備池"
-    },
-    {
-      "cat": "波段-個股",
-      "name": "聖育",
-      "tick": "7868.TW",
-      "shares": 2000,
-      "perSh": 92.5,
-      "cost": 185000,
-      "cur": "TWD",
-      "note": "",
-      "manualPrice": 89.1,
-      "price": 92.5
     }
   ],
   "loan": [
