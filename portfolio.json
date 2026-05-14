@@ -1,5 +1,5 @@
 {
-  "available_cash": 1508622,
+  "available_cash": 1323622,
   "stock_loan": 1026000,
   "thresholds": {
     "high": 30,
@@ -476,6 +476,18 @@
       "price": 30.77,
       "cur": "TWD",
       "note": "貸款預備池"
+    },
+    {
+      "cat": "波段-個股",
+      "name": "聖育",
+      "tick": "7868.TW",
+      "shares": 2000,
+      "perSh": 92.5,
+      "cost": 185000,
+      "cur": "TWD",
+      "note": "",
+      "manualPrice": 89.1,
+      "price": 92.5
     }
   ],
   "loan": [
@@ -752,5 +764,5 @@
       "est": true
     }
   ],
-  "_synced_at": "2026-05-14T10:20:26.640Z"
+  "_synced_at": "2026-05-14T11:20:46.390Z"
 }
