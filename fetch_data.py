@@ -461,6 +461,9 @@ def main():
     static_upcoming = cfg.get("dividends_upcoming", [])
     static_ytd      = cfg.get("dividends_ytd", [])
 
+    today    = today_str()
+    yr_start = year_start_str()
+
     # 動態修正靜態 YTD 的已入帳狀態（依實際日期判斷，不寫死）
     for d in static_ytd:
         pay = d.get("payDate") or d.get("date") or ""
