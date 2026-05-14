@@ -1344,10 +1344,14 @@ function renderDividends(){
       if(d.tick&&p.tick) return p.tick.replace('.TW','')===d.tick.replace('.TW','');
       return p.name&&d.stock&&(p.name.includes(d.stock)||d.stock.includes(p.name));
     });
-    const useShares=d.shares||0||(localH?localH.shares:0)||0;
+    const useShares=Number(d.shares)||0||(localH?Number(localH.shares):0)||0;
     const lots=useShares>=1000?Math.floor(useShares/1000):useShares;
-    const lotLabel=useShares>=1000?`${lots} 張`:(useShares>0?`${useShares} 股`:'—');
-    const amt=d.amount>0?d.amount:(d.perShare&&useShares?d.perShare*useShares:0);
+    const perSh=Number(d.perShare)||0;
+    const amt=d.amount>0?d.amount:(perSh&&useShares?perSh*useShares:0);
+    // 顯示標籤：用實際股數（張數 × 1000）
+    const sharesLabel=useShares>=1000
+      ?`${lots} 張（${useShares.toLocaleString()} 股）`
+      :(useShares>0?`${useShares} 股`:'—');
     const days=d.exDate?Math.round((new Date(d.exDate)-new Date(today))/86400000):null;
     const daysTag=days!==null?`<span class="div-days">${days===0?'今日':days+' 天後'}</span>`:'';
     const manualTag=d.isManual?`<span style="font-size:9px;color:var(--yellow);margin-left:4px">手動</span>`:'';
@@ -1359,7 +1363,7 @@ function renderDividends(){
         </div>
         <div style="text-align:right">
           <div class="div-amt-val">${amt>0?'+'+f(amt):'—'}</div>
-          <div class="div-per-sh">每股 ${d.perShare||0} × ${lotLabel}</div>
+          <div class="div-per-sh">每股 ${perSh} × ${sharesLabel}</div>
         </div>
       </div>`;
   });
@@ -1369,25 +1373,33 @@ function renderDividends(){
   accEl.innerHTML='';
   const groups={};
   (div.ytd||[]).forEach(d=>{
-    const amt=d.amount||(d.perShare*d.shares);
+    // 確保數值正確：避免 undefined/null 導致計算錯誤
+    const ps=Number(d.perShare)||0;
+    const sh=Number(d.shares)||0;
+    const amt=(d.amount>0)?Number(d.amount):(ps*sh);
+    // 確保 exDate 有值（靜態資料可能只有 date）
+    const exKey=(d.exDate||d.date||'').slice(0,10);
     if(!groups[d.stock]) groups[d.stock]={total:0,items:[]};
     groups[d.stock].total+=amt;
-    groups[d.stock].items.push({...d,amt});
+    groups[d.stock].items.push({...d, amt, _exKey:exKey});
   });
 
   Object.entries(groups).forEach(([stock,data],i)=>{
     const items=data.items.map(d=>{
-      const key=d.stock+'__'+d.exDate;
+      // 用 _exKey 作為 override key（保證不含 undefined）
+      const key=d.stock+'__'+d._exKey;
       const ov=(LOCAL.dividendOverrides||{})[key]||{};
       const dispDate=ov.is_manual_date?ov.date:(d.date||d.exDate||'—');
-      const dispAmt=ov.is_manual_amount?ov.amount:d.amt;
+      // 若無手動覆蓋，直接用 amt（已正確計算）
+      const dispAmt=ov.is_manual_amount?Number(ov.amount||0):d.amt;
       const dateLineCss=ov.is_manual_date?'var(--yellow)':'rgba(255,255,255,.15)';
       const amtLineCss=ov.is_manual_amount?'var(--yellow)':'rgba(255,255,255,.15)';
+      const safeStock=d.stock.replace(/'/g,"\\'");
       return `<div class="acc-row">
-        <span contenteditable="true" onblur="onDivDateEdit(this,'${d.stock.replace(/'/g,"\\'")}','${d.exDate}')"
+        <span contenteditable="true" onblur="onDivDateEdit(this,'${safeStock}','${d._exKey}')"
           style="flex:1;cursor:text;outline:none;border-bottom:1px dashed ${dateLineCss};min-width:70px">${dispDate}</span>
         <span style="color:var(--muted)">${d.note||''}</span>
-        <span contenteditable="true" class="pos" onblur="onDivAmtEdit(this,'${d.stock.replace(/'/g,"\\'")}','${d.exDate}')"
+        <span contenteditable="true" class="pos" onblur="onDivAmtEdit(this,'${safeStock}','${d._exKey}')"
           style="margin-left:auto;cursor:text;outline:none;border-bottom:1px dashed ${amtLineCss};min-width:60px">+${f(dispAmt)}</span>
         <span style="margin-left:8px">${d.received?'✅':'⏳'}</span>
       </div>`;
@@ -1628,9 +1640,10 @@ async function loadData(){
 /* ══════════════════════════════════════
    股利手動編輯（is_manual_date / is_manual_amount）
 ══════════════════════════════════════ */
-function onDivDateEdit(el, stock, exDate){
+function onDivDateEdit(el, stock, exKey){
   const newDate = el.textContent.trim();
-  const key = stock+'__'+exDate;
+  if(!newDate) return;
+  const key = stock+'__'+exKey;
   if(!LOCAL.dividendOverrides) LOCAL.dividendOverrides={};
   if(!LOCAL.dividendOverrides[key]) LOCAL.dividendOverrides[key]={};
   LOCAL.dividendOverrides[key].date = newDate;
@@ -1639,16 +1652,17 @@ function onDivDateEdit(el, stock, exDate){
   savePf();
 }
 
-function onDivAmtEdit(el, stock, exDate){
+function onDivAmtEdit(el, stock, exKey){
   const raw = el.textContent.replace(/[+,\s]/g,'');
-  const amt = parseFloat(raw)||0;
-  const key = stock+'__'+exDate;
+  const amt = parseFloat(raw);
+  if(isNaN(amt)) return;
+  const key = stock+'__'+exKey;
   if(!LOCAL.dividendOverrides) LOCAL.dividendOverrides={};
   if(!LOCAL.dividendOverrides[key]) LOCAL.dividendOverrides[key]={};
   LOCAL.dividendOverrides[key].amount = amt;
   LOCAL.dividendOverrides[key].is_manual_amount = true;
   el.style.borderBottomColor = 'var(--yellow)';
-  el.textContent = '+'+f(amt);
+  el.textContent = '+'+(amt>0?f(amt):'0');
   savePf();
 }
 

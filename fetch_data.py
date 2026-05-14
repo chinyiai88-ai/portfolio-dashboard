@@ -464,10 +464,18 @@ def main():
     today    = today_str()
     yr_start = year_start_str()
 
-    # 動態修正靜態 YTD 的已入帳狀態（依實際日期判斷，不寫死）
+    # 動態修正靜態 YTD 的已入帳狀態，並補齊 amount / exDate 欄位
     for d in static_ytd:
         pay = d.get("payDate") or d.get("date") or ""
         d["received"] = bool(pay and pay <= today)
+        # 補算 amount（靜態資料未預先計算）
+        if not d.get("amount"):
+            ps = float(d.get("perShare") or 0)
+            sh = float(d.get("shares") or 0)
+            d["amount"] = round(ps * sh, 2)
+        # 補 exDate = date（前端 key 生成需要 exDate）
+        if not d.get("exDate") and d.get("date"):
+            d["exDate"] = d["date"]
 
     # 過濾已過期的靜態 upcoming（避免舊日期殘留在除息預告區塊）
     static_upcoming_valid = [d for d in static_upcoming if d.get("exDate", "") >= today]
