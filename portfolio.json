@@ -1,6 +1,6 @@
 {
-  "available_cash": 0,
-  "stock_loan": 0,
+  "available_cash": 1508622,
+  "stock_loan": 1026000,
   "thresholds": {
     "high": 30,
     "midH": 15,
@@ -175,7 +175,8 @@
       "cur": "TWD",
       "note": "每月28付3000",
       "cost": 28982.2,
-      "price": 92.3
+      "price": 92.3,
+      "manualPrice": 121.03
     },
     {
       "cat": "成長-美股ETF",
@@ -252,7 +253,8 @@
       "cur": "TWD",
       "note": "每月3號",
       "cost": 245006.28900000002,
-      "price": 33.13
+      "price": 33.13,
+      "manualPrice": 29.59
     },
     {
       "cat": "成長-國外基金",
@@ -351,7 +353,8 @@
       "cur": "USD",
       "note": "手動",
       "cost": 685.3,
-      "price": 68.53
+      "price": 68.53,
+      "manualPrice": 73.42
     },
     {
       "cat": "波段-個股",
@@ -748,5 +751,6 @@
       "received": true,
       "est": true
     }
-  ]
+  ],
+  "_synced_at": "2026-05-14T10:20:26.640Z"
 }
