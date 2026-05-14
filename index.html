@@ -341,10 +341,13 @@
 
   <!-- ════ Tab C：股利 ════ -->
   <div class="tab-pane fade" id="tab-dividends">
-    <div class="kpi-grid" style="grid-template-columns:1fr 1fr 1fr;margin-top:2px">
-      <div class="kpi-box"><div class="kpi-label">📅 未來30天</div><div class="kpi-val pos" id="div-30d">—</div></div>
-      <div class="kpi-box"><div class="kpi-label">💰 今年已領</div><div class="kpi-val pos" id="div-ytd-kpi">—</div></div>
+    <div class="kpi-grid" style="margin-top:2px">
+      <div class="kpi-box"><div class="kpi-label">✅ 今年已入帳</div><div class="kpi-val pos" id="div-ytd-kpi">—</div><div class="kpi-note" id="div-ytd-pending-note">待入帳：—</div></div>
+      <div class="kpi-box"><div class="kpi-label">📅 未來30天預估</div><div class="kpi-val pos" id="div-30d">—</div></div>
+    </div>
+    <div class="kpi-grid" style="margin-bottom:2px">
       <div class="kpi-box"><div class="kpi-label">📈 年殖利率</div><div class="kpi-val pos" id="div-yield">—</div></div>
+      <div class="kpi-box"><div class="kpi-label">🎯 全年預估</div><div class="kpi-val pos" id="div-annual">—</div></div>
     </div>
 
     <div class="sec-title">📅 近期除息預告</div>
@@ -352,11 +355,6 @@
 
     <div class="sec-title">📊 今年累計股利（點擊展開各期）</div>
     <div id="div-ytd-acc"></div>
-
-    <div class="kpi-box" style="margin-top:10px">
-      <div class="kpi-label">🎯 全年股利預估（依 YTD 推算）</div>
-      <div class="kpi-val pos" id="div-annual">—</div>
-    </div>
 
     <div class="sec-title">✏️ 手動補充股利</div>
     <div id="div-manual-list"></div>
@@ -366,6 +364,11 @@
 
   <!-- ════ Tab D：系統 ════ -->
   <div class="tab-pane fade" id="tab-logs">
+    <div style="display:flex;gap:8px;margin:8px 0 4px">
+      <button onclick="quickSyncGitHub()" style="flex:1;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px;font-size:12px;font-weight:700;cursor:pointer">💾 儲存到 GitHub</button>
+      <button onclick="manualRefreshData()" style="flex:1;background:rgba(255,255,255,.07);color:var(--text);border:none;border-radius:10px;padding:11px;font-size:12px;cursor:pointer">🔄 手動更新報價</button>
+    </div>
+    <div id="quick-act-status" style="font-size:11px;min-height:18px;margin-bottom:6px;text-align:center;color:var(--muted)"></div>
     <div class="card-dark" style="margin-top:2px">
       <div class="kpi-label">🕐 最後成功更新</div>
       <div id="log-updated" style="font-size:15px;font-weight:700">—</div>
@@ -721,6 +724,8 @@ async function syncToGitHub(){
     // Cash fields
     merged.available_cash = LOCAL.bankCash || 0;
     merged.stock_loan     = LOCAL.stockLoan || 0;
+    // 嵌入同步時間戳，供其他裝置偵測版本差異
+    merged._synced_at = new Date().toISOString();
 
     setSt('上傳到 GitHub…', null);
 
@@ -751,6 +756,9 @@ async function syncToGitHub(){
     } else {
       setSt('✅ portfolio.json 已同步，但觸發 Actions 失敗（需 Actions:write 權限）', true);
     }
+    // 記錄同步時間戳到本機
+    LOCAL.last_synced_at = merged._synced_at;
+    savePf();
 
   } catch(err){
     setSt(`❌ 同步失敗：${err.message}`, false);
@@ -1262,8 +1270,13 @@ function submitAdd(type, defaultCat){
 ══════════════════════════════════════ */
 function renderDividends(){
   const div=D.dividends||{};
+  // 已入帳 vs 待入帳（前端自行計算，比後端預算更準確）
+  const calcAmt=d=>d.amount>0?d.amount:(d.perShare||0)*(d.shares||0);
+  const ytdRecv=(div.ytd||[]).filter(d=>d.received).reduce((a,d)=>a+calcAmt(d),0);
+  const ytdPend=(div.ytd||[]).filter(d=>!d.received).reduce((a,d)=>a+calcAmt(d),0);
+  G('div-ytd-kpi').textContent = ytdRecv>0?'+'+f(ytdRecv):'—';
+  if(G('div-ytd-pending-note')) G('div-ytd-pending-note').textContent = ytdPend>0?`待入帳：+${f(ytdPend)}`:'待入帳：—';
   G('div-30d').textContent     = div.next30d_estimate>0?'+'+f(div.next30d_estimate):'—';
-  G('div-ytd-kpi').textContent = div.ytd_total>0?'+'+f(div.ytd_total):'—';
   G('div-yield').textContent   = div.ytd_yield_pct>0?fp(div.ytd_yield_pct):'—';
   G('div-annual').textContent  = (div.annual_estimate||0)>0?'+'+f(div.annual_estimate):'—';
 
@@ -1424,6 +1437,82 @@ function renderManualDivs(){
 }
 
 /* ══════════════════════════════════════
+   跨裝置同步 & 快捷操作
+══════════════════════════════════════ */
+function quickSyncGitHub(){
+  const st=G('quick-act-status');
+  if(!localStorage.getItem('gh_token')){
+    if(st){st.textContent='❌ 請先在下方設定 GitHub Token';st.style.color='var(--red)';}
+    setTimeout(()=>{document.querySelector('#gh-token-input')?.scrollIntoView({behavior:'smooth'});},200);
+    return;
+  }
+  syncToGitHub();
+}
+
+async function manualRefreshData(){
+  const st=G('quick-act-status');
+  if(st){st.textContent='⏳ 更新中…';st.style.color='var(--muted)';}
+  try{
+    const r=await fetch(`./data.json?t=${Date.now()}`,{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    D=await r.json();
+    renderAll();
+    if(st){st.textContent='✅ 報價已更新';st.style.color='var(--green)';}
+    setTimeout(()=>{if(st)st.textContent='';},3000);
+  }catch(e){
+    if(st){st.textContent='❌ 更新失敗：'+e.message;st.style.color='var(--red)';}
+  }
+}
+
+async function checkRemoteSync(){
+  try{
+    const r=await fetch('./portfolio.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok) return;
+    const remote=await r.json();
+    const remoteSynced=remote._synced_at;
+    if(!remoteSynced) return;
+    const localSynced=LOCAL.last_synced_at;
+    if(!localSynced||new Date(remoteSynced)>new Date(localSynced)){
+      showSyncBanner(remote,remoteSynced);
+    }
+  }catch(e){}
+}
+
+function showSyncBanner(remote,syncedAt){
+  if(G('remote-sync-banner')) return;
+  const d=document.createElement('div');
+  d.id='remote-sync-banner';
+  d.style.cssText='position:fixed;top:56px;left:0;right:0;z-index:998;background:rgba(79,110,247,.94);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:12px;backdrop-filter:blur(8px)';
+  const t=new Date(syncedAt).toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  d.innerHTML=`<div style="flex:1">📱 偵測到 GitHub 有較新的持股結構（${t}），可能來自另一台裝置</div>
+    <button onclick="importRemotePortfolio()" style="background:#fff;color:var(--blue);border:none;border-radius:6px;padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">載入</button>
+    <button onclick="G('remote-sync-banner').remove()" style="background:rgba(255,255,255,.2);color:#fff;border:none;border-radius:6px;padding:5px 8px;font-size:11px;cursor:pointer">略過</button>`;
+  document.body.appendChild(d);
+}
+
+async function importRemotePortfolio(){
+  try{
+    const r=await fetch('./portfolio.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const remote=await r.json();
+    const fx=D.exchange_rate||31.5;
+    const calcCost=h=>h.cost!=null?+h.cost:(h.cur==='USD'?h.shares*h.perSh*fx:h.shares*h.perSh);
+    LOCAL.portfolio=(remote.portfolio||[]).map(h=>({cat:h.cat,name:h.name,tick:h.tick||'',shares:h.shares,perSh:h.perSh,cost:calcCost(h),cur:h.cur||'TWD',note:h.note||'',manualPrice:h.manualPrice||null}));
+    LOCAL.loan=(remote.loan||[]).map(h=>({name:h.name,tick:h.tick||'',shares:h.shares,perSh:h.perSh,cost:calcCost(h),cur:h.cur||'TWD',pledgeAmt:h.pledgeAmt||0,note:h.note||''}));
+    if(remote.available_cash!==undefined) LOCAL.bankCash=remote.available_cash;
+    if(remote.stock_loan!==undefined) LOCAL.stockLoan=remote.stock_loan;
+    LOCAL.last_synced_at=remote._synced_at;
+    if(!LOCAL.manualDividends) LOCAL.manualDividends=[];
+    savePf();
+    G('remote-sync-banner')?.remove();
+    renderAll();
+    alert('✅ 已載入 GitHub 上的最新持股結構！');
+  }catch(e){
+    alert('❌ 載入失敗：'+e.message);
+  }
+}
+
+/* ══════════════════════════════════════
    Tab D：系統
 ══════════════════════════════════════ */
 function renderLogs(){
@@ -1461,6 +1550,7 @@ async function loadData(){
     loadThresholds();
     setupCashEditable();
     renderAll();
+    checkRemoteSync();  // 偵測其他裝置是否有更新的持股版本
 
     const saved=localStorage.getItem('activeTab');
     if(saved&&TABS.includes(saved)) switchTab(saved);
