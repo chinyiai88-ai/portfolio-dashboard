@@ -104,6 +104,49 @@ def fetch_prices_twse(tw_tickers: list[str]) -> dict[str, float]:
     return prices
 
 
+def fetch_dividends_yfinance(stock_map: dict, today: str, yr_start: str) -> tuple[list, list]:
+    """yfinance 股利備援：當無 FinMind Token 時，用 yfinance 抓歷史除息紀錄"""
+    upcoming: list[dict] = []
+    ytd:      list[dict] = []
+    cutoff = str((datetime.now(TZ_TW) + timedelta(days=60)).date())
+
+    for stock_id, info in stock_map.items():
+        try:
+            tick = stock_id + ".TW"
+            divs = yf.Ticker(tick).dividends
+            if divs is None or divs.empty:
+                continue
+            for ts, amount in divs.items():
+                amount = round(float(amount), 4)
+                if amount <= 0:
+                    continue
+                try:
+                    date_str = ts.tz_convert("Asia/Taipei").strftime("%Y-%m-%d")
+                except Exception:
+                    date_str = str(ts)[:10]
+                base = {
+                    "stock":    info["name"],
+                    "stock_id": stock_id,
+                    "shares":   info["shares"],
+                    "perShare": amount,
+                    "exDate":   date_str,
+                    "payDate":  "",
+                    "note":     "yfinance",
+                    "amount":   round(amount * info["shares"], 2),
+                }
+                if yr_start <= date_str < today:
+                    ytd.append({**base, "date": date_str, "received": True, "est": False})
+                elif today <= date_str <= cutoff:
+                    upcoming.append(base)
+            time.sleep(0.15)
+        except Exception as e:
+            print(f"[yf-div] {stock_id}: {e}", file=sys.stderr)
+
+    upcoming.sort(key=lambda x: x["exDate"])
+    ytd.sort(key=lambda x: x["exDate"])
+    return upcoming, ytd
+
+
 def fetch_finmind_dividends(token: str, stock_map: dict) -> tuple[list, list]:
     today = today_str()
     yr_start = year_start_str()
@@ -418,6 +461,14 @@ def main():
     static_upcoming = cfg.get("dividends_upcoming", [])
     static_ytd      = cfg.get("dividends_ytd", [])
 
+    # 動態修正靜態 YTD 的已入帳狀態（依實際日期判斷，不寫死）
+    for d in static_ytd:
+        pay = d.get("payDate") or d.get("date") or ""
+        d["received"] = bool(pay and pay <= today)
+
+    # 過濾已過期的靜態 upcoming（避免舊日期殘留在除息預告區塊）
+    static_upcoming_valid = [d for d in static_upcoming if d.get("exDate", "") >= today]
+
     div_upcoming, div_ytd = [], []
     if FINMIND_TOKEN:
         try:
@@ -425,22 +476,31 @@ def main():
             logs["finmind"] = f"ok (upcoming:{len(div_upcoming)}, ytd:{len(div_ytd)})"
         except Exception as e:
             logs["finmind"] = f"error: {e}"
-    else:
+
+    # yfinance 備援：FinMind 失敗或無 token 時，改用 yfinance 抓真實歷史除息資料
+    if not div_upcoming and not div_ytd:
+        try:
+            div_upcoming, div_ytd = fetch_dividends_yfinance(stock_map, today, yr_start)
+            logs["yf_dividends"] = f"ok (upcoming:{len(div_upcoming)}, ytd:{len(div_ytd)})"
+        except Exception as e:
+            logs["yf_dividends"] = f"error: {e}"
+
+    if not FINMIND_TOKEN and "yf_dividends" not in logs:
         logs["finmind"] = "no token — using portfolio.json cache"
 
-    # 永遠合併靜態資料（補 FinMind 沒抓到的債券 ETF 股息）
+    # 合併靜態資料（補 API 沒抓到的標的，例如基金、無代碼持股）
     def _div_key(d: dict) -> str:
         return (d.get("stock", "") or d.get("stock_id", "")) + (d.get("exDate") or d.get("date", ""))
 
-    def _merge_divs(finmind_list: list, static_list: list) -> list:
-        seen = {_div_key(d) for d in finmind_list}
-        result = list(finmind_list)
+    def _merge_divs(api_list: list, static_list: list) -> list:
+        seen = {_div_key(d) for d in api_list}
+        result = list(api_list)
         for d in static_list:
             if _div_key(d) not in seen:
                 result.append(d)
         return result
 
-    div_upcoming = _merge_divs(div_upcoming, static_upcoming)
+    div_upcoming = _merge_divs(div_upcoming, static_upcoming_valid)
     div_ytd      = _merge_divs(div_ytd, static_ytd)
     div_upcoming.sort(key=lambda x: x.get("exDate", ""))
     div_ytd.sort(key=lambda x: x.get("exDate") or x.get("date", ""))
