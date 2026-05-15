@@ -7,6 +7,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
   <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="./icon.png"/>
+  <link rel="icon" type="image/png" href="./icon.png"/>
   <meta name="theme-color" content="#0a0c12"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
@@ -93,7 +95,8 @@
     .sig-sub{font-size:10px;color:var(--muted);margin-top:4px}
 
     /* Threshold legend */
-    .thr-bar{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px}
+    .thr-bar{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px}
+    #s-port-pct,#s-cash-pct{font-size:12px!important;color:var(--text)!important;opacity:.9}
     .thr-chip{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;white-space:nowrap}
     .thr-high{background:rgba(242,92,84,.15);color:var(--red)}
     .thr-midH{background:rgba(245,166,35,.15);color:var(--yellow)}
@@ -283,7 +286,7 @@
       <div class="kpi-box">
         <div class="kpi-label">📉 股票貸款 <span style="font-size:9px;color:var(--blue)">✎</span></div>
         <div class="kpi-val"><span class="editable" id="loan-input" contenteditable="true" inputmode="numeric">0</span></div>
-        <div class="kpi-note">質押借款總額</div>
+        <div class="kpi-note">質押借款總額｜維持率 <span id="s-maint" style="color:var(--muted)">—</span></div>
       </div>
       <div class="kpi-box">
         <div class="kpi-label">🏦 借款部位獲利</div>
@@ -444,7 +447,7 @@
       <div class="modal-body" style="padding:16px">
         <div class="ma-field">
           <label class="ma-label">股號（台股加 .TW，或輸入 4-6 碼自動補）</label>
-          <input id="ma-tick" class="ma-input" placeholder="例：00631L 或 NVDA" onblur="lookupStockInfo()"/>
+          <input id="ma-tick" class="ma-input" placeholder="例：00631L 或 NVDA" onblur="lookupStockInfo()" oninput="debounceTickLookup()"/>
           <div id="ma-lookup-status" style="font-size:10px;color:var(--muted);margin-top:4px;min-height:14px"></div>
         </div>
         <div class="ma-field">
@@ -590,7 +593,7 @@ function enrichItem(item, pm, usdTwd){
   const sh    = +item.shares||0, ps=+item.perSh||0;
   const fx    = usdTwd||31.5;
   // 優先使用儲存的成本（USD持股成本已是TWD），否則即時計算
-  const cost  = item.cost != null ? +item.cost : (item.cur==='USD' ? sh*ps*fx : sh*ps);
+  const cost  = item.cur==='USD' ? sh*ps*fx : (item.cost != null ? +item.cost : sh*ps);
   const vTwd  = item.cur==='USD' ? sh*price*fx : sh*price;
   const pnl   = vTwd-cost;
   const ret   = cost>0 ? pnl/cost*100 : 0;
@@ -609,7 +612,9 @@ function computeSummary(enriched, loanEnr){
   const sl     = LOCAL.stockLoan||0;
   const nav    = pTotal+lTotal+cash-sl;
   const pRet   = pCost>0 ? (pTotal-pCost)/pCost*100 : 0;
-  return {pTotal,pCost,pRet,pUnreal:pTotal-pCost,lTotal,lPnl:lTotal-lCost,bankCash,cPool,cash,sl,nav};
+  const lMarketVal = loanEnr.reduce((a,h)=>a+h.value_twd,0);
+  const maintainRatio = sl>0 ? lMarketVal/sl*100 : null;
+  return {pTotal,pCost,pRet,pUnreal:pTotal-pCost,lTotal,lPnl:lTotal-lCost,bankCash,cPool,cash,sl,nav,maintainRatio};
 }
 
 function computeRebal(enriched, nav){
@@ -707,12 +712,18 @@ const GH_OWNER = 'chinyiai88-ai';
 const GH_REPO  = 'portfolio-dashboard';
 const GH_API   = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`;
 
-function saveGhToken(){
+async function saveGhToken(){
   const v = G('gh-token-input').value.trim();
   if(!v){ alert('Token 不能為空'); return; }
   localStorage.setItem('gh_token', v);
   G('gh-token-input').value = '';
-  updateGhTokenStatus();
+  const el = G('gh-token-status');
+  if(el) el.innerHTML='<span style="color:var(--muted)">驗證中…</span>';
+  try{
+    const r = await fetch(`${GH_API}`,{headers:{'Authorization':`Bearer ${v}`,'Accept':'application/vnd.github.v3+json'}});
+    if(r.ok){ updateGhTokenStatus(); }
+    else { if(el) el.innerHTML=`<span style="color:var(--red)">⚠️ Token 已儲存，但驗證失敗（${r.status}）—請確認權限設定</span>`; }
+  }catch(e){ updateGhTokenStatus(); }
 }
 
 function clearGhToken(){
@@ -891,6 +902,15 @@ function renderSummaryContent(sum, rebal){
   }
   G('s-loanpnl').textContent = (sum.lPnl>=0?'+':'')+f(sum.lPnl);
   G('s-loanpnl').className   = 'kpi-val '+clr(sum.lPnl);
+  const maintEl=G('s-maint');
+  if(maintEl){
+    const mr=sum.maintainRatio;
+    if(mr!==null){
+      maintEl.textContent=mr.toFixed(0)+'%';
+      maintEl.style.color=mr<140?'var(--red)':mr<=160?'var(--yellow)':'var(--green)';
+      maintEl.style.fontWeight='700';
+    } else { maintEl.textContent='—'; maintEl.style.color='var(--muted)'; }
+  }
   G('s-ret').textContent     = (sum.pRet>=0?'+':'')+fp(sum.pRet);
   G('s-ret').className       = 'kpi-val '+clr(sum.pRet);
 
@@ -1324,15 +1344,25 @@ function renderDividends(){
   const div=D.dividends||{};
   // 已入帳 vs 待入帳（前端自行計算，比後端預算更準確）
   const calcAmt=d=>d.amount>0?d.amount:(d.perShare||0)*(d.shares||0);
-  const ytdRecv=(div.ytd||[]).filter(d=>d.received).reduce((a,d)=>a+calcAmt(d),0);
-  const ytdPend=(div.ytd||[]).filter(d=>!d.received).reduce((a,d)=>a+calcAmt(d),0);
+  const _visYtdSet=new Set();
+  const ytdVisible=(div.ytd||[]).filter(d=>{
+    const ek=(d.exDate||d.date||'').slice(0,10);
+    const k=d.stock+'__'+ek;
+    if(_visYtdSet.has(k)) return false;
+    _visYtdSet.add(k);
+    const ov=(LOCAL.dividendOverrides||{})[k]||{};
+    return !ov.hidden;
+  });
+  const ytdRecv=ytdVisible.filter(d=>d.received).reduce((a,d)=>a+calcAmt(d),0);
+  const ytdPend=ytdVisible.filter(d=>!d.received).reduce((a,d)=>a+calcAmt(d),0);
   G('div-ytd-kpi').textContent = ytdRecv>0?'+'+f(ytdRecv):'—';
   if(G('div-ytd-pending-note')) G('div-ytd-pending-note').textContent = ytdPend>0?`待入帳：+${f(ytdPend)}`:'待入帳：—';
   G('div-30d').textContent     = div.next30d_estimate>0?'+'+f(div.next30d_estimate):'—';
   G('div-yield').textContent   = div.ytd_yield_pct>0?fp(div.ytd_yield_pct):'—';
   G('div-annual').textContent  = (div.annual_estimate||0)>0?'+'+f(div.annual_estimate):'—';
 
-  const today=new Date().toISOString().slice(0,10);
+  const _now=new Date();
+  const today=`${_now.getFullYear()}-${String(_now.getMonth()+1).padStart(2,'0')}-${String(_now.getDate()).padStart(2,'0')}`;
   const upEl=G('div-upcoming');
   upEl.innerHTML='';
   // 合併 data.json 的即將除息 + 手動未來股利
@@ -1372,13 +1402,17 @@ function renderDividends(){
   const accEl=G('div-ytd-acc');
   accEl.innerHTML='';
   const groups={};
+  const _seenYtd=new Set();
   (div.ytd||[]).forEach(d=>{
-    // 確保數值正確：避免 undefined/null 導致計算錯誤
+    const exKey=(d.exDate||d.date||'').slice(0,10);
+    const ov=(LOCAL.dividendOverrides||{})[d.stock+'__'+exKey]||{};
+    if(ov.hidden) return;
+    const dedupKey=d.stock+'__'+exKey;
+    if(_seenYtd.has(dedupKey)) return;
+    _seenYtd.add(dedupKey);
     const ps=Number(d.perShare)||0;
     const sh=Number(d.shares)||0;
     const amt=(d.amount>0)?Number(d.amount):(ps*sh);
-    // 確保 exDate 有值（靜態資料可能只有 date）
-    const exKey=(d.exDate||d.date||'').slice(0,10);
     if(!groups[d.stock]) groups[d.stock]={total:0,items:[]};
     groups[d.stock].total+=amt;
     groups[d.stock].items.push({...d, amt, _exKey:exKey});
@@ -1389,7 +1423,7 @@ function renderDividends(){
       // 用 _exKey 作為 override key（保證不含 undefined）
       const key=d.stock+'__'+d._exKey;
       const ov=(LOCAL.dividendOverrides||{})[key]||{};
-      const dispDate=ov.is_manual_date?ov.date:(d.date||d.exDate||'—');
+      const dispDate=ov.is_manual_date?ov.date:(d.exDate||d.date||'—');
       // 若無手動覆蓋，直接用 amt（已正確計算）
       const dispAmt=ov.is_manual_amount?Number(ov.amount||0):d.amt;
       const dateLineCss=ov.is_manual_date?'var(--yellow)':'rgba(255,255,255,.15)';
@@ -1401,7 +1435,8 @@ function renderDividends(){
         <span style="color:var(--muted)">${d.note||''}</span>
         <span contenteditable="true" class="pos" onblur="onDivAmtEdit(this,'${safeStock}','${d._exKey}')"
           style="margin-left:auto;cursor:text;outline:none;border-bottom:1px dashed ${amtLineCss};min-width:60px">+${f(dispAmt)}</span>
-        <span style="margin-left:8px">${d.received?'✅':'⏳'}</span>
+        <span style="margin-left:6px">${d.est?'':d.received?'✅':'⏳'}</span>
+        <button onclick="hideDivItem('${safeStock}','${d._exKey}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0 0 0 4px" title="隱藏此筆">✕</button>
       </div>`;
     }).join('');
     const divEl=document.createElement('div');
@@ -1652,6 +1687,15 @@ function onDivDateEdit(el, stock, exKey){
   savePf();
 }
 
+function hideDivItem(stock, exKey){
+  const key=stock+'__'+exKey;
+  if(!LOCAL.dividendOverrides) LOCAL.dividendOverrides={};
+  if(!LOCAL.dividendOverrides[key]) LOCAL.dividendOverrides[key]={};
+  LOCAL.dividendOverrides[key].hidden=true;
+  savePf();
+  renderDividends();
+}
+
 function onDivAmtEdit(el, stock, exKey){
   const raw = el.textContent.replace(/[+,\s]/g,'');
   const amt = parseFloat(raw);
@@ -1685,6 +1729,9 @@ function openAddAssetModal(){
 
   new bootstrap.Modal(G('addAssetModal')).show();
 }
+
+let _tickTimer=null;
+function debounceTickLookup(){ clearTimeout(_tickTimer); _tickTimer=setTimeout(lookupStockInfo,500); }
 
 function lookupStockInfo(){
   const raw = (G('ma-tick').value||'').trim().toUpperCase();

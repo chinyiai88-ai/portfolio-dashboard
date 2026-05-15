@@ -3,7 +3,7 @@
 //           data.json 永遠 network-first（確保看到最新資料）
 
 const CACHE_NAME = 'portfolio-v2';
-const SHELL = ['./index.html', './manifest.json', './sw.js'];
+const SHELL = ['./index.html', './manifest.json', './sw.js', './icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
