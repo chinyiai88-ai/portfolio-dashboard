@@ -97,6 +97,7 @@
     /* Threshold legend */
     .thr-bar{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px}
     #s-port-pct,#s-cash-pct{font-size:12px!important;color:var(--text)!important;opacity:.9}
+    .is-manual-item .div-check{display:none!important}
     .thr-chip{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;white-space:nowrap}
     .thr-high{background:rgba(242,92,84,.15);color:var(--red)}
     .thr-midH{background:rgba(245,166,35,.15);color:var(--yellow)}
@@ -1429,13 +1430,16 @@ function renderDividends(){
       const dateLineCss=ov.is_manual_date?'var(--yellow)':'rgba(255,255,255,.15)';
       const amtLineCss=ov.is_manual_amount?'var(--yellow)':'rgba(255,255,255,.15)';
       const safeStock=d.stock.replace(/'/g,"\\'");
-      return `<div class="acc-row">
+      // 多重條件：靜態估算、手動旗標、來源標記、或使用者有手動修改過任一欄位 → 均視為手動項目
+      const isManualRow=!!(d.est||d.isManual||d.source==='manual'||ov.is_manual_date||ov.is_manual_amount);
+      const checkHtml=isManualRow?'':d.received?'✅':'⏳';
+      return `<div class="acc-row${isManualRow?' is-manual-item':''}">
         <span contenteditable="true" onblur="onDivDateEdit(this,'${safeStock}','${d._exKey}')"
           style="flex:1;cursor:text;outline:none;border-bottom:1px dashed ${dateLineCss};min-width:70px">${dispDate}</span>
         <span style="color:var(--muted)">${d.note||''}</span>
         <span contenteditable="true" class="pos" onblur="onDivAmtEdit(this,'${safeStock}','${d._exKey}')"
           style="margin-left:auto;cursor:text;outline:none;border-bottom:1px dashed ${amtLineCss};min-width:60px">+${f(dispAmt)}</span>
-        <span style="margin-left:6px">${d.est?'':d.received?'✅':'⏳'}</span>
+        <span class="div-check" style="margin-left:6px">${checkHtml}</span>
         <button onclick="hideDivItem('${safeStock}','${d._exKey}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0 0 0 4px" title="隱藏此筆">✕</button>
       </div>`;
     }).join('');
