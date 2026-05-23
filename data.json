@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-05-23T05:48:43.092299+08:00",
+  "updated_at": "2026-05-23T12:00:53.115246+08:00",
   "exchange_rate": 31.449,
   "summary": {
     "nav": 9181453.0,
@@ -1129,55 +1129,55 @@
     }
   },
   "twii_market": {
-    "close": 41368.21,
-    "close_date": "2026/05/21",
+    "close": 42267.97,
+    "close_date": "2026/05/22",
     "ath": 42309.37,
     "ath_date": "2026/05/22",
-    "drop_pct": -2.22,
-    "ma20": 40530.47,
-    "ma60": 36375.13,
-    "ma240": 28753.83,
+    "drop_pct": -0.1,
+    "ma20": 40758.16,
+    "ma60": 36516.71,
+    "ma240": 28841.04,
     "triggers": [
       {
         "name": "\u8dcc10%(\u5df2\u7834\u6708\u7dda)\u6295\u516515%",
         "trigger": 38078.43,
         "amount": 275444.0,
-        "gap": 3290.0,
+        "gap": 4190.0,
         "triggered": false
       },
       {
         "name": "\u7834\u5b63\u7dda\u6295\u516525%",
-        "trigger": 36375.13,
+        "trigger": 36516.71,
         "amount": 459073.0,
-        "gap": 4993.0,
+        "gap": 5751.0,
         "triggered": false
       },
       {
         "name": "\u8dcc15%(\u5df2\u7834\u5b63\u7dda)\u6295\u516520%",
         "trigger": 35962.96,
         "amount": 367258.0,
-        "gap": 5405.0,
+        "gap": 6305.0,
         "triggered": false
       },
       {
         "name": "\uff08\u7d04\u5e74\u7dda\uff09\u783419%\u6295\u516510%",
         "trigger": 34270.59,
         "amount": 183629.0,
-        "gap": 7098.0,
+        "gap": 7997.0,
         "triggered": false
       },
       {
         "name": "\u783420%\u6295\u516510%",
         "trigger": 33847.5,
         "amount": 183629.0,
-        "gap": 7521.0,
+        "gap": 8420.0,
         "triggered": false
       },
       {
         "name": "\u5e74\u7dda\u4e0b\u783420%\u6295\u516510%",
         "trigger": 33847.5,
         "amount": 183629.0,
-        "gap": 7521.0,
+        "gap": 8420.0,
         "triggered": false
       }
     ]
@@ -1187,6 +1187,6 @@
     "twse_backup": "ok (2 prices)",
     "usd_twd": 31.449,
     "finmind": "ok (upcoming:0, ytd:6)",
-    "twii": "ok (41,368 | ATH:42,309)"
+    "twii": "ok (42,268 | ATH:42,309)"
   }
 }
