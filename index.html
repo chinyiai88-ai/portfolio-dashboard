@@ -119,6 +119,13 @@
     .rb-table{width:100%;border-collapse:collapse;font-size:11px;min-width:560px}
     .rb-table th{color:var(--muted);font-weight:600;padding:6px 6px;border-bottom:1px solid var(--border);white-space:nowrap;font-size:11px}
     .rb-table td{padding:7px 6px;border-bottom:1px solid rgba(255,255,255,.03);vertical-align:middle}
+    .rb-input{background:transparent;border:none;border-bottom:1px dashed var(--blue);color:var(--text);font-size:11px;outline:none;width:100%;padding:1px 2px;text-align:right}
+    .rb-input:focus{background:rgba(79,110,247,.1);border-radius:3px 3px 0 0}
+    .rb-input-strat{text-align:left;max-width:90px}
+    .rb-warn{background:rgba(242,92,84,.12);border:1px solid rgba(242,92,84,.4);border-radius:8px;padding:7px 12px;font-size:11px;color:var(--red);font-weight:600;margin-bottom:8px;display:none}
+
+    /* Toast notification */
+    #toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(20,24,35,.96);border:1px solid var(--border);border-radius:10px;padding:9px 18px;font-size:12px;font-weight:600;color:var(--text);z-index:9999;pointer-events:none;opacity:0;transition:opacity .25s;white-space:nowrap;backdrop-filter:blur(10px)}
     .prog-bg{background:var(--border);border-radius:3px;height:4px;margin-top:4px}
     .prog-fill{height:4px;border-radius:3px}
     .badge-s{display:inline-block;border-radius:5px;padding:2px 7px;font-size:10px;font-weight:700;white-space:nowrap}
@@ -308,6 +315,7 @@
     <!-- 再平衡導航 -->
     <div class="sec-title">⚖️ 再平衡導航</div>
     <div class="card-dark" style="padding:10px">
+      <div id="rb-warn" class="rb-warn"></div>
       <div class="scroll-x">
         <table class="rb-table">
           <thead>
@@ -620,16 +628,21 @@ function computeSummary(enriched, loanEnr){
 
 function computeRebal(enriched, nav){
   const targets = D.targets||{};
+  const custom  = LOCAL.customTargets||{};
   return Object.entries(targets).map(([cat,tgt])=>{
-    const items = enriched.filter(h=>h.cat===cat);
-    const val   = items.reduce((a,h)=>a+h.value_twd,0);
-    const cost  = items.reduce((a,h)=>a+h.cost,0);
-    const tgtP  = tgt.pct*100;
-    const actP  = nav>0 ? val/nav*100 : 0;
-    const tgtA  = nav*tgt.pct;
+    const items  = enriched.filter(h=>h.cat===cat);
+    const val    = items.reduce((a,h)=>a+h.value_twd,0);
+    const cost   = items.reduce((a,h)=>a+h.cost,0);
+    // 使用者自訂覆蓋優先，否則用 data.json 預設值
+    const ovr    = custom[cat]||{};
+    const tgtPct = ovr.pct != null ? ovr.pct : tgt.pct;
+    const strat  = ovr.strat != null ? ovr.strat : (tgt.strat||'');
+    const tgtP   = tgtPct*100;
+    const actP   = nav>0 ? val/nav*100 : 0;
+    const tgtA   = nav*tgtPct;
     return {cat,val,cost,catRet:cost>0?(val-cost)/cost*100:0,
             actual_pct:actP,target_pct:tgtP,diff_pct:actP-tgtP,
-            target_amount:tgtA,diff_amount:val-tgtA,strat:tgt.strat||''};
+            target_amount:tgtA,diff_amount:val-tgtA,strat};
   });
 }
 
@@ -665,6 +678,7 @@ function initLocal(){
       });
       if(!LOCAL.manualDividends){ LOCAL.manualDividends=[]; migrated=true; }
       if(!LOCAL.dividendOverrides){ LOCAL.dividendOverrides={}; migrated=true; }
+      if(!LOCAL.customTargets){ LOCAL.customTargets={}; migrated=true; }
       if(migrated) savePf();
       return;
     }catch(e){}
@@ -684,6 +698,7 @@ function initLocal(){
     stockLoan:D.summary?.stock_loan||0,
     manualDividends:[],
     dividendOverrides:{},
+    customTargets:{},
   };
   savePf();
 }
@@ -800,6 +815,10 @@ async function syncToGitHub(){
     // Cash fields
     merged.available_cash = LOCAL.bankCash || 0;
     merged.stock_loan     = LOCAL.stockLoan || 0;
+    // 自訂再平衡目標（使用者手動修改的應有% 與備註）
+    if(LOCAL.customTargets && Object.keys(LOCAL.customTargets).length){
+      merged.custom_targets = LOCAL.customTargets;
+    }
     // 嵌入同步時間戳，供其他裝置偵測版本差異
     merged._synced_at = new Date().toISOString();
 
@@ -828,7 +847,9 @@ async function syncToGitHub(){
     });
 
     if(wfResp.status === 204 || wfResp.ok){
-      setSt('✅ 同步完成！GitHub Actions 已啟動，約 1 分鐘後價格更新', true);
+      setSt('✅ 同步完成！自動等待報價更新…（最長 3 分鐘）', true);
+      // 觸發成功後開始輪詢：Actions 跑完會更新 data.json 的 updated_at
+      pollForDataUpdate(D.updated_at, setSt);
     } else {
       setSt('✅ portfolio.json 已同步，但觸發 Actions 失敗（需 Actions:write 權限）', true);
     }
@@ -842,6 +863,49 @@ async function syncToGitHub(){
     btn.disabled = false;
     btn.textContent = '🚀 同步到 GitHub';
   }
+}
+
+/* ══════════════════════════════════════
+   GitHub Actions 輪詢（儲存後自動等待更新）
+══════════════════════════════════════ */
+let _pollTimer = null;
+function pollForDataUpdate(oldTimestamp, setSt){
+  if(_pollTimer) clearInterval(_pollTimer);
+  let attempts = 0;
+  const maxAttempts = 6;     // 6 × 30s = 3 分鐘
+  const interval   = 30000;  // 每 30 秒檢查一次
+
+  _pollTimer = setInterval(async () => {
+    attempts++;
+    try{
+      const r = await fetch(`./data.json?t=${Date.now()}`, {cache:'no-store'});
+      if(!r.ok) return;
+      const json = await r.json();
+      // 若 updated_at 變了，代表 Actions 已跑完
+      if(json.updated_at && json.updated_at !== oldTimestamp){
+        clearInterval(_pollTimer);
+        _pollTimer = null;
+        D = json;
+        renderAll();
+        if(G('update-time')){
+          G('update-time').textContent = new Date(D.updated_at)
+            .toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})+' 更新';
+        }
+        if(setSt) setSt('✅ 報價已自動更新最新版本', true);
+        showToast('✅ Actions 完成，報價已即時更新！','ok');
+        return;
+      }
+    }catch(e){}
+    // 超時還沒更新
+    if(attempts >= maxAttempts){
+      clearInterval(_pollTimer);
+      _pollTimer = null;
+      if(setSt) setSt('ℹ️ Actions 尚未完成，請稍後手動更新報價', null);
+    } else {
+      const remaining = (maxAttempts - attempts) * 30;
+      if(setSt) setSt(`⏳ 等待 Actions 完成… 剩約 ${remaining} 秒`, null);
+    }
+  }, interval);
 }
 
 /* ══════════════════════════════════════
@@ -949,21 +1013,94 @@ function renderSummaryContent(sum, rebal){
     if(d>5){sc='s-sell';st='減倉';}else if(d>2){sc='s-trim';st='輕減';}
     else if(d<-5){sc='s-buy';st='加碼';}else if(d<-2){sc='s-add';st='輕加';}
     else{sc='s-hold';st='持倉';}
+    const catKey=row.cat.replace(/"/g,'&quot;');
     tbody.innerHTML+=`
-      <tr>
+      <tr data-cat="${catKey}" data-nav="${sum.nav}" data-actual="${row.actual_pct}">
         <td style="text-align:center"><span class="badge-s ${sc}">${st}</span></td>
         <td style="font-weight:700">${row.cat}</td>
-        <td style="font-size:10px;color:var(--muted);max-width:80px;line-height:1.4">${row.strat}</td>
-        <td style="text-align:right;color:var(--muted)">${row.target_pct.toFixed(0)}%</td>
+        <td style="max-width:90px"><input class="rb-input rb-input-strat" type="text" value="${row.strat.replace(/"/g,'&quot;')}" placeholder="備註" data-cat="${catKey}" data-field="strat"/></td>
+        <td style="text-align:right"><input class="rb-input" type="number" min="0" max="100" step="1" value="${row.target_pct.toFixed(0)}" data-cat="${catKey}" data-field="pct" style="width:52px"/><span style="color:var(--muted)">%</span></td>
         <td style="text-align:right" class="${clr(d)}">${fp(row.actual_pct)}</td>
         <td style="text-align:right">${f(row.val)}</td>
-        <td style="text-align:right;color:var(--muted)">${f(row.target_amount)}</td>
-        <td style="text-align:right" class="${clr(da)}">${da>=0?'+':''}${f(da)}</td>
-        <td style="min-width:60px"><div class="prog-bg"><div class="prog-fill" style="width:${fill}%;background:${barC}"></div></div></td>
+        <td class="rb-target-amt" style="text-align:right;color:var(--muted)">${f(row.target_amount)}</td>
+        <td class="rb-diff-amt" style="text-align:right" data-clr="${clr(da)}">${da>=0?'+':''}${f(da)}</td>
+        <td style="min-width:60px"><div class="prog-bg"><div class="prog-fill rb-prog" style="width:${fill}%;background:${barC}"></div></div></td>
       </tr>`;
   });
+  // 事件監聽：輸入時即時更新
+  tbody.querySelectorAll('.rb-input').forEach(inp=>{
+    inp.addEventListener('input', onRbInput);
+    inp.addEventListener('change', onRbInput);
+  });
 
+  checkRbTotal();
   renderTwiiMarket();
+}
+
+/* ══════════════════════════════════════
+   再平衡表：輸入處理 & 防呆
+══════════════════════════════════════ */
+function onRbInput(e){
+  const inp  = e.target;
+  const cat  = inp.dataset.cat;
+  const field= inp.dataset.field;
+  const val  = inp.value;
+  if(!LOCAL.customTargets) LOCAL.customTargets={};
+  if(!LOCAL.customTargets[cat]) LOCAL.customTargets[cat]={};
+
+  if(field==='pct'){
+    const pct = parseFloat(val);
+    if(isNaN(pct)) return;
+    LOCAL.customTargets[cat].pct = pct/100;
+    // 即時重算這一行的目標金額 & 差額
+    const tr = inp.closest('tr');
+    const nav    = parseFloat(tr.dataset.nav)||0;
+    const actual = parseFloat(tr.dataset.actual)||0;
+    const actVal = nav*(actual/100);
+    const tgtAmt = nav*(pct/100);
+    const diffAmt= actVal - tgtAmt;
+    const tgtEl  = tr.querySelector('.rb-target-amt');
+    const difEl  = tr.querySelector('.rb-diff-amt');
+    if(tgtEl) tgtEl.textContent = f(tgtAmt);
+    if(difEl){
+      difEl.textContent = (diffAmt>=0?'+':'')+f(diffAmt);
+      difEl.className   = 'rb-diff-amt '+clr(diffAmt);
+    }
+    checkRbTotal();
+  } else if(field==='strat'){
+    LOCAL.customTargets[cat].strat = val;
+  }
+  savePf();
+}
+
+function checkRbTotal(){
+  const inputs = document.querySelectorAll('#rb-body .rb-input[data-field="pct"]');
+  if(!inputs.length) return;
+  let total=0;
+  inputs.forEach(inp=>{ total += parseFloat(inp.value)||0; });
+  const warn = G('rb-warn');
+  if(!warn) return;
+  if(Math.abs(total-100)>0.5){
+    warn.textContent = `⚠️ 目前總和為 ${total.toFixed(1)}%，請調整至 100%`;
+    warn.style.display='block';
+  } else {
+    warn.style.display='none';
+  }
+}
+
+/* ══════════════════════════════════════
+   Toast 通知
+══════════════════════════════════════ */
+let _toastTimer=null;
+function showToast(msg, type='ok'){
+  const el=G('toast');
+  if(!el) return;
+  el.textContent=msg;
+  el.style.color = type==='ok'?'var(--green)':type==='err'?'var(--red)':'var(--text)';
+  el.style.borderColor = type==='ok'?'rgba(31,216,122,.4)':type==='err'?'rgba(242,92,84,.4)':'var(--border)';
+  el.style.opacity='1';
+  if(_toastTimer) clearTimeout(_toastTimer);
+  _toastTimer=setTimeout(()=>{el.style.opacity='0';},3500);
 }
 
 /* ══════════════════════════════════════
@@ -1227,55 +1364,24 @@ function onNumEdit(cell,idx,type,field){
   const val=parseFloat(cell.textContent.replace(/,/g,''))||0;
   const list=type==='portfolio'?LOCAL.portfolio:LOCAL.loan;
   list[idx][field]=val;
-  // 編輯股數或每股成本時同步更新總成本
+  // 編輯股數或每股成本時同步更新總成本（分類小計、KPI 一起重算）
   if(field==='shares'||field==='perSh'){
     const h=list[idx], fx=D.exchange_rate||31.5;
     list[idx].cost = h.cur==='USD' ? h.shares*h.perSh*fx : h.shares*h.perSh;
   }
   savePf();
-  // 更新同一列的計算欄位
-  const usd=D.exchange_rate||31.5;
-  const pm=buildPriceMap();
-  const item=type==='portfolio'?LOCAL.portfolio[idx]:LOCAL.loan[idx];
-  const enr=enrichItem(item,pm,usd);
-  const row=cell.closest('tr');
-  if(!row) return;
-  const setCell=(f,v)=>{ const td=row.querySelector(`[data-field="${f}"]`); if(td){td.textContent=v;td.className=td.className.replace(/pos|neg|neu/g,'');td.classList.add(v.startsWith('-')?'neg':v.startsWith('+')?'pos':'neu');} };
-  row.querySelector('[data-field="cost"]').textContent=f(enr.cost);
-  row.querySelector('[data-field="valueTwd"]').textContent=f(enr.value_twd);
-  const pnlEl=row.querySelector('[data-field="pnl"]');
-  if(pnlEl){pnlEl.textContent=(enr.unrealized_pnl>=0?'+':'')+f(enr.unrealized_pnl);pnlEl.className=clr(enr.unrealized_pnl);}
-  const retEl=row.querySelector('[data-field="ret"]');
-  if(retEl){retEl.textContent=(enr.return_pct>=0?'+':'')+fp(enr.return_pct);retEl.className='font-weight:700 '+clr(enr.return_pct);}
-  const dot=row.querySelector('.ret-dot');
-  if(dot) dot.style.background=retColor(enr.return_pct);
-  if(type==='portfolio') renderSummaryTab();
+  // 重新渲染全部（包含分類小計 & 再平衡表），確保所有衍生數字同步
+  renderAll();
 }
 
 function onPriceEdit(cell,idx,type){
-  const isFx=cell.closest('tr').dataset.cur==='USD';
   const raw=cell.textContent.replace(/[$,]/g,'');
   const newPrice=parseFloat(raw)||0;
   const list=type==='portfolio'?LOCAL.portfolio:LOCAL.loan;
   list[idx].manualPrice=newPrice>0?newPrice:null;
-  cell.style.color=newPrice>0?'var(--yellow)':'var(--muted)';
   savePf();
-  const usd=D.exchange_rate||31.5;
-  const pm=buildPriceMap();
-  const enr=enrichItem(list[idx],pm,usd);
-  const priceDisplay=isFx?`$${(enr.price||0).toFixed(2)}`:(enr.price||0).toLocaleString('zh-TW',{minimumFractionDigits:2,maximumFractionDigits:2});
-  cell.textContent=priceDisplay;
-  const row=cell.closest('tr');
-  if(!row) return;
-  const vtd=row.querySelector('[data-field="valueTwd"]');
-  if(vtd) vtd.textContent=f(enr.value_twd);
-  const pnlEl=row.querySelector('[data-field="pnl"]');
-  if(pnlEl){pnlEl.textContent=(enr.unrealized_pnl>=0?'+':'')+f(enr.unrealized_pnl);pnlEl.className=clr(enr.unrealized_pnl);}
-  const retEl=row.querySelector('[data-field="ret"]');
-  if(retEl){retEl.textContent=(enr.return_pct>=0?'+':'')+fp(enr.return_pct);retEl.className='font-weight:700 '+clr(enr.return_pct);}
-  const dot=row.querySelector('.ret-dot');
-  if(dot) dot.style.background=retColor(enr.return_pct);
-  if(type==='portfolio') renderSummaryTab();
+  // 重新渲染全部（確保現值、損益、分類小計全部同步更新）
+  renderAll();
 }
 
 function deleteItem(idx,type){
@@ -1564,15 +1670,32 @@ function quickSyncGitHub(){
 async function manualRefreshData(){
   const st=G('quick-act-status');
   if(st){st.textContent='⏳ 更新中…';st.style.color='var(--muted)';}
+  showToast('⏳ 更新報價中…','info');
+
+  // AbortController：15 秒無回應則強制中斷，避免請求卡死
+  const ctrl = new AbortController();
+  const timeout = setTimeout(()=>ctrl.abort(),15000);
+
   try{
-    const r=await fetch(`./data.json?t=${Date.now()}`,{cache:'no-store'});
+    const r=await fetch(`./data.json?t=${Date.now()}`,{cache:'no-store',signal:ctrl.signal});
+    clearTimeout(timeout);
     if(!r.ok) throw new Error('HTTP '+r.status);
     D=await r.json();
     renderAll();
+    // 同步更新 header 時間
+    if(G('update-time')){
+      G('update-time').textContent=D.updated_at
+        ?new Date(D.updated_at).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})+' 更新'
+        :'—';
+    }
     if(st){st.textContent='✅ 報價已更新';st.style.color='var(--green)';}
     setTimeout(()=>{if(st)st.textContent='';},3000);
+    showToast('✅ 報價更新成功','ok');
   }catch(e){
-    if(st){st.textContent='❌ 更新失敗：'+e.message;st.style.color='var(--red)';}
+    clearTimeout(timeout);
+    const msg = e.name==='AbortError' ? '請求超時，請檢查網路' : e.message;
+    if(st){st.textContent='❌ API 異常：'+msg;st.style.color='var(--red)';}
+    showToast('❌ API 異常，請檢查網路','err');
   }
 }
 
@@ -1613,8 +1736,10 @@ async function importRemotePortfolio(){
     LOCAL.loan=(remote.loan||[]).map(h=>({name:h.name,tick:h.tick||'',shares:h.shares,perSh:h.perSh,cost:calcCost(h),cur:h.cur||'TWD',pledgeAmt:h.pledgeAmt||0,note:h.note||''}));
     if(remote.available_cash!==undefined) LOCAL.bankCash=remote.available_cash;
     if(remote.stock_loan!==undefined) LOCAL.stockLoan=remote.stock_loan;
+    if(remote.custom_targets) LOCAL.customTargets=remote.custom_targets;
     LOCAL.last_synced_at=remote._synced_at;
     if(!LOCAL.manualDividends) LOCAL.manualDividends=[];
+    if(!LOCAL.customTargets) LOCAL.customTargets={};
     savePf();
     G('remote-sync-banner')?.remove();
     renderAll();
@@ -1812,5 +1937,9 @@ function submitAssetModal(){
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 loadData();
 </script>
+
+<!-- Toast 通知容器 -->
+<div id="toast"></div>
+
 </body>
 </html>
