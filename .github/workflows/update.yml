@@ -5,6 +5,11 @@ on:
     - cron: '0 * * * *'   # 每小時整點執行
   workflow_dispatch:        # 手動觸發（可在 GitHub Actions 頁面按 Run workflow）
 
+# 同一時間只允許一個 run 執行，避免多個 run 同時搶 push data.json 導致失敗
+concurrency:
+  group: portfolio-update
+  cancel-in-progress: true
+
 jobs:
   fetch-and-commit:
     runs-on: ubuntu-latest
@@ -37,4 +42,6 @@ jobs:
           # 只有 data.json 有變動才 commit（避免空 commit）
           git diff --staged --quiet \
             || git commit -m "chore: auto-update data.json [skip ci]"
+          # pull --rebase 保險：若在 commit 與 push 之間有其他 push 進來，避免衝突失敗
+          git pull --rebase origin main
           git push
