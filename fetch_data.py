@@ -250,9 +250,45 @@ def calc_us_exposure(portfolio, loan, prices, usd_twd, etf_weights):
     return dict(sorted(exposure.items(), key=lambda x: x[1]["value_twd"], reverse=True))
 
 
+def fetch_twii_realtime_twse() -> tuple[float | None, str | None]:
+    """從 TWSE 即時 API 抓大盤收盤指數（tse_t00.tw = 發行量加權股價指數）
+    盤後返回當日收盤，盤中返回最新成交指數，無資料或非交易時間返回 (None, None)。
+    """
+    try:
+        url = "https://mis.twse.com.tw/stock/api/getStockInfo.jsp"
+        params = {"ex_ch": "tse_t00.tw", "json": "1", "delay": "0"}
+        headers = {
+            "Referer": "https://mis.twse.com.tw/",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        }
+        r = requests.get(url, params=params, headers=headers, timeout=10)
+        r.raise_for_status()
+        body = r.json()
+        msg = body.get("msgArray", [])
+        if not msg:
+            return None, None
+        q = msg[0]
+        z = q.get("z", "-")   # 當前成交指數（盤中 / 盤後收盤）
+        y = q.get("y", "-")   # 昨日收盤
+        d = q.get("d", "")    # 日期 YYYYMMDD
+        price_str = z if (z and z not in ("-", "")) else y
+        if not price_str or price_str in ("-", "") or not d:
+            return None, None
+        price = float(price_str.replace(",", ""))
+        if price <= 0:
+            return None, None
+        date_str = f"{d[:4]}/{d[4:6]}/{d[6:8]}"
+        return price, date_str
+    except Exception as e:
+        print(f"[TWII-TWSE] {e}", file=sys.stderr)
+        return None, None
+
+
 def fetch_twii_market(cfg: dict, nav: float,
                       existing_ath: float = 0, existing_ath_date: str = "") -> dict | None:
-    """抓台股加權指數，計算移動平均線與進場觸發條件"""
+    """抓台股加權指數，計算移動平均線與進場觸發條件。
+    最新收盤優先用 TWSE 即時 API；yfinance 2y 歷史僅用於計算 MA。
+    """
     try:
         ticker = yf.Ticker('^TWII')
         hist = ticker.history(period='2y')
@@ -260,8 +296,17 @@ def fetch_twii_market(cfg: dict, nav: float,
             return None
 
         close_s = hist['Close'].dropna()
-        close   = round(float(close_s.iloc[-1]), 2)
-        close_date = hist.index[-1].strftime('%Y/%m/%d')
+        # ── 優先使用 TWSE 即時 API 取得最新收盤（修正 yfinance 延遲問題）──
+        rt_price, rt_date = fetch_twii_realtime_twse()
+        yf_date = hist.index[-1].strftime('%Y/%m/%d')
+        if rt_price and rt_date and rt_date >= yf_date:
+            close      = rt_price
+            close_date = rt_date
+            print(f"[TWII] TWSE即時: {close:,.2f} ({close_date})", file=sys.stderr)
+        else:
+            close      = round(float(close_s.iloc[-1]), 2)
+            close_date = yf_date
+            print(f"[TWII] yfinance fallback: {close:,.2f} ({close_date})", file=sys.stderr)
 
         hist_max      = round(float(close_s.max()), 2)
         hist_max_date = close_s.idxmax().strftime('%Y/%m/%d')
