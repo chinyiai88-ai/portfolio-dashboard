@@ -396,6 +396,17 @@
 
   <!-- ════ Tab D：系統 ════ -->
   <div class="tab-pane fade" id="tab-logs">
+
+    <div class="sec-title" style="margin-top:14px">📝 筆記</div>
+    <div class="card-dark" style="padding:12px 14px;margin-bottom:10px">
+      <textarea id="user-notes"
+        placeholder="隨手記錄任何事情…策略想法、待辦事項、觀察筆記"
+        style="width:100%;min-height:140px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:13px;line-height:1.7;outline:none;resize:vertical;font-family:inherit"
+        oninput="saveNotes()"
+      ></textarea>
+      <div id="notes-saved" style="font-size:10px;color:var(--muted);margin-top:4px;min-height:14px;text-align:right"></div>
+    </div>
+
     <div style="display:flex;gap:8px;margin:8px 0 4px">
       <button onclick="quickSyncGitHub()" style="flex:1;background:var(--blue);color:#fff;border:none;border-radius:10px;padding:11px;font-size:12px;font-weight:700;cursor:pointer">💾 儲存到 GitHub</button>
       <button onclick="manualRefreshData()" style="flex:1;background:rgba(255,255,255,.07);color:var(--text);border:none;border-radius:10px;padding:11px;font-size:12px;cursor:pointer">🔄 手動更新報價</button>
@@ -426,16 +437,6 @@
       <div id="gh-token-status" style="font-size:11px;margin-bottom:10px;color:var(--muted)"></div>
       <button id="gh-sync-btn" onclick="syncToGitHub()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;width:100%">🚀 同步到 GitHub</button>
       <div id="gh-sync-status" style="font-size:11px;margin-top:8px;min-height:16px"></div>
-    </div>
-
-    <div class="sec-title">📝 筆記</div>
-    <div class="card-dark" style="padding:12px 14px">
-      <textarea id="user-notes"
-        placeholder="隨手記錄任何事情…策略想法、待辦事項、觀察筆記"
-        style="width:100%;min-height:180px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:13px;line-height:1.7;outline:none;resize:vertical;font-family:inherit"
-        oninput="saveNotes()"
-      ></textarea>
-      <div id="notes-saved" style="font-size:10px;color:var(--muted);margin-top:4px;min-height:14px;text-align:right"></div>
     </div>
 
   </div>
@@ -1514,48 +1515,53 @@ function renderDividends(){
       </div>`;
   });
 
-  // Accordion：依股票分組
+  // Accordion：依股票分組（欄位：日期｜每股股利｜總額）
   const accEl=G('div-ytd-acc');
   accEl.innerHTML='';
   const groups={};
   const _seenYtd=new Set();
   (div.ytd||[]).forEach(d=>{
     const exKey=(d.exDate||d.date||'').slice(0,10);
-    const ov=(LOCAL.dividendOverrides||{})[d.stock+'__'+exKey]||{};
+    const key=d.stock+'__'+exKey;
+    const ov=(LOCAL.dividendOverrides||{})[key]||{};
     if(ov.hidden) return;
-    const dedupKey=d.stock+'__'+exKey;
-    if(_seenYtd.has(dedupKey)) return;
-    _seenYtd.add(dedupKey);
-    const ps=Number(d.perShare)||0;
-    const sh=Number(d.shares)||0;
-    const amt=(d.amount>0)?Number(d.amount):(ps*sh);
+    if(_seenYtd.has(key)) return;
+    _seenYtd.add(key);
+    // 每股股利：優先用手動覆蓋值
+    const dispPerShare = ov.perShare!=null ? Number(ov.perShare) : (Number(d.perShare)||0);
+    // 現持股數：從 LOCAL.portfolio 比對代碼或名稱
+    const sid = d.stock_id||'';
+    const tick = sid ? sid+'.TW' : '';
+    const portH = (LOCAL.portfolio||[]).find(p=>
+      (tick && p.tick===tick) ||
+      (d.stock && p.name && (p.name.includes(d.stock)||d.stock.includes(p.name)))
+    );
+    const currentShares = portH ? +portH.shares : Number(d.shares)||0;
+    const dispTotal = Math.round(dispPerShare * currentShares);
     if(!groups[d.stock]) groups[d.stock]={total:0,items:[]};
-    groups[d.stock].total+=amt;
-    groups[d.stock].items.push({...d, amt, _exKey:exKey});
+    groups[d.stock].total += dispTotal;
+    groups[d.stock].items.push({...d, _exKey:exKey, dispPerShare, currentShares, dispTotal});
   });
 
+  const COL = '100px 70px 80px 20px'; // 日期 | 每股股利 | 總額 | 刪除
   Object.entries(groups).forEach(([stock,data],i)=>{
-    const items=data.items.map(d=>{
-      // 用 _exKey 作為 override key（保證不含 undefined）
+    const hdr = `<div style="display:grid;grid-template-columns:${COL};gap:6px;padding:2px 8px 4px;font-size:9px;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.05)">
+      <span>日期</span><span style="text-align:right">每股股利</span><span style="text-align:right">總額（${data.items[0]?.currentShares||0}股）</span><span></span>
+    </div>`;
+    const rows=data.items.map(d=>{
       const key=d.stock+'__'+d._exKey;
       const ov=(LOCAL.dividendOverrides||{})[key]||{};
       const dispDate=ov.is_manual_date?ov.date:(d.exDate||d.date||'—');
-      // 若無手動覆蓋，直接用 amt（已正確計算）
-      const dispAmt=ov.is_manual_amount?Number(ov.amount||0):d.amt;
       const dateLineCss=ov.is_manual_date?'var(--yellow)':'rgba(255,255,255,.15)';
-      const amtLineCss=ov.is_manual_amount?'var(--yellow)':'rgba(255,255,255,.15)';
+      const psLineCss=ov.perShare!=null?'var(--yellow)':'rgba(255,255,255,.15)';
       const safeStock=d.stock.replace(/'/g,"\\'");
-      // 多重條件：靜態估算、手動旗標、來源標記、或使用者有手動修改過任一欄位 → 均視為手動項目
-      const isManualRow=!!(d.est||d.isManual||d.source==='manual'||ov.is_manual_date||ov.is_manual_amount);
-      const checkHtml=isManualRow?'':d.received?'✅':'⏳';
-      return `<div class="acc-row${isManualRow?' is-manual-item':''}">
+      return `<div style="display:grid;grid-template-columns:${COL};gap:6px;padding:5px 8px;align-items:center;border-bottom:1px solid rgba(255,255,255,.03)">
         <span contenteditable="true" onblur="onDivDateEdit(this,'${safeStock}','${d._exKey}')"
-          style="flex:1;cursor:text;outline:none;border-bottom:1px dashed ${dateLineCss};min-width:70px">${dispDate}</span>
-        <span style="color:var(--muted)">${d.note||''}</span>
-        <span contenteditable="true" class="pos" onblur="onDivAmtEdit(this,'${safeStock}','${d._exKey}')"
-          style="margin-left:auto;cursor:text;outline:none;border-bottom:1px dashed ${amtLineCss};min-width:60px">+${f(dispAmt)}</span>
-        <span class="div-check" style="margin-left:6px">${checkHtml}</span>
-        <button onclick="hideDivItem('${safeStock}','${d._exKey}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0 0 0 4px" title="隱藏此筆">✕</button>
+          style="font-size:11px;color:var(--text);cursor:text;outline:none;border-bottom:1px dashed ${dateLineCss}">${dispDate}</span>
+        <span contenteditable="true" onblur="onDivPerShareEdit(this,'${safeStock}','${d._exKey}')"
+          style="font-size:11px;color:var(--text);text-align:right;cursor:text;outline:none;border-bottom:1px dashed ${psLineCss}">${d.dispPerShare||0}</span>
+        <span style="font-size:11px;font-weight:700;color:var(--teal);text-align:right">+${f(d.dispTotal)}</span>
+        <button onclick="hideDivItem('${safeStock}','${d._exKey}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0;text-align:center" title="隱藏">✕</button>
       </div>`;
     }).join('');
     const divEl=document.createElement('div');
@@ -1568,7 +1574,7 @@ function renderDividends(){
         <span class="acc-total">+${f(data.total)}</span>
         <span class="acc-arrow" id="acc-arrow-${i}">▼</span>
       </div>
-      <div class="acc-body" id="acc-body-${i}">${items}</div>`;
+      <div class="acc-body" id="acc-body-${i}">${hdr}${rows}</div>`;
     accEl.appendChild(divEl);
   });
   renderManualDivs();
@@ -1844,6 +1850,19 @@ function onDivDateEdit(el, stock, exKey){
   LOCAL.dividendOverrides[key].is_manual_date = true;
   el.style.borderBottomColor = 'var(--yellow)';
   savePf();
+}
+
+function onDivPerShareEdit(el, stock, exKey){
+  const raw = el.textContent.replace(/[,\s]/g,'');
+  const ps = parseFloat(raw);
+  if(isNaN(ps)||ps<0) return;
+  const key = stock+'__'+exKey;
+  if(!LOCAL.dividendOverrides) LOCAL.dividendOverrides={};
+  if(!LOCAL.dividendOverrides[key]) LOCAL.dividendOverrides[key]={};
+  LOCAL.dividendOverrides[key].perShare = ps;
+  el.style.borderBottomColor = 'var(--yellow)';
+  savePf();
+  renderDividends();
 }
 
 function hideDivItem(stock, exKey){
