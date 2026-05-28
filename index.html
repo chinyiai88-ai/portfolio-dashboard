@@ -828,8 +828,10 @@ async function syncToGitHub(){
       merged.custom_targets = LOCAL.customTargets;
     }
     // 手動股利資料（跨裝置同步）
-    merged.ytd_manual       = LOCAL.ytdManual       || [];
-    merged.manual_dividends = LOCAL.manualDividends || [];
+    merged.ytd_manual          = LOCAL.ytdManual          || [];
+    merged.manual_dividends    = LOCAL.manualDividends    || [];
+    merged.dividend_overrides  = LOCAL.dividendOverrides  || {};
+    merged.user_notes          = localStorage.getItem('user_notes') || '';
     // 嵌入同步時間戳，供其他裝置偵測版本差異
     merged._synced_at = new Date().toISOString();
 
@@ -1788,14 +1790,18 @@ async function importRemotePortfolio(){
     if(remote.available_cash!==undefined) LOCAL.bankCash=remote.available_cash;
     if(remote.stock_loan!==undefined) LOCAL.stockLoan=remote.stock_loan;
     if(remote.custom_targets) LOCAL.customTargets=remote.custom_targets;
-    if(remote.ytd_manual) LOCAL.ytdManual=remote.ytd_manual;
-    if(remote.manual_dividends) LOCAL.manualDividends=remote.manual_dividends;
+    if(remote.ytd_manual)         LOCAL.ytdManual         = remote.ytd_manual;
+    if(remote.manual_dividends)   LOCAL.manualDividends   = remote.manual_dividends;
+    if(remote.dividend_overrides) LOCAL.dividendOverrides = remote.dividend_overrides;
+    if(remote.user_notes !== undefined) localStorage.setItem('user_notes', remote.user_notes);
     LOCAL.last_synced_at=remote._synced_at;
-    if(!LOCAL.manualDividends) LOCAL.manualDividends=[];
-    if(!LOCAL.customTargets) LOCAL.customTargets={};
-    if(!LOCAL.ytdManual) LOCAL.ytdManual=[];
+    if(!LOCAL.manualDividends)  LOCAL.manualDividends=[];
+    if(!LOCAL.customTargets)    LOCAL.customTargets={};
+    if(!LOCAL.ytdManual)        LOCAL.ytdManual=[];
+    if(!LOCAL.dividendOverrides) LOCAL.dividendOverrides={};
     savePf();
     G('remote-sync-banner')?.remove();
+    loadNotes();
     renderAll();
     alert('✅ 已載入 GitHub 上的最新持股結構！');
   }catch(e){
