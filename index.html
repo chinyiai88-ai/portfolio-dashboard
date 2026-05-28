@@ -674,6 +674,11 @@ function initLocal(){
           LOCAL.portfolio[i].cost = orig?.cost ?? calcCost(h);
           migrated=true;
         }
+        if(h.manualPrice===undefined){
+          const orig=pfMap[h.tick||h.name];
+          LOCAL.portfolio[i].manualPrice = orig?.manualPrice ?? null;
+          migrated=true;
+        }
       });
       (LOCAL.loan||[]).forEach((h,i)=>{
         if(h.cost==null){
@@ -1787,8 +1792,14 @@ async function importRemotePortfolio(){
     const calcCost=h=>h.cost!=null?+h.cost:(h.cur==='USD'?h.shares*h.perSh*fx:h.shares*h.perSh);
     LOCAL.portfolio=(remote.portfolio||[]).map(h=>({cat:h.cat,name:h.name,tick:h.tick||'',shares:h.shares,perSh:h.perSh,cost:calcCost(h),cur:h.cur||'TWD',note:h.note||'',manualPrice:h.manualPrice||null}));
     LOCAL.loan=(remote.loan||[]).map(h=>({name:h.name,tick:h.tick||'',shares:h.shares,perSh:h.perSh,cost:calcCost(h),cur:h.cur||'TWD',pledgeAmt:h.pledgeAmt||0,note:h.note||''}));
-    if(remote.available_cash!==undefined) LOCAL.bankCash=remote.available_cash;
-    if(remote.stock_loan!==undefined) LOCAL.stockLoan=remote.stock_loan;
+    if(remote.available_cash!==undefined){
+      LOCAL.bankCash=remote.available_cash;
+      localStorage.setItem('bankCash', LOCAL.bankCash);
+    }
+    if(remote.stock_loan!==undefined){
+      LOCAL.stockLoan=remote.stock_loan;
+      localStorage.setItem('stockLoan', LOCAL.stockLoan);
+    }
     if(remote.custom_targets) LOCAL.customTargets=remote.custom_targets;
     if(remote.ytd_manual)         LOCAL.ytdManual         = remote.ytd_manual;
     if(remote.manual_dividends)   LOCAL.manualDividends   = remote.manual_dividends;
@@ -1803,6 +1814,9 @@ async function importRemotePortfolio(){
     G('remote-sync-banner')?.remove();
     loadNotes();
     renderAll();
+    const ce=G('cash-input'), le=G('loan-input');
+    if(ce) ce.textContent=f(LOCAL.bankCash||0);
+    if(le) le.textContent=f(LOCAL.stockLoan||0);
     alert('✅ 已載入 GitHub 上的最新持股結構！');
   }catch(e){
     alert('❌ 載入失敗：'+e.message);
