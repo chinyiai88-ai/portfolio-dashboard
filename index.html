@@ -685,6 +685,7 @@ function initLocal(){
       if(!LOCAL.manualDividends){ LOCAL.manualDividends=[]; migrated=true; }
       if(!LOCAL.dividendOverrides){ LOCAL.dividendOverrides={}; migrated=true; }
       if(!LOCAL.customTargets){ LOCAL.customTargets={}; migrated=true; }
+      if(!LOCAL.ytdManual){ LOCAL.ytdManual=[]; migrated=true; }
       if(migrated) savePf();
       return;
     }catch(e){}
@@ -705,6 +706,7 @@ function initLocal(){
     manualDividends:[],
     dividendOverrides:{},
     customTargets:{},
+    ytdManual:[],
   };
   savePf();
 }
@@ -1543,18 +1545,45 @@ function renderDividends(){
     groups[d.stock].items.push({...d, _exKey:exKey, dispPerShare, currentShares, dispTotal});
   });
 
+  // 注入手動新增的 YTD 項目
+  (LOCAL.ytdManual||[]).forEach((d,li)=>{
+    const portH=(LOCAL.portfolio||[]).find(p=>
+      (d.tick&&p.tick&&p.tick.replace('.TW','')===d.tick.replace('.TW',''))||
+      (d.stock&&p.name&&(p.name.includes(d.stock)||d.stock.includes(p.name)))
+    );
+    const currentShares=d.shares||(portH?+portH.shares:0)||0;
+    const dispPerShare=d.perShare||0;
+    const dispTotal=Math.round(dispPerShare*currentShares);
+    if(!groups[d.stock]) groups[d.stock]={total:0,items:[]};
+    groups[d.stock].total+=dispTotal;
+    groups[d.stock].items.push({
+      stock:d.stock,date:d.date,_exKey:'local__'+li,
+      dispPerShare,currentShares,dispTotal,_isLocalManual:true,_localIdx:li
+    });
+  });
+
   const COL = '100px 70px 80px 20px'; // 日期 | 每股股利 | 總額 | 刪除
   Object.entries(groups).forEach(([stock,data],i)=>{
+    const autoShares=data.items.find(x=>!x._isLocalManual)?.currentShares||data.items[0]?.currentShares||0;
+    const safeStockOuter=stock.replace(/'/g,"\\'");
     const hdr = `<div style="display:grid;grid-template-columns:${COL};gap:6px;padding:2px 8px 4px;font-size:9px;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.05)">
-      <span>日期</span><span style="text-align:right">每股股利</span><span style="text-align:right">總額（${data.items[0]?.currentShares||0}股）</span><span></span>
+      <span>日期</span><span style="text-align:right">每股股利</span><span style="text-align:right">總額（${autoShares}股）</span><span></span>
     </div>`;
     const rows=data.items.map(d=>{
+      const safeStock=d.stock.replace(/'/g,"\\'");
+      if(d._isLocalManual){
+        return `<div style="display:grid;grid-template-columns:${COL};gap:6px;padding:5px 8px;align-items:center;border-bottom:1px solid rgba(255,255,255,.03);background:rgba(245,166,35,.04)">
+          <span style="font-size:11px;color:var(--yellow)">${d.date||'—'}</span>
+          <span style="font-size:11px;color:var(--yellow);text-align:right">${d.dispPerShare||0}</span>
+          <span style="font-size:11px;font-weight:700;color:var(--teal);text-align:right">+${f(d.dispTotal)}</span>
+          <button onclick="deleteYtdManual(${d._localIdx})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0;text-align:center" title="刪除">✕</button>
+        </div>`;
+      }
       const key=d.stock+'__'+d._exKey;
       const ov=(LOCAL.dividendOverrides||{})[key]||{};
       const dispDate=ov.is_manual_date?ov.date:(d.exDate||d.date||'—');
       const dateLineCss=ov.is_manual_date?'var(--yellow)':'rgba(255,255,255,.15)';
       const psLineCss=ov.perShare!=null?'var(--yellow)':'rgba(255,255,255,.15)';
-      const safeStock=d.stock.replace(/'/g,"\\'");
       return `<div style="display:grid;grid-template-columns:${COL};gap:6px;padding:5px 8px;align-items:center;border-bottom:1px solid rgba(255,255,255,.03)">
         <span contenteditable="true" onblur="onDivDateEdit(this,'${safeStock}','${d._exKey}')"
           style="font-size:11px;color:var(--text);cursor:text;outline:none;border-bottom:1px dashed ${dateLineCss}">${dispDate}</span>
@@ -1574,7 +1603,11 @@ function renderDividends(){
         <span class="acc-total">+${f(data.total)}</span>
         <span class="acc-arrow" id="acc-arrow-${i}">▼</span>
       </div>
-      <div class="acc-body" id="acc-body-${i}">${hdr}${rows}</div>`;
+      <div class="acc-body" id="acc-body-${i}">
+        ${hdr}${rows}
+        <div id="ytd-add-form-${i}" style="display:none"></div>
+        <button class="add-row-btn" style="margin:6px 8px 2px;font-size:11px;padding:6px 10px;width:calc(100% - 16px)" onclick="toggleYtdAddForm('${safeStockOuter}',${i},${autoShares})"><i class="bi bi-plus-circle"></i> 新增這期</button>
+      </div>`;
     accEl.appendChild(divEl);
   });
   renderManualDivs();
@@ -1981,6 +2014,50 @@ function submitAssetModal(){
   bootstrap.Modal.getInstance(G('addAssetModal'))?.hide();
   renderAll();
   switchTab('portfolio');
+}
+
+/* ══════════════════════════════════════
+   手動新增 YTD 股利（每支股票下的「新增這期」）
+══════════════════════════════════════ */
+function toggleYtdAddForm(stock, accIdx, shares){
+  const el=G('ytd-add-form-'+accIdx);
+  if(!el) return;
+  if(el.style.display!=='none'&&el.innerHTML){el.style.display='none';el.innerHTML='';return;}
+  el.style.display='block';
+  const safeStock=stock.replace(/'/g,"\\'");
+  el.innerHTML=`
+    <div style="background:rgba(79,110,247,.06);border:1px solid rgba(79,110,247,.2);border-radius:10px;padding:10px 12px;margin:6px 8px 2px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+        <div><label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px">除息日</label>
+          <input id="ytd-date-${accIdx}" type="date" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:5px 8px;color:var(--text);font-size:12px;outline:none"/></div>
+        <div><label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px">每股股利（元）</label>
+          <input id="ytd-ps-${accIdx}" type="number" step="0.001" placeholder="0" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:5px 8px;color:var(--text);font-size:12px;outline:none"/></div>
+        <div><label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px">股數（0=自動抓）</label>
+          <input id="ytd-sh-${accIdx}" type="number" placeholder="${shares}" value="${shares}" style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:5px 8px;color:var(--text);font-size:12px;outline:none"/></div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button onclick="submitYtdAdd('${safeStock}',${accIdx})" style="flex:1;background:var(--blue);color:#fff;border:none;border-radius:7px;padding:7px;font-size:12px;font-weight:700;cursor:pointer">確認新增</button>
+        <button onclick="G('ytd-add-form-${accIdx}').style.display='none';G('ytd-add-form-${accIdx}').innerHTML=''" style="background:rgba(255,255,255,.06);color:var(--muted);border:none;border-radius:7px;padding:7px 14px;font-size:12px;cursor:pointer">取消</button>
+      </div>
+    </div>`;
+}
+
+function submitYtdAdd(stock, accIdx){
+  const date=(G('ytd-date-'+accIdx)||{}).value?.trim();
+  const ps=parseFloat((G('ytd-ps-'+accIdx)||{}).value)||0;
+  const sh=parseFloat((G('ytd-sh-'+accIdx)||{}).value)||0;
+  if(!date){alert('請填寫除息日');return;}
+  if(!LOCAL.ytdManual) LOCAL.ytdManual=[];
+  LOCAL.ytdManual.push({stock,date,perShare:ps,shares:sh});
+  savePf();
+  renderDividends();
+}
+
+function deleteYtdManual(li){
+  if(!confirm('確定刪除這筆股利紀錄？'))return;
+  (LOCAL.ytdManual||[]).splice(li,1);
+  savePf();
+  renderDividends();
 }
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
