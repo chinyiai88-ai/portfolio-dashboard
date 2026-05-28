@@ -1,13 +1,13 @@
 // Service Worker — 發財888888 資產儀表板
-// 快取策略：index.html / manifest.json 用 cache-first（殼）
-//           data.json 永遠 network-first（確保看到最新資料）
+// 快取策略：index.html / data.json 用 network-first（確保看到最新版）
+//           manifest.json / icon.png / sw.js 用 cache-first（靜態資源）
 
-const CACHE_NAME = 'portfolio-v3';
-const SHELL = ['./index.html', './manifest.json', './sw.js', './icon.png'];
+const CACHE_NAME = 'portfolio-v4';
+const STATIC = ['./manifest.json', './sw.js', './icon.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(c => c.addAll(SHELL))
+    caches.open(CACHE_NAME).then(c => c.addAll(STATIC))
   );
   self.skipWaiting();
 });
@@ -24,8 +24,8 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
 
-  // data.json → network first，失敗才 fallback cache
-  if (url.pathname.endsWith('data.json')) {
+  // index.html 與 data.json → network first，離線才 fallback cache
+  if (url.pathname.endsWith('data.json') || url.pathname.endsWith('index.html') || url.pathname.endsWith('/')) {
     e.respondWith(
       fetch(e.request)
         .then(res => {
@@ -38,7 +38,7 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // 其他靜態資源 → cache first
+  // 其他靜態資源（icon、manifest）→ cache first
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request))
   );
