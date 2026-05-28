@@ -780,12 +780,23 @@
       "est": true
     }
   ],
-  "_synced_at": "2026-05-28T13:21:54.898Z",
+  "_synced_at": "2026-05-28T13:36:59.638Z",
   "custom_targets": {
     "成長-美股ETF": {
       "pct": 0.3
     }
   },
   "ytd_manual": [],
-  "manual_dividends": []
+  "manual_dividends": [],
+  "dividend_overrides": {
+    "00937B 群益ESG投等債20+__2026-01-15": {
+      "date": "2026-01-15",
+      "is_manual_date": true
+    },
+    "00937B 群益ESG投等債20+__2026-02-14": {
+      "date": "2026-02-14",
+      "is_manual_date": true
+    }
+  },
+  "user_notes": "00981a賣11張/00990a賣8張/00887全賣8張/00924全賣/"
 }
