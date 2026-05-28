@@ -257,7 +257,7 @@
       <div class="kpi-box" style="grid-column:1/-1">
         <div class="kpi-label">💎 金融資產淨值（NAV）</div>
         <div class="kpi-val" style="font-size:22px;font-weight:900" id="s-nav">—</div>
-        <div class="kpi-note">組合 + 借款損益 + 現金 − 貸款 ｜ USD/TWD <span id="s-fx">—</span></div>
+        <div class="kpi-note">投組現值 + 借款現值 + 現金 − 質押借款 ｜ USD/TWD <span id="s-fx">—</span></div>
       </div>
     </div>
 
@@ -299,7 +299,7 @@
       <div class="kpi-box">
         <div class="kpi-label">🏦 借款部位獲利</div>
         <div class="kpi-val" id="s-loanpnl">—</div>
-        <div class="kpi-note">借款現值 − 質押貸款額</div>
+        <div class="kpi-note">借款現值 − 借款成本</div>
       </div>
     </div>
 
@@ -410,19 +410,6 @@
     <div class="sec-title">📡 數據來源狀態</div>
     <div id="log-sources"></div>
 
-    <div class="sec-title">💾 投組資料管理</div>
-    <div class="card-dark" style="font-size:12px;line-height:2;color:var(--muted)">
-      <div>• 持股的新增 / 編輯 / 刪除存在<b style="color:var(--text)">這台裝置的瀏覽器</b></div>
-      <div>• 換裝置時先在舊裝置「匯出」，再到新裝置「匯入」</div>
-      <div>• 報價每小時由 GitHub Actions 自動更新，持股結構由你管理</div>
-      <div style="margin-top:6px;display:flex;gap:8px;flex-wrap:wrap">
-        <button onclick="exportPf()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer">📥 匯出 portfolio.json</button>
-        <button onclick="document.getElementById('import-input').click()" style="background:rgba(255,255,255,.07);color:var(--text);border:none;border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer">📤 匯入</button>
-        <button onclick="if(confirm('確定重設為 GitHub 上的版本？')){localStorage.removeItem('pf_data');location.reload()}" style="background:rgba(242,92,84,.12);color:var(--red);border:none;border-radius:8px;padding:8px 16px;font-size:12px;cursor:pointer">🔄 重設</button>
-        <input type="file" id="import-input" accept=".json" style="display:none" onchange="importPf(event)"/>
-      </div>
-    </div>
-
     <div class="sec-title">🔗 同步到 GitHub</div>
     <div class="card-dark" style="font-size:12px;color:var(--muted)">
       <div style="line-height:1.8;margin-bottom:10px">
@@ -439,6 +426,16 @@
       <div id="gh-token-status" style="font-size:11px;margin-bottom:10px;color:var(--muted)"></div>
       <button id="gh-sync-btn" onclick="syncToGitHub()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;width:100%">🚀 同步到 GitHub</button>
       <div id="gh-sync-status" style="font-size:11px;margin-top:8px;min-height:16px"></div>
+    </div>
+
+    <div class="sec-title">📝 筆記</div>
+    <div class="card-dark" style="padding:12px 14px">
+      <textarea id="user-notes"
+        placeholder="隨手記錄任何事情…策略想法、待辦事項、觀察筆記"
+        style="width:100%;min-height:180px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-size:13px;line-height:1.7;outline:none;resize:vertical;font-family:inherit"
+        oninput="saveNotes()"
+      ></textarea>
+      <div id="notes-saved" style="font-size:10px;color:var(--muted);margin-top:4px;min-height:14px;text-align:right"></div>
     </div>
 
   </div>
@@ -921,8 +918,12 @@ function pollForDataUpdate(oldTimestamp, setSt){
 ══════════════════════════════════════ */
 function setupCashEditable(){
   const ce=G('cash-input'), le=G('loan-input');
-  ce.textContent = f(localStorage.getItem('bankCash')!==null ? +localStorage.getItem('bankCash') : LOCAL.bankCash||0);
-  le.textContent = f(localStorage.getItem('stockLoan')!==null ? +localStorage.getItem('stockLoan') : LOCAL.stockLoan||0);
+  const savedCash = localStorage.getItem('bankCash');
+  const savedLoan = localStorage.getItem('stockLoan');
+  if(savedCash !== null) LOCAL.bankCash = +savedCash;
+  if(savedLoan !== null) LOCAL.stockLoan = +savedLoan;
+  ce.textContent = f(LOCAL.bankCash||0);
+  le.textContent = f(LOCAL.stockLoan||0);
   ['input','blur'].forEach(ev=>{
     ce.addEventListener(ev,()=>{ LOCAL.bankCash=parseMoney(ce); localStorage.setItem('bankCash',LOCAL.bankCash); savePf(); renderSummaryTab(); });
     le.addEventListener(ev,()=>{ LOCAL.stockLoan=parseMoney(le); localStorage.setItem('stockLoan',LOCAL.stockLoan); savePf(); renderSummaryTab(); });
@@ -1760,6 +1761,26 @@ async function importRemotePortfolio(){
 /* ══════════════════════════════════════
    Tab D：系統
 ══════════════════════════════════════ */
+/* ══════════════════════════════════════
+   筆記
+══════════════════════════════════════ */
+let _noteTimer = null;
+function saveNotes(){
+  const el = G('user-notes');
+  if(!el) return;
+  localStorage.setItem('user_notes', el.value);
+  const hint = G('notes-saved');
+  if(hint){ hint.textContent = '已自動儲存'; }
+  clearTimeout(_noteTimer);
+  _noteTimer = setTimeout(()=>{ if(hint) hint.textContent=''; }, 2000);
+}
+
+function loadNotes(){
+  const el = G('user-notes');
+  if(!el) return;
+  el.value = localStorage.getItem('user_notes') || '';
+}
+
 function renderLogs(){
   G('log-updated').textContent   = D.updated_at?new Date(D.updated_at).toLocaleString('zh-TW'):'—';
   G('log-updated-ago').textContent = relTime(D.updated_at);
@@ -1794,6 +1815,7 @@ async function loadData(){
     initLocal();
     loadThresholds();
     setupCashEditable();
+    loadNotes();
     renderAll();
     checkRemoteSync();  // 偵測其他裝置是否有更新的持股版本
 
