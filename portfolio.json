@@ -1,5 +1,5 @@
 {
-  "available_cash": 2625863,
+  "available_cash": 3646145,
   "stock_loan": 1020268,
   "thresholds": {
     "high": 30,
@@ -197,8 +197,8 @@
       "cat": "成長-美股ETF",
       "name": "00924 復華S&P500",
       "tick": "00924.TW",
-      "shares": 6747,
-      "perSh": 27.4,
+      "shares": 7117,
+      "perSh": 27.66,
       "cost": 184867.8,
       "price": 31.75,
       "cur": "TWD",
@@ -269,7 +269,7 @@
       "cat": "成長-國外基金",
       "name": "00887 永豐中國科技50大",
       "tick": "00887.TW",
-      "shares": 15000,
+      "shares": 0,
       "perSh": 12.5,
       "cost": 187500,
       "price": 15.23,
@@ -305,7 +305,7 @@
       "cat": "成長-美股個股",
       "name": "Nvidia NVDA",
       "tick": "NVDA",
-      "shares": 30,
+      "shares": 14,
       "perSh": 185.283,
       "cost": 174578.27,
       "price": 115.13,
@@ -329,8 +329,8 @@
       "cat": "成長-美股個股",
       "name": "特斯拉 TSLA",
       "tick": "TSLA",
-      "shares": 19,
-      "perSh": 400.172,
+      "shares": 0,
+      "perSh": 400.17,
       "cost": 238799.64,
       "price": 321.46,
       "cur": "USD",
@@ -341,8 +341,8 @@
       "cat": "成長-美股個股",
       "name": "Google GOOGL",
       "tick": "GOOGL",
-      "shares": 17,
-      "perSh": 300.142,
+      "shares": 0,
+      "perSh": 300.14,
       "cost": 153072.42,
       "price": 160.01,
       "cur": "USD",
@@ -422,18 +422,6 @@
       "manualPrice": null
     },
     {
-      "cat": "波段-個股",
-      "name": "緯穎 6669",
-      "tick": "6669.TW",
-      "shares": 10,
-      "perSh": 4610,
-      "cost": 46100,
-      "price": 5340,
-      "cur": "TWD",
-      "note": "",
-      "manualPrice": null
-    },
-    {
       "cat": "存股-ETF",
       "name": "00919 群益台灣精選高息",
       "tick": "00919.TW",
@@ -504,6 +492,18 @@
       "cur": "TWD",
       "note": "貸款預備池",
       "manualPrice": null
+    },
+    {
+      "cat": "存股-個股",
+      "name": "野村稀土關鍵資源",
+      "tick": "009821.TW",
+      "shares": 9000,
+      "perSh": 15,
+      "cost": 135000,
+      "cur": "TWD",
+      "note": "",
+      "manualPrice": 15.7,
+      "price": 15
     }
   ],
   "loan": [
@@ -780,7 +780,7 @@
       "est": true
     }
   ],
-  "_synced_at": "2026-06-23T14:48:50.685Z",
+  "_synced_at": "2026-06-23T14:57:27.678Z",
   "custom_targets": {
     "成長-美股ETF": {
       "pct": 0.3
