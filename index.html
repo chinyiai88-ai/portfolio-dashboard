@@ -303,12 +303,17 @@
       </div>
     </div>
 
-    <!-- Row 5: 組合報酬率 -->
+    <!-- Row 5: 組合報酬率 + 維持率 -->
     <div class="kpi-grid">
       <div class="kpi-box">
         <div class="kpi-label">📊 組合報酬率</div>
         <div class="kpi-val" id="s-ret">—</div>
         <div class="kpi-note">整體投組含成本基準</div>
+      </div>
+      <div class="kpi-box">
+        <div class="kpi-label">📐 維持率</div>
+        <div class="kpi-val" id="s-port-maint">—</div>
+        <div class="kpi-note">投資組合總額 ÷ 股票貸款</div>
       </div>
     </div>
 
@@ -629,7 +634,8 @@ function computeSummary(enriched, loanEnr){
   const pRet   = pCost>0 ? (pTotal-pCost)/pCost*100 : 0;
   const lMarketVal = loanEnr.reduce((a,h)=>a+h.value_twd,0);
   const maintainRatio = sl>0 ? lMarketVal/sl*100 : null;
-  return {pTotal,pCost,pRet,pUnreal:pTotal-pCost,lTotal,lPnl:lTotal-lCost,bankCash,cPool,cash,sl,nav,maintainRatio};
+  const portMaintRatio = pTotal>0 && sl>0 ? pTotal/sl*100 : null;
+  return {pTotal,pCost,pRet,pUnreal:pTotal-pCost,lTotal,lPnl:lTotal-lCost,bankCash,cPool,cash,sl,nav,maintainRatio,portMaintRatio};
 }
 
 function computeRebal(enriched, nav){
@@ -1000,6 +1006,14 @@ function renderSummaryContent(sum, rebal){
   }
   G('s-ret').textContent     = (sum.pRet>=0?'+':'')+fp(sum.pRet);
   G('s-ret').className       = 'kpi-val '+clr(sum.pRet);
+  const pmEl=G('s-port-maint');
+  if(pmEl){
+    const pm=sum.portMaintRatio;
+    if(pm!==null){
+      pmEl.textContent=pm.toFixed(0)+'%';
+      pmEl.style.color=pm<130?'var(--red)':pm<=200?'var(--yellow)':'var(--green)';
+    } else { pmEl.textContent='—'; pmEl.style.color='var(--muted)'; }
+  }
 
   // 系統燈號（用 localStorage 門檻重新計算）
   const sRet = D.summary?.portfolio_return_pct||0;
