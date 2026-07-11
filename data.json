@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-11T22:55:06.892024+08:00",
+  "updated_at": "2026-07-11T23:57:20.331336+08:00",
   "exchange_rate": 32.099,
   "summary": {
     "nav": 9603722.0,
@@ -1088,18 +1088,6 @@
         "est": false
       },
       {
-        "stock": "00919 \u7fa4\u76ca\u53f0\u7063\u7cbe\u9078\u9ad8\u606f",
-        "stock_id": "00919",
-        "shares": 20000,
-        "perShare": 1.0,
-        "exDate": "2026-06-16",
-        "payDate": "2026-07-13",
-        "note": "115",
-        "amount": 20000.0,
-        "received": false,
-        "est": false
-      },
-      {
         "stock": "00937B \u7fa4\u76caESG\u6295\u7b49\u50b520+",
         "stock_id": "00937B",
         "shares": 23000,
@@ -1160,10 +1148,10 @@
         "est": false
       }
     ],
-    "ytd_total": 192814.0,
-    "annual_estimate": 330538.0,
+    "ytd_total": 172814.0,
+    "annual_estimate": 296253.0,
     "next30d_estimate": 0,
-    "ytd_yield_pct": 2.01
+    "ytd_yield_pct": 1.8
   },
   "us_exposure": [
     {
@@ -1407,7 +1395,7 @@
     "yfinance": "ok (23 prices)",
     "twse_backup": "ok (2 prices)",
     "usd_twd": 32.099,
-    "finmind": "ok (upcoming:0, ytd:27)",
+    "finmind": "ok (upcoming:0, ytd:26)",
     "twii": "ok (45,355 | ATH:47,776)"
   }
 }
