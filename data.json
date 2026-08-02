@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-03T01:00:15.381349+08:00",
+  "updated_at": "2026-08-03T02:07:08.013764+08:00",
   "exchange_rate": 32.295,
   "summary": {
     "nav": 9268453.0,
@@ -1386,11 +1386,11 @@
     }
   },
   "twii_market": {
-    "close": 43119.75,
+    "close": 39933.3,
     "close_date": "2026/07/31",
     "ath": 47776.0,
     "ath_date": "2026/06/22",
-    "drop_pct": -9.75,
+    "drop_pct": -16.42,
     "ma20": 44114.76,
     "ma60": 44089.08,
     "ma240": 33295.78,
@@ -1399,42 +1399,42 @@
         "name": "\u7834\u5b63\u7dda\u6295\u516525%",
         "trigger": 44089.08,
         "amount": 463423.0,
-        "gap": -969.0,
+        "gap": -4156.0,
         "triggered": true
       },
       {
         "name": "\u8dcc10%(\u5df2\u7834\u6708\u7dda)\u6295\u516515%",
         "trigger": 42998.4,
         "amount": 278054.0,
-        "gap": 121.0,
-        "triggered": false
+        "gap": -3065.0,
+        "triggered": true
       },
       {
         "name": "\u8dcc15%(\u5df2\u7834\u5b63\u7dda)\u6295\u516520%",
         "trigger": 40609.6,
         "amount": 370738.0,
-        "gap": 2510.0,
-        "triggered": false
+        "gap": -676.0,
+        "triggered": true
       },
       {
         "name": "\uff08\u7d04\u5e74\u7dda\uff09\u783419%\u6295\u516510%",
         "trigger": 38698.56,
         "amount": 185369.0,
-        "gap": 4421.0,
+        "gap": 1235.0,
         "triggered": false
       },
       {
         "name": "\u783420%\u6295\u516510%",
         "trigger": 38220.8,
         "amount": 185369.0,
-        "gap": 4899.0,
+        "gap": 1712.0,
         "triggered": false
       },
       {
         "name": "\u5e74\u7dda\u4e0b\u783420%\u6295\u516510%",
         "trigger": 38220.8,
         "amount": 185369.0,
-        "gap": 4899.0,
+        "gap": 1712.0,
         "triggered": false
       }
     ]
@@ -1444,6 +1444,6 @@
     "twse_backup": "ok (2 prices)",
     "usd_twd": 32.295,
     "finmind": "ok (upcoming:0, ytd:30)",
-    "twii": "ok (43,120 | ATH:47,776)"
+    "twii": "ok (39,933 | ATH:47,776)"
   }
 }
