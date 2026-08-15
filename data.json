@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-15T13:25:02.285674+08:00",
+  "updated_at": "2026-08-15T14:39:09.881284+08:00",
   "exchange_rate": 32.004,
   "summary": {
     "nav": 9687975.0,
@@ -559,6 +559,26 @@
   "loan": [],
   "dividends": {
     "upcoming": [
+      {
+        "stock": "00937B \u7fa4\u76caESG\u6295\u7b49\u50b520+",
+        "stock_id": "00937B",
+        "shares": 23000,
+        "perShare": 0.072,
+        "exDate": "2026-08-18",
+        "payDate": "2026-09-11",
+        "note": "115",
+        "amount": 1656.0
+      },
+      {
+        "stock": "00772B \u4e2d\u4fe1\u516c\u53f8\u50b5",
+        "stock_id": "00772B",
+        "shares": 9000,
+        "perShare": 0.14,
+        "exDate": "2026-08-18",
+        "payDate": "2026-09-11",
+        "note": "115",
+        "amount": 1260.0
+      },
       {
         "stock": "\u5947\u92d0 3017",
         "stock_id": "3017",
@@ -1209,7 +1229,7 @@
     ],
     "ytd_total": 198160.0,
     "annual_estimate": 297240.0,
-    "next30d_estimate": 2088.0,
+    "next30d_estimate": 5004.0,
     "ytd_yield_pct": 2.05
   },
   "us_exposure": [
@@ -1402,15 +1422,15 @@
     "ath": 47776.0,
     "ath_date": "2026/06/22",
     "drop_pct": -4.11,
-    "ma20": 43786.26,
-    "ma60": 44668.55,
-    "ma240": 34156.31,
+    "ma20": 43873.73,
+    "ma60": 44483.72,
+    "ma240": 33909.97,
     "triggers": [
       {
         "name": "\u7834\u5b63\u7dda\u6295\u516525%",
-        "trigger": 44668.55,
+        "trigger": 44483.72,
         "amount": 484399.0,
-        "gap": 1142.0,
+        "gap": 1327.0,
         "triggered": false
       },
       {
@@ -1454,7 +1474,7 @@
     "yfinance": "ok (23 prices)",
     "twse_backup": "ok (2 prices)",
     "usd_twd": 32.004,
-    "finmind": "ok (upcoming:1, ytd:30)",
+    "finmind": "ok (upcoming:3, ytd:30)",
     "twii": "ok (45,811 | ATH:47,776)"
   }
 }
