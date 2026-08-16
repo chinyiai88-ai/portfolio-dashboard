@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-16T19:20:34.670430+08:00",
+  "updated_at": "2026-08-16T20:39:50.311739+08:00",
   "exchange_rate": 32.004,
   "summary": {
     "nav": 9659520.0,
@@ -496,7 +496,7 @@
       "cur": "TWD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 263200.0,
+      "value_twd": 263200.01,
       "return_pct": 129.75
     },
     {
@@ -1422,15 +1422,15 @@
     "ath": 47776.0,
     "ath_date": "2026/06/22",
     "drop_pct": -4.11,
-    "ma20": 43786.26,
-    "ma60": 44668.55,
-    "ma240": 34156.31,
+    "ma20": 43873.73,
+    "ma60": 44483.72,
+    "ma240": 33909.97,
     "triggers": [
       {
         "name": "\u7834\u5b63\u7dda\u6295\u516525%",
-        "trigger": 44668.55,
+        "trigger": 44483.72,
         "amount": 482976.0,
-        "gap": 1142.0,
+        "gap": 1327.0,
         "triggered": false
       },
       {
@@ -1471,8 +1471,8 @@
     ]
   },
   "logs": {
-    "yfinance": "ok (22 prices)",
-    "twse_backup": "ok (3 prices)",
+    "yfinance": "ok (23 prices)",
+    "twse_backup": "ok (2 prices)",
     "usd_twd": 32.004,
     "finmind": "ok (upcoming:3, ytd:30)",
     "twii": "ok (45,811 | ATH:47,776)"
