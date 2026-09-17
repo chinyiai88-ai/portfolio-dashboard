@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-09-17T19:08:59.102363+08:00",
-  "exchange_rate": 31.883,
+  "updated_at": "2026-09-18T00:25:52.218496+08:00",
+  "exchange_rate": 31.871,
   "summary": {
-    "nav": 9580528.0,
-    "portfolio_total": 6375591.0,
+    "nav": 9501839.0,
+    "portfolio_total": 6296902.0,
     "portfolio_cost": 4721359.0,
-    "portfolio_return_pct": 35.04,
+    "portfolio_return_pct": 33.37,
     "loan_total": 0,
     "loan_pnl": 0,
     "available_cash": 4225205.0,
@@ -14,7 +14,7 @@
     "signal_level": "high",
     "pos2_signal": "\u6e1b\u5009",
     "pos2_signal_level": "high",
-    "pos2_return_pct": 283.67,
+    "pos2_return_pct": 269.76,
     "thresholds": {
       "high": 30,
       "midH": 15,
@@ -24,26 +24,26 @@
     "cat_breakdown": [
       {
         "cat": "\u53f0\u7063\u5927\u76e4ETF",
-        "value": 2186076.0,
+        "value": 2134176.0,
         "cost": 1162477.0,
-        "return_pct": 88.05,
-        "actual_pct": 22.82,
+        "return_pct": 83.59,
+        "actual_pct": 22.46,
         "target_pct": 31.0,
-        "diff_pct": -8.18,
-        "target_amount": 2969964.0,
-        "diff_amount": -783887.0,
+        "diff_pct": -8.54,
+        "target_amount": 2945570.0,
+        "diff_amount": -811394.0,
         "strat": "\u6b632:20% \uff0b 00981A:10%"
       },
       {
         "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
-        "value": 1385694.0,
+        "value": 1370867.0,
         "cost": 870598.0,
-        "return_pct": 59.17,
-        "actual_pct": 14.46,
+        "return_pct": 57.46,
+        "actual_pct": 14.43,
         "target_pct": 20.0,
-        "diff_pct": -5.54,
-        "target_amount": 1916106.0,
-        "diff_amount": -530411.0,
+        "diff_pct": -5.57,
+        "target_amount": 1900368.0,
+        "diff_amount": -529501.0,
         "strat": "00924\u3001TOPT"
       },
       {
@@ -51,59 +51,59 @@
         "value": 245006.0,
         "cost": 432506.0,
         "return_pct": -43.35,
-        "actual_pct": 2.56,
+        "actual_pct": 2.58,
         "target_pct": 5.0,
-        "diff_pct": -2.44,
-        "target_amount": 479026.0,
-        "diff_amount": -234020.0,
+        "diff_pct": -2.42,
+        "target_amount": 475092.0,
+        "diff_amount": -230086.0,
         "strat": "\u5370\u5ea6\u57fa\u91d1 \uff0b \u4e2d\u570b\u79d1\u6280"
       },
       {
         "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
-        "value": 403625.0,
+        "value": 407511.0,
         "cost": 798615.0,
-        "return_pct": -49.46,
-        "actual_pct": 4.21,
+        "return_pct": -48.97,
+        "actual_pct": 4.29,
         "target_pct": 10.0,
-        "diff_pct": -5.79,
-        "target_amount": 958053.0,
-        "diff_amount": -554428.0,
+        "diff_pct": -5.71,
+        "target_amount": 950184.0,
+        "diff_amount": -542673.0,
         "strat": "Nvidia 40% / Tesla 30% / Google 30%"
       },
       {
         "cat": "\u6ce2\u6bb5-\u500b\u80a1",
-        "value": 520429.0,
+        "value": 519362.0,
         "cost": 277492,
-        "return_pct": 87.55,
-        "actual_pct": 5.43,
+        "return_pct": 87.16,
+        "actual_pct": 5.47,
         "target_pct": 6.0,
-        "diff_pct": -0.57,
-        "target_amount": 574832.0,
-        "diff_amount": -54403.0,
+        "diff_pct": -0.53,
+        "target_amount": 570110.0,
+        "diff_amount": -50749.0,
         "strat": "\u5118\u5feb\u8ce3\u6389\uff0c\u8f49\u50b5\u5238\u505c\u6cca"
       },
       {
         "cat": "\u5b58\u80a1-ETF",
-        "value": 642200.0,
+        "value": 632800.0,
         "cost": 404000,
-        "return_pct": 58.96,
-        "actual_pct": 6.7,
+        "return_pct": 56.63,
+        "actual_pct": 6.66,
         "target_pct": 5.0,
-        "diff_pct": 1.7,
-        "target_amount": 479026.0,
-        "diff_amount": 163174.0,
+        "diff_pct": 1.66,
+        "target_amount": 475092.0,
+        "diff_amount": 157708.0,
         "strat": "00919\uff0c\u586b\u606f\u5f8c\u8f49\u6b632"
       },
       {
         "cat": "\u5b58\u80a1-\u500b\u80a1",
-        "value": 652850.0,
+        "value": 647470.0,
         "cost": 429060,
-        "return_pct": 52.16,
+        "return_pct": 50.9,
         "actual_pct": 6.81,
         "target_pct": 8.0,
         "diff_pct": -1.19,
-        "target_amount": 766442.0,
-        "diff_amount": -113592.0,
+        "target_amount": 760147.0,
+        "diff_amount": -112677.0,
         "strat": "\u4e2d\u4fe1\u91d1 \uff0b \u53f0\u7a4d\u96fb"
       },
       {
@@ -111,11 +111,11 @@
         "value": 339710.0,
         "cost": 346610,
         "return_pct": -1.99,
-        "actual_pct": 3.55,
+        "actual_pct": 3.58,
         "target_pct": 5.0,
-        "diff_pct": -1.45,
-        "target_amount": 479026.0,
-        "diff_amount": -139316.0,
+        "diff_pct": -1.42,
+        "target_amount": 475092.0,
+        "diff_amount": -135382.0,
         "strat": "\u6708\u914d\uff0c\u76ee\u6a19\u5b58\u5230288\u842c"
       }
     ]
@@ -128,12 +128,12 @@
       "shares": 40000,
       "perSh": 9.49,
       "cost": 730730,
-      "price": 36.41,
+      "price": 35.09,
       "cur": "TWD",
       "note": "\u4e0a\u965020%",
       "manualPrice": null,
-      "value_twd": 1456399.99,
-      "return_pct": 99.31
+      "value_twd": 1403600.01,
+      "return_pct": 92.08
     },
     {
       "cat": "\u53f0\u7063\u5927\u76e4ETF",
@@ -142,12 +142,12 @@
       "shares": 21000,
       "perSh": 18.465,
       "cost": 387765,
-      "price": 28.13,
+      "price": 28.23,
       "cur": "TWD",
       "note": "\u4e0a\u965010%",
       "manualPrice": null,
-      "value_twd": 590729.98,
-      "return_pct": 52.34
+      "value_twd": 592829.99,
+      "return_pct": 52.88
     },
     {
       "cat": "\u53f0\u7063\u5927\u76e4ETF",
@@ -156,12 +156,12 @@
       "shares": 1000,
       "perSh": 15,
       "cost": 15000,
-      "price": 92.15,
+      "price": 90.95,
       "cur": "TWD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 92150.0,
-      "return_pct": 514.33
+      "value_twd": 90950.0,
+      "return_pct": 506.33
     },
     {
       "cat": "\u53f0\u7063\u5927\u76e4ETF",
@@ -184,12 +184,12 @@
       "shares": 3000,
       "perSh": 12.48,
       "cost": 37440,
-      "price": 42.82,
+      "price": 42.09,
       "cur": "TWD",
       "note": "\u96f6\u6210\u672c",
       "manualPrice": null,
-      "value_twd": 128460.0,
-      "return_pct": 243.11
+      "value_twd": 126270.0,
+      "return_pct": 237.26
     },
     {
       "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
@@ -198,12 +198,12 @@
       "shares": 7117,
       "perSh": 27.66,
       "cost": 184867.8,
-      "price": 32.82,
+      "price": 32.64,
       "cur": "TWD",
       "note": "\u6bcf\u6708\u5b9a\u984d17000",
       "manualPrice": null,
-      "value_twd": 233579.94,
-      "return_pct": 26.35
+      "value_twd": 232298.88,
+      "return_pct": 25.66
     },
     {
       "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
@@ -212,12 +212,12 @@
       "shares": 6000,
       "perSh": 38.84,
       "cost": 233040,
-      "price": 80.45,
+      "price": 79.0,
       "cur": "TWD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 482699.98,
-      "return_pct": 107.13
+      "value_twd": 474000.0,
+      "return_pct": 103.4
     },
     {
       "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
@@ -226,12 +226,12 @@
       "shares": 242,
       "perSh": 26.84,
       "cost": 204000.51,
-      "price": 33.75,
+      "price": 34.3,
       "cur": "USD",
       "note": "\u4e0a\u965010%",
       "manualPrice": null,
-      "value_twd": 260404.4,
-      "return_pct": 27.65
+      "value_twd": 264548.42,
+      "return_pct": 29.68
     },
     {
       "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
@@ -240,12 +240,12 @@
       "shares": 15000,
       "perSh": 10.4,
       "cost": 156000,
-      "price": 14.89,
+      "price": 14.53,
       "cur": "TWD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 223350.01,
-      "return_pct": 43.17
+      "value_twd": 217950.0,
+      "return_pct": 39.71
     },
     {
       "cat": "\u6210\u9577-\u7f8e\u80a1ETF",
@@ -254,12 +254,12 @@
       "shares": 1000,
       "perSh": 70.2,
       "cost": 55250,
-      "price": 57.2,
+      "price": 55.8,
       "cur": "TWD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 57200.0,
-      "return_pct": 3.53
+      "value_twd": 55800.0,
+      "return_pct": 1.0
     },
     {
       "cat": "\u6210\u9577-\u570b\u5916\u57fa\u91d1",
@@ -296,12 +296,12 @@
       "shares": 50,
       "perSh": 23.91,
       "cost": 37547.67,
-      "price": 13.63,
+      "price": 13.795,
       "cur": "USD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 21728.26,
-      "return_pct": -42.13
+      "value_twd": 21983.02,
+      "return_pct": -41.45
     },
     {
       "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
@@ -310,12 +310,12 @@
       "shares": 2,
       "perSh": 171.43,
       "cost": 10768.38,
-      "price": 332.41,
+      "price": 336.24,
       "cur": "USD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 21196.46,
-      "return_pct": 96.84
+      "value_twd": 21432.61,
+      "return_pct": 99.03
     },
     {
       "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
@@ -324,12 +324,12 @@
       "shares": 14,
       "perSh": 185.283,
       "cost": 174578.27,
-      "price": 213.9,
+      "price": 218.94,
       "cur": "USD",
       "note": "\u5bcc\u90a616 \u5143\u592714",
       "manualPrice": null,
-      "value_twd": 95476.83,
-      "return_pct": -45.31
+      "value_twd": 97689.72,
+      "return_pct": -44.04
     },
     {
       "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
@@ -338,12 +338,12 @@
       "shares": 5,
       "perSh": 930.93,
       "cost": 146190.92,
-      "price": 1137.8199,
+      "price": 1145.36,
       "cur": "USD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 181385.56,
-      "return_pct": 24.07
+      "value_twd": 182518.84,
+      "return_pct": 24.85
     },
     {
       "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
@@ -352,7 +352,7 @@
       "shares": 0,
       "perSh": 400.17,
       "cost": 238799.64,
-      "price": 358.08,
+      "price": 368.115,
       "cur": "USD",
       "note": "\u5bcc\u90a611 \u5143\u59278",
       "manualPrice": null,
@@ -366,7 +366,7 @@
       "shares": 0,
       "perSh": 300.14,
       "cost": 153072.42,
-      "price": 342.87,
+      "price": 345.4,
       "cur": "USD",
       "note": "",
       "manualPrice": null,
@@ -380,12 +380,12 @@
       "shares": 7,
       "perSh": 168.169,
       "cost": 36972.38,
-      "price": 375.65,
+      "price": 376.01,
       "cur": "USD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 83837.94,
-      "return_pct": 126.76
+      "value_twd": 83886.71,
+      "return_pct": 126.89
     },
     {
       "cat": "\u6210\u9577-\u7f8e\u80a1\u500b\u80a1",
@@ -436,12 +436,12 @@
       "shares": 192,
       "perSh": 1,
       "cost": 192,
-      "price": 37.65,
+      "price": 37.3,
       "cur": "TWD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 7228.8,
-      "return_pct": 3665.0
+      "value_twd": 7161.6,
+      "return_pct": 3630.0
     },
     {
       "cat": "\u6ce2\u6bb5-\u500b\u80a1",
@@ -450,12 +450,12 @@
       "shares": 100,
       "perSh": 769,
       "cost": 76900,
-      "price": 3185.0,
+      "price": 3175.0,
       "cur": "TWD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 318500.0,
-      "return_pct": 314.17
+      "value_twd": 317500.0,
+      "return_pct": 312.87
     },
     {
       "cat": "\u5b58\u80a1-ETF",
@@ -464,12 +464,12 @@
       "shares": 20000,
       "perSh": 20.2,
       "cost": 404000,
-      "price": 32.11,
+      "price": 31.64,
       "cur": "TWD",
       "note": "\u4e2d\u4fe115000/\u570b\u6cf05000",
       "manualPrice": null,
-      "value_twd": 642200.01,
-      "return_pct": 58.96
+      "value_twd": 632800.03,
+      "return_pct": 56.63
     },
     {
       "cat": "\u5b58\u80a1-\u500b\u80a1",
@@ -478,12 +478,12 @@
       "shares": 100,
       "perSh": 1795,
       "cost": 179500,
-      "price": 2425.0,
+      "price": 2380.0,
       "cur": "TWD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 242500.0,
-      "return_pct": 35.1
+      "value_twd": 238000.0,
+      "return_pct": 32.59
     },
     {
       "cat": "\u5b58\u80a1-\u500b\u80a1",
@@ -492,12 +492,12 @@
       "shares": 4000,
       "perSh": 28.64,
       "cost": 114560,
-      "price": 71.2,
+      "price": 70.8,
       "cur": "TWD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 284799.99,
-      "return_pct": 148.6
+      "value_twd": 283200.01,
+      "return_pct": 147.21
     },
     {
       "cat": "\u50b5\u5238",
@@ -551,9 +551,9 @@
       "cur": "TWD",
       "note": "",
       "manualPrice": 15.7,
-      "price": 13.95,
-      "value_twd": 125550.0,
-      "return_pct": -7.0
+      "price": 14.03,
+      "value_twd": 126270.0,
+      "return_pct": -6.47
     }
   ],
   "loan": [],
@@ -1307,98 +1307,98 @@
     "ytd_total": 242860.0,
     "annual_estimate": 323814.0,
     "next30d_estimate": 0,
-    "ytd_yield_pct": 2.53
+    "ytd_yield_pct": 2.56
   },
   "us_exposure": [
     {
       "sym": "NVDA",
-      "value_usd": 8265.39,
-      "value_twd": 263525.0,
-      "direct_usd": 2994.6,
-      "etf_usd": 5270.79
+      "value_usd": 8294.61,
+      "value_twd": 264358.0,
+      "direct_usd": 3065.16,
+      "etf_usd": 5229.45
     },
     {
       "sym": "LLY",
-      "value_usd": 6287.17,
-      "value_twd": 200454.0,
-      "direct_usd": 5689.1,
-      "etf_usd": 598.07
+      "value_usd": 6327.17,
+      "value_twd": 201653.0,
+      "direct_usd": 5726.8,
+      "etf_usd": 600.37
     },
     {
       "sym": "PANW",
-      "value_usd": 2629.55,
-      "value_twd": 83838.0,
-      "direct_usd": 2629.55,
+      "value_usd": 2632.07,
+      "value_twd": 83887.0,
+      "direct_usd": 2632.07,
       "etf_usd": 0.0
     },
     {
       "sym": "AVGO",
-      "value_usd": 2414.11,
-      "value_twd": 76969.0,
+      "value_usd": 2385.9,
+      "value_twd": 76041.0,
       "direct_usd": 0.0,
-      "etf_usd": 2414.11
+      "etf_usd": 2385.9
     },
     {
       "sym": "AAPL",
-      "value_usd": 2252.34,
-      "value_twd": 71811.0,
-      "direct_usd": 664.82,
-      "etf_usd": 1587.52
+      "value_usd": 2276.54,
+      "value_twd": 72556.0,
+      "direct_usd": 672.48,
+      "etf_usd": 1604.06
     },
     {
       "sym": "GOOGL",
-      "value_usd": 2132.68,
-      "value_twd": 67996.0,
+      "value_usd": 2133.8,
+      "value_twd": 68006.0,
       "direct_usd": 0.0,
-      "etf_usd": 2132.68
+      "etf_usd": 2133.8
     },
     {
       "sym": "MSFT",
-      "value_usd": 2102.54,
-      "value_twd": 67035.0,
+      "value_usd": 2106.41,
+      "value_twd": 67133.0,
       "direct_usd": 0.0,
-      "etf_usd": 2102.54
+      "etf_usd": 2106.41
     },
     {
       "sym": "AMD",
-      "value_usd": 1935.89,
-      "value_twd": 61722.0,
+      "value_usd": 1908.18,
+      "value_twd": 60816.0,
       "direct_usd": 0.0,
-      "etf_usd": 1935.89
+      "etf_usd": 1908.18
     },
     {
       "sym": "META",
-      "value_usd": 1276.91,
-      "value_twd": 40712.0,
+      "value_usd": 1271.36,
+      "value_twd": 40519.0,
       "direct_usd": 0.0,
-      "etf_usd": 1276.91
+      "etf_usd": 1271.36
     },
     {
       "sym": "TSLA",
-      "value_usd": 1153.34,
-      "value_twd": 36772.0,
+      "value_usd": 1145.96,
+      "value_twd": 36523.0,
       "direct_usd": 0.0,
-      "etf_usd": 1153.34
-    },
-    {
-      "sym": "TSM",
-      "value_usd": 1018.79,
-      "value_twd": 32482.0,
-      "direct_usd": 0.0,
-      "etf_usd": 1018.79
+      "etf_usd": 1145.96
     },
     {
       "sym": "AMZN",
-      "value_usd": 1009.16,
-      "value_twd": 32175.0,
+      "value_usd": 1011.72,
+      "value_twd": 32245.0,
       "direct_usd": 0.0,
-      "etf_usd": 1009.16
+      "etf_usd": 1011.72
+    },
+    {
+      "sym": "TSM",
+      "value_usd": 998.25,
+      "value_twd": 31815.0,
+      "direct_usd": 0.0,
+      "etf_usd": 998.25
     },
     {
       "sym": "PATH",
-      "value_usd": 681.5,
-      "value_twd": 21728.0,
-      "direct_usd": 681.5,
+      "value_usd": 689.75,
+      "value_twd": 21983.0,
+      "direct_usd": 689.75,
       "etf_usd": 0.0
     },
     {
@@ -1499,49 +1499,49 @@
     "ath": 47776.0,
     "ath_date": "2026/06/22",
     "drop_pct": -3.11,
-    "ma20": 46159.89,
-    "ma60": 45156.82,
-    "ma240": 36293.06,
+    "ma20": 46092.17,
+    "ma60": 45152.75,
+    "ma240": 36206.77,
     "triggers": [
       {
         "name": "\u7834\u5b63\u7dda\u6295\u516525%",
-        "trigger": 45156.82,
-        "amount": 479026.0,
-        "gap": 1131.0,
+        "trigger": 45152.75,
+        "amount": 475092.0,
+        "gap": 1135.0,
         "triggered": false
       },
       {
         "name": "\u8dcc10%(\u5df2\u7834\u6708\u7dda)\u6295\u516515%",
         "trigger": 42998.4,
-        "amount": 287416.0,
+        "amount": 285055.0,
         "gap": 3290.0,
         "triggered": false
       },
       {
         "name": "\u8dcc15%(\u5df2\u7834\u5b63\u7dda)\u6295\u516520%",
         "trigger": 40609.6,
-        "amount": 383221.0,
+        "amount": 380074.0,
         "gap": 5678.0,
         "triggered": false
       },
       {
         "name": "\uff08\u7d04\u5e74\u7dda\uff09\u783419%\u6295\u516510%",
         "trigger": 38698.56,
-        "amount": 191611.0,
+        "amount": 190037.0,
         "gap": 7589.0,
         "triggered": false
       },
       {
         "name": "\u783420%\u6295\u516510%",
         "trigger": 38220.8,
-        "amount": 191611.0,
+        "amount": 190037.0,
         "gap": 8067.0,
         "triggered": false
       },
       {
         "name": "\u5e74\u7dda\u4e0b\u783420%\u6295\u516510%",
         "trigger": 38220.8,
-        "amount": 191611.0,
+        "amount": 190037.0,
         "gap": 8067.0,
         "triggered": false
       }
@@ -1550,7 +1550,7 @@
   "logs": {
     "yfinance": "ok (23 prices)",
     "twse_backup": "ok (2 prices)",
-    "usd_twd": 31.883,
+    "usd_twd": 31.871,
     "finmind": "ok (upcoming:0, ytd:39)",
     "twii": "ok (46,288 | ATH:47,776)"
   }
