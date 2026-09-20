@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-20T08:44:45.309676+08:00",
+  "updated_at": "2026-09-20T13:48:23.744588+08:00",
   "exchange_rate": 31.763,
   "summary": {
     "nav": 9699679.0,
@@ -1494,55 +1494,55 @@
     }
   },
   "twii_market": {
-    "close": 47180.75,
-    "close_date": "2026/09/18",
+    "close": 47368.04,
+    "close_date": "2026/09/20",
     "ath": 47776.0,
     "ath_date": "2026/06/22",
-    "drop_pct": -1.25,
-    "ma20": 46257.71,
-    "ma60": 45172.25,
-    "ma240": 36381.81,
+    "drop_pct": -0.85,
+    "ma20": 46387.99,
+    "ma60": 45218.85,
+    "ma240": 36469.81,
     "triggers": [
       {
         "name": "\u7834\u5b63\u7dda\u6295\u516525%",
-        "trigger": 45172.25,
+        "trigger": 45218.85,
         "amount": 484984.0,
-        "gap": 2008.0,
+        "gap": 2149.0,
         "triggered": false
       },
       {
         "name": "\u8dcc10%(\u5df2\u7834\u6708\u7dda)\u6295\u516515%",
         "trigger": 42998.4,
         "amount": 290990.0,
-        "gap": 4182.0,
+        "gap": 4370.0,
         "triggered": false
       },
       {
         "name": "\u8dcc15%(\u5df2\u7834\u5b63\u7dda)\u6295\u516520%",
         "trigger": 40609.6,
         "amount": 387987.0,
-        "gap": 6571.0,
+        "gap": 6758.0,
         "triggered": false
       },
       {
         "name": "\uff08\u7d04\u5e74\u7dda\uff09\u783419%\u6295\u516510%",
         "trigger": 38698.56,
         "amount": 193994.0,
-        "gap": 8482.0,
+        "gap": 8669.0,
         "triggered": false
       },
       {
         "name": "\u783420%\u6295\u516510%",
         "trigger": 38220.8,
         "amount": 193994.0,
-        "gap": 8960.0,
+        "gap": 9147.0,
         "triggered": false
       },
       {
         "name": "\u5e74\u7dda\u4e0b\u783420%\u6295\u516510%",
         "trigger": 38220.8,
         "amount": 193994.0,
-        "gap": 8960.0,
+        "gap": 9147.0,
         "triggered": false
       }
     ]
@@ -1552,6 +1552,6 @@
     "twse_backup": "ok (2 prices)",
     "usd_twd": 31.763,
     "finmind": "ok (upcoming:0, ytd:39)",
-    "twii": "ok (47,181 | ATH:47,776)"
+    "twii": "ok (47,368 | ATH:47,776)"
   }
 }
