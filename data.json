@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-26T15:09:21.400268+08:00",
+  "updated_at": "2026-09-26T20:42:46.335474+08:00",
   "exchange_rate": 31.695,
   "summary": {
     "nav": 9865461.0,
@@ -755,6 +755,18 @@
         "exDate": "2026-03-13"
       },
       {
+        "stock": "00981A \u7d71\u4e00\u53f0\u80a1\u589e\u9577ETF",
+        "stock_id": "00981A",
+        "shares": 21000,
+        "perShare": 0.41,
+        "exDate": "2026-03-17",
+        "payDate": "2026-04-10",
+        "note": "115",
+        "amount": 8610.0,
+        "received": true,
+        "est": false
+      },
+      {
         "stock": "00919 \u7fa4\u76ca\u53f0\u7063\u7cbe\u9078\u9ad8\u606f",
         "stock_id": "00919",
         "shares": 20000,
@@ -1052,6 +1064,30 @@
         "est": false
       },
       {
+        "stock": "00981A \u7d71\u4e00\u53f0\u80a1\u589e\u9577ETF",
+        "stock_id": "00981A",
+        "shares": 21000,
+        "perShare": 0.63,
+        "exDate": "2026-06-16",
+        "payDate": "2026-07-09",
+        "note": "115",
+        "amount": 13230.0,
+        "received": true,
+        "est": false
+      },
+      {
+        "stock": "00981A \u7d71\u4e00\u53f0\u80a1\u589e\u9577ETF",
+        "stock_id": "00981A",
+        "shares": 21000,
+        "perShare": 0.63,
+        "exDate": "2026-06-16",
+        "payDate": "2026-07-09",
+        "note": "115",
+        "amount": 13230.0,
+        "received": true,
+        "est": false
+      },
+      {
         "stock": "00919 \u7fa4\u76ca\u53f0\u7063\u7cbe\u9078\u9ad8\u606f",
         "stock_id": "00919",
         "shares": 20000,
@@ -1208,6 +1244,18 @@
         "est": false
       },
       {
+        "stock": "00981A \u7d71\u4e00\u53f0\u80a1\u589e\u9577ETF",
+        "stock_id": "00981A",
+        "shares": 21000,
+        "perShare": 0.63,
+        "exDate": "2026-09-16",
+        "payDate": "2026-10-13",
+        "note": "115",
+        "amount": 13230.0,
+        "received": false,
+        "est": false
+      },
+      {
         "stock": "00919 \u7fa4\u76ca\u53f0\u7063\u7cbe\u9078\u9ad8\u606f",
         "stock_id": "00919",
         "shares": 20000,
@@ -1256,10 +1304,10 @@
         "est": false
       }
     ],
-    "ytd_total": 194560.0,
-    "annual_estimate": 259414.0,
+    "ytd_total": 242860.0,
+    "annual_estimate": 323814.0,
     "next30d_estimate": 0,
-    "ytd_yield_pct": 1.97
+    "ytd_yield_pct": 2.46
   },
   "us_exposure": [
     {
@@ -1503,7 +1551,7 @@
     "yfinance": "ok (23 prices)",
     "twse_backup": "ok (2 prices)",
     "usd_twd": 31.695,
-    "finmind": "ok (upcoming:0, ytd:35)",
+    "finmind": "ok (upcoming:0, ytd:39)",
     "twii": "ok (48,025 | ATH:48,189)"
   }
 }
