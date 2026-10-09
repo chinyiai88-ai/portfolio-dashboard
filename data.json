@@ -1,11 +1,11 @@
 {
-  "updated_at": "2026-10-09T12:59:14.875888+08:00",
+  "updated_at": "2026-10-09T19:48:12.614550+08:00",
   "exchange_rate": 31.912,
   "summary": {
-    "nav": 10066413.0,
-    "portfolio_total": 6861476.0,
+    "nav": 10061113.0,
+    "portfolio_total": 6856176.0,
     "portfolio_cost": 4721359.0,
-    "portfolio_return_pct": 45.33,
+    "portfolio_return_pct": 45.22,
     "loan_total": 0,
     "loan_pnl": 0,
     "available_cash": 4225205.0,
@@ -27,11 +27,11 @@
         "value": 2493256.0,
         "cost": 1162477.0,
         "return_pct": 114.48,
-        "actual_pct": 24.77,
+        "actual_pct": 24.78,
         "target_pct": 31.0,
-        "diff_pct": -6.23,
-        "target_amount": 3120588.0,
-        "diff_amount": -627332.0,
+        "diff_pct": -6.22,
+        "target_amount": 3118945.0,
+        "diff_amount": -625689.0,
         "strat": "\u6b632:20% \uff0b 00981A:10%"
       },
       {
@@ -39,11 +39,11 @@
         "value": 1527340.0,
         "cost": 870598.0,
         "return_pct": 75.44,
-        "actual_pct": 15.17,
+        "actual_pct": 15.18,
         "target_pct": 20.0,
-        "diff_pct": -4.83,
-        "target_amount": 2013283.0,
-        "diff_amount": -485943.0,
+        "diff_pct": -4.82,
+        "target_amount": 2012223.0,
+        "diff_amount": -484883.0,
         "strat": "00924\u3001TOPT"
       },
       {
@@ -51,11 +51,11 @@
         "value": 245006.0,
         "cost": 432506.0,
         "return_pct": -43.35,
-        "actual_pct": 2.43,
+        "actual_pct": 2.44,
         "target_pct": 5.0,
-        "diff_pct": -2.57,
-        "target_amount": 503321.0,
-        "diff_amount": -258314.0,
+        "diff_pct": -2.56,
+        "target_amount": 503056.0,
+        "diff_amount": -258049.0,
         "strat": "\u5370\u5ea6\u57fa\u91d1 \uff0b \u4e2d\u570b\u79d1\u6280"
       },
       {
@@ -66,20 +66,20 @@
         "actual_pct": 4.19,
         "target_pct": 10.0,
         "diff_pct": -5.81,
-        "target_amount": 1006641.0,
-        "diff_amount": -585162.0,
+        "target_amount": 1006111.0,
+        "diff_amount": -584632.0,
         "strat": "Nvidia 40% / Tesla 30% / Google 30%"
       },
       {
         "cat": "\u6ce2\u6bb5-\u500b\u80a1",
-        "value": 552344.0,
+        "value": 547044.0,
         "cost": 277492,
-        "return_pct": 99.05,
-        "actual_pct": 5.49,
+        "return_pct": 97.14,
+        "actual_pct": 5.44,
         "target_pct": 6.0,
-        "diff_pct": -0.51,
-        "target_amount": 603985.0,
-        "diff_amount": -51641.0,
+        "diff_pct": -0.56,
+        "target_amount": 603667.0,
+        "diff_amount": -56623.0,
         "strat": "\u5118\u5feb\u8ce3\u6389\uff0c\u8f49\u50b5\u5238\u505c\u6cca"
       },
       {
@@ -90,8 +90,8 @@
         "actual_pct": 6.35,
         "target_pct": 5.0,
         "diff_pct": 1.35,
-        "target_amount": 503321.0,
-        "diff_amount": 135479.0,
+        "target_amount": 503056.0,
+        "diff_amount": 135744.0,
         "strat": "00919\uff0c\u586b\u606f\u5f8c\u8f49\u6b632"
       },
       {
@@ -99,11 +99,11 @@
         "value": 643540.0,
         "cost": 429060,
         "return_pct": 49.99,
-        "actual_pct": 6.39,
+        "actual_pct": 6.4,
         "target_pct": 8.0,
-        "diff_pct": -1.61,
-        "target_amount": 805313.0,
-        "diff_amount": -161773.0,
+        "diff_pct": -1.6,
+        "target_amount": 804889.0,
+        "diff_amount": -161349.0,
         "strat": "\u4e2d\u4fe1\u91d1 \uff0b \u53f0\u7a4d\u96fb"
       },
       {
@@ -111,11 +111,11 @@
         "value": 339710.0,
         "cost": 346610,
         "return_pct": -1.99,
-        "actual_pct": 3.37,
+        "actual_pct": 3.38,
         "target_pct": 5.0,
-        "diff_pct": -1.63,
-        "target_amount": 503321.0,
-        "diff_amount": -163611.0,
+        "diff_pct": -1.62,
+        "target_amount": 503056.0,
+        "diff_amount": -163346.0,
         "strat": "\u6708\u914d\uff0c\u76ee\u6a19\u5b58\u5230288\u842c"
       }
     ]
@@ -282,7 +282,7 @@
       "shares": 0,
       "perSh": 12.5,
       "cost": 187500,
-      "price": 14.87,
+      "price": 15.23,
       "cur": "TWD",
       "note": "\u7121\u914d\u606f",
       "manualPrice": null,
@@ -422,12 +422,12 @@
       "shares": 100,
       "perSh": 886,
       "cost": 88600,
-      "price": 788.0,
+      "price": 735,
       "cur": "TWD",
       "note": "",
       "manualPrice": null,
-      "value_twd": 78800.0,
-      "return_pct": -11.06
+      "value_twd": 73500,
+      "return_pct": -17.04
     },
     {
       "cat": "\u6ce2\u6bb5-\u500b\u80a1",
@@ -1506,42 +1506,42 @@
       {
         "name": "\u7834\u5b63\u7dda\u6295\u516525%",
         "trigger": 45726.78,
-        "amount": 503321.0,
+        "amount": 503056.0,
         "gap": 3587.0,
         "triggered": false
       },
       {
         "name": "\u8dcc10%(\u5df2\u7834\u6708\u7dda)\u6295\u516515%",
         "trigger": 44840.3,
-        "amount": 301992.0,
+        "amount": 301833.0,
         "gap": 4473.0,
         "triggered": false
       },
       {
         "name": "\u8dcc15%(\u5df2\u7834\u5b63\u7dda)\u6295\u516520%",
         "trigger": 42349.17,
-        "amount": 402657.0,
+        "amount": 402445.0,
         "gap": 6964.0,
         "triggered": false
       },
       {
         "name": "\uff08\u7d04\u5e74\u7dda\uff09\u783419%\u6295\u516510%",
         "trigger": 40356.27,
-        "amount": 201328.0,
+        "amount": 201222.0,
         "gap": 8957.0,
         "triggered": false
       },
       {
         "name": "\u783420%\u6295\u516510%",
         "trigger": 39858.04,
-        "amount": 201328.0,
+        "amount": 201222.0,
         "gap": 9455.0,
         "triggered": false
       },
       {
         "name": "\u5e74\u7dda\u4e0b\u783420%\u6295\u516510%",
         "trigger": 39858.04,
-        "amount": 201328.0,
+        "amount": 201222.0,
         "gap": 9455.0,
         "triggered": false
       }
@@ -1549,7 +1549,7 @@
   },
   "logs": {
     "yfinance": "ok (23 prices)",
-    "twse_backup": "ok (2 prices)",
+    "twse_backup": "ok (0 prices)",
     "usd_twd": 31.912,
     "finmind": "ok (upcoming:0, ytd:39)",
     "twii": "ok (49,313 | ATH:49,823)"
